@@ -1,23 +1,23 @@
 <!-- RegisterPage.vue -->
 <template>
-  <div class="container">
+  <div class="loginContainer">
     <h1>Register</h1>
     <form @submit.prevent="register">
       <div class="form-group">
         <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" required />
+        <input type="text" id="usernameInput" v-model="username" required />
       </div>
 
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
+        <input type="password" id="passwordInput" v-model="password" required />
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirm Password:</label>
         <input
           type="password"
-          id="confirmPassword"
+          id="confirmPasswordInput"
           v-model="confirmPassword"
           required
         />
@@ -27,7 +27,7 @@
         {{ errorMessage }}
       </div>
 
-      <button type="submit">Register</button>
+      <button type="submit" class="submitButton">Register</button>
     </form>
 
     <p>
@@ -65,50 +65,4 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  text-align: center;
-  margin-top: 50px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 100%;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-
-p {
-  margin-top: 20px;
-}
-
-a {
-  color: #007bff;
-}
 </style>
