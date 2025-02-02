@@ -48,17 +48,30 @@ export default {
     };
   },
   methods: {
-    register() {
+    async register() {
       // 验证两次密码是否一致
       if (this.password !== this.confirmPassword) {
         this.errorMessage = "Passwords do not match!";
         return;
       }
 
-      // 这里你可以添加更多的验证逻辑，比如检查用户名是否已经存在
-      // 模拟注册成功后跳转到登录页面
-      alert("Registration successful!");
-      this.$router.push("/login"); // 注册成功后跳转到登录页面
+      try {
+        // 发送 POST 请求到后端进行用户注册
+        const response = await this.$axios.post("/register", {
+          username: this.username,
+          password: this.password,
+        });
+
+        // 假设后端注册成功后返回的是登录页面的重定向信息
+        if (response.data.status === 200) {
+          this.$router.push("/Home"); // 注册成功后跳转到登录页面
+        } else {
+          throw "Error in HomeController.java";
+        }
+      } catch (error) {
+        console.error("注册失败：", error);
+        this.errorMessage = "Registration failed, please try again later.";
+      }
     },
   },
 };

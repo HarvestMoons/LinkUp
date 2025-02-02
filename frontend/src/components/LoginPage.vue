@@ -13,6 +13,11 @@
       </div>
       <button type="submit" class="submitButton">Login</button>
     </form>
+
+    <p>
+      Didn't have an account?
+      <router-link to="/register">Register here</router-link>
+    </p>
   </div>
 </template>
 
@@ -27,12 +32,8 @@ export default {
   },
   methods: {
     login() {
-      /*// 模拟登录逻辑，实际情况可能是发请求到后台
-      if (this.username === 'admin' && this.password === '1234') {
-        this.$router.push('/');  // 登录成功后跳转到主页
-      } else {
-        alert('Invalid credentials');
-      }*/
+      // TODO: 登录逻辑
+      this.$router.push("/"); // 登录成功后跳转到主页
     },
   },
 };

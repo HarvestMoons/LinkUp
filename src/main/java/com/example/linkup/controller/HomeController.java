@@ -1,7 +1,13 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.service.UserService;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +43,20 @@ public class HomeController {
      */
     // 处理用户注册
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String password) {
-        userService.registerUser(username, password); // 调用服务层处理注册逻辑
-        return "redirect:/login"; // 注册成功后跳转到登录页面
+    public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
+        String username = body.get("username");
+        String password = body.get("password");
+        Map<String, Object> response = new HashMap<>();
+        try {
+            userService.registerUser(username, password); // 调用服务层处理注册逻辑
+            response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
+            response.put("message", "Registration successful.");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // HTTP状态码 500
+            response.put("message", "Registration failed.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
 }

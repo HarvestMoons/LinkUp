@@ -15,8 +15,7 @@ export default {
   name: "HomePage",
   methods: {
     logout() {
-      // 假设这里是一个注销的逻辑
-      // 可以跳转到登录页面，或者清除存储的用户信息
+      // TODO: 清除存储的用户信息
       this.$router.push("/login"); // 跳转到登录页面
     },
   },
