@@ -64,13 +64,14 @@ export default {
 
         // 假设后端注册成功后返回的是登录页面的重定向信息
         if (response.data.status === 200) {
-          this.$router.push("/Home"); // 注册成功后跳转到登录页面
+          this.$router.push("/"); // 注册成功后跳转到登录页面
         } else {
-          throw "Error in HomeController.java";
+          throw new Error(response.data.message);
         }
       } catch (error) {
         console.error("注册失败：", error);
-        this.errorMessage = "Registration failed, please try again later.";
+        this.errorMessage =
+          error.message || "Registration failed, please try again later.";
       }
     },
   },
