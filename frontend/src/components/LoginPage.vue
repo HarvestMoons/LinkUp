@@ -52,7 +52,7 @@ export default {
             password: this.password,
           }
         );
-        console.log(response.data.status);
+
         // 判断后端返回的状态码是否为 200 (表示登录成功)
         if (response.data.status === 200) {
           showToast(this.toast, "登录成功！即将跳转到主页面...", "success");
@@ -65,9 +65,9 @@ export default {
           throw new Error(response.data.message);
         }
       } catch (error) {
+        const backendError = error.response?.data?.message;
+        this.errorMessage = backendError || "登录失败，请检查网络或稍后重试。";
         console.error("登录失败：", error);
-        this.errorMessage =
-          error.message || "Login failed, please try again later.";
       }
     },
   },

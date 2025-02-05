@@ -37,12 +37,13 @@ public class HomeController {
         Map<String, Object> response = new HashMap<>();
 
         try {
+            // TODO: 用户名已存在时还能注册
             userService.registerUser(username, password); // 调用服务层处理注册逻辑
             response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
         } catch (Exception e) {
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 业务状态码 500
-            response.put("message", "Registration failed: " + e.getMessage()); // 错误信息
+            response.put("message", "注册失败，请检查网络或稍后重试。"); // 错误信息
         }
 
         // 始终返回 HTTP 状态码 200，错误信息通过 response 中的 status 字段传递
@@ -78,7 +79,7 @@ public class HomeController {
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", "Login Failed.");
+            response.put("message", "登录失败，请检查网络或稍后重试。");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         }
         /*

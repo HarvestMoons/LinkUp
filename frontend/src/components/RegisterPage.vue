@@ -109,6 +109,9 @@ export default {
           setTimeout(() => {
             this.$router.push("/login"); // 明确跳转到登录页
           }, 3000);
+        } else {
+          // 注册失败
+          throw new Error(response.data.message);
         }
       } catch (error) {
         // 提取后端返回的具体错误信息
