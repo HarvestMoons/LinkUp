@@ -45,10 +45,13 @@ export default {
     async login() {
       try {
         // 发送 POST 请求到后端进行用户登录
-        const response = await this.$axios.post("/auth/login", {
-          username: this.username,
-          password: this.password,
-        });
+        const response = await this.$axios.post(
+          `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
+          {
+            username: this.username,
+            password: this.password,
+          }
+        );
         console.log(response.data.status);
         // 判断后端返回的状态码是否为 200 (表示登录成功)
         if (response.data.status === 200) {

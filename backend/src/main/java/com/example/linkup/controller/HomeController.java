@@ -1,6 +1,7 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.service.UserService;
+import com.example.linkup.config.Constant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +30,7 @@ public class HomeController {
     }
 
     // 处理用户注册
-    @PostMapping("/auth/register")
+    @PostMapping(Constant.PUBLIC_AUTH_API + "/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
@@ -48,7 +49,7 @@ public class HomeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/auth/login")
+    @PostMapping(Constant.PUBLIC_AUTH_API + "/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");

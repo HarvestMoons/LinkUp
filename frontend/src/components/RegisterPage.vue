@@ -95,10 +95,13 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post("/auth/register", {
-          username: this.username,
-          password: this.password,
-        });
+        const response = await this.$axios.post(
+          `${this.$CONSTANT.PUBLIC_AUTH_API}/register`,
+          {
+            username: this.username,
+            password: this.password,
+          }
+        );
 
         // 假设后端返回 HTTP 状态码 200 表示成功
         if (response.status === 200) {
