@@ -1,8 +1,5 @@
 package com.example.linkup.config;
 
-import com.example.linkup.service.CustomUserDetailsService;
-import com.example.linkup.service.UserService;
-import com.example.linkup.service.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -11,67 +8,70 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.Arrays;
+import java.util.List;
 
-@Component
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-        private final CustomUserDetailsService customUserDetailsService;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final UserDetailsService userDetailsService;
         private final PasswordEncoder passwordEncoder;
 
-        public SecurityConfig(@Lazy CustomUserDetailsService customUserDetailsService,
-                        @Lazy PasswordEncoder passwordEncoder) {
-                this.customUserDetailsService = customUserDetailsService;
+
+        // 构造器注入 UserDetailsService 和 PasswordEncoder
+        public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,@Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+                this.userDetailsService = userDetailsService;
                 this.passwordEncoder = passwordEncoder;
         }
 
-        // 使用 Spring 自动注入的方式配置 AuthenticationManager
+        // 暴露 AuthenticationManager 为 Bean
         @Bean
         public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-                AuthenticationManagerBuilder authenticationManagerBuilder = http
-                                .getSharedObject(AuthenticationManagerBuilder.class);
-                authenticationManagerBuilder
-                                .userDetailsService(customUserDetailsService)
-                                .passwordEncoder(passwordEncoder); // 使用密码编码器
-                return authenticationManagerBuilder.build();
+                AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+                authManagerBuilder
+                        .userDetailsService(userDetailsService)
+                        .passwordEncoder(passwordEncoder);
+                return authManagerBuilder.build();
         }
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
-                                .formLogin().disable()
-                                .authorizeHttpRequests(auth -> auth
-                                                .requestMatchers("/register", "/login").permitAll() // 注册和登录页面不需要认证
-                                                .requestMatchers("/home").authenticated() // home 页面需要认证
-                                                .anyRequest().permitAll() // 其他页面不受限制
-                                )
-                                /*
-                                 * // 配置表单登录
-                                 * .formLogin(form -> form
-                                 * .loginPage("/login") // 登录页面 URL
-                                 * .defaultSuccessUrl("/home", true) // 登录成功后的默认跳转 URL
-                                 * .permitAll() // 允许所有用户访问登录页面
-                                 * )
-                                 * // 配置登出
-                                 * .logout(logout -> logout
-                                 * .logoutUrl("/logout") // 设置登出请求的 URL
-                                 * .logoutSuccessUrl("/login") // 登出成功后跳转到登录页面
-                                 * )
-                                 */
-                                // 禁用 CSRF（可以根据需要启用）
-                                .csrf(AbstractHttpConfigurer::disable);
+                        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                        .csrf(AbstractHttpConfigurer::disable)
+                        .sessionManagement(session -> session
+                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        )
+                        .authorizeHttpRequests(auth -> auth
+                                .requestMatchers("/api/**").permitAll()
+                                .anyRequest().authenticated()
+                        )
+                        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
 
         @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
+        public CorsConfigurationSource corsConfigurationSource() {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of("http://localhost:3000"));
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+                config.setAllowedHeaders(List.of("*"));
+                config.setAllowCredentials(true);
+
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", config);
+                return source;
         }
 }

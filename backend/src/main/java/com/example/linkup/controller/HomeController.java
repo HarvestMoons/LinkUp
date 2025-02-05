@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,28 +35,26 @@ public class HomeController {
     }
 
     // 处理用户注册
-    @PostMapping("/register")
+    @PostMapping("/api/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
         Map<String, Object> response = new HashMap<>();
+
         try {
             userService.registerUser(username, password); // 调用服务层处理注册逻辑
             response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // HTTP状态码 500
-            response.put("message", "Registration failed.");
-            // NOTE:
-            // 就像第74行，在后端往前端返回的信息的status都要是HttpStatus.OK，
-            // 不然前端的代码（如LoginPage.vue）第41行会直接在前端抛出异常，
-            // 所以只能在后端返回的消息response中的存HttpStatus.INTERNAL_SERVER_ERROR.value()，像第68行
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 业务状态码 500
+            response.put("message", "Registration failed: " + e.getMessage()); // 错误信息
         }
+
+        // 始终返回 HTTP 状态码 200，错误信息通过 response 中的 status 字段传递
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
@@ -81,6 +80,11 @@ public class HomeController {
         // NOTE:
         // 在这里把所有的异常都给用户显示为“登录失败”了，
         // 后续需要看看怎么用AuthenticationException或者ExceptionHandler之类的东西改改，显示“用户名不存在”这种更准确的提示
+        catch (AuthenticationException e) {
+            response.put("status", HttpStatus.UNAUTHORIZED.value());
+            response.put("message", "用户名或密码错误。");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
         catch (Exception e) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
             response.put("message", "Login Failed.");

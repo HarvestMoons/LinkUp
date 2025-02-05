@@ -2,6 +2,7 @@ package com.example.linkup.service;
 
 import com.example.linkup.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,7 +14,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserServiceImpl userService;
 
     @Autowired
-    public CustomUserDetailsService(UserServiceImpl userService) {
+    public CustomUserDetailsService(@Lazy UserServiceImpl userService) {
         this.userService = userService;
     }
 

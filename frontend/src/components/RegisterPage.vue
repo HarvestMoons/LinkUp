@@ -37,6 +37,9 @@
 </template>
 
 <script>
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+
 export default {
   name: "RegisterPage",
   data() {
@@ -44,34 +47,73 @@ export default {
       username: "",
       password: "",
       confirmPassword: "",
-      errorMessage: "", // 用于存储错误信息
+      errorMessage: "",
+      isLoading: false, // 加载状态
     };
   },
+  setup() {
+    const toast = useToast()
+    return { toast }
+  },
   methods: {
+    // 密码强度校验（至少6位，包含字母和数字）
+    validatePassword(password) {
+      const minLength = 6;
+      const hasLetter = /[a-zA-Z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      return password.length >= minLength && hasLetter && hasNumber;
+    },
+    // 用户名合法性校验（仅允许字母、数字和下划线）
+    validateUsername(username) {
+      const regex = /^[a-zA-Z0-9_]+$/;
+      return regex.test(username);
+    },
     async register() {
-      // 验证两次密码是否一致
+      this.errorMessage = "";
+      this.isLoading = true;
+
+      // 输入校验
+      if (!this.username.trim()) {
+        this.errorMessage = "用户名不能为空！";
+        this.isLoading = false;
+        return;
+      }
+      if (!this.validateUsername(this.username)) {
+        this.errorMessage = "用户名只能包含字母、数字和下划线！";
+        this.isLoading = false;
+        return;
+      }
       if (this.password !== this.confirmPassword) {
-        this.errorMessage = "Passwords do not match!";
+        this.errorMessage = "两次输入的密码不一致！";
+        this.isLoading = false;
+        return;
+      }
+      if (!this.validatePassword(this.password)) {
+        this.errorMessage = "密码至少6位，且需包含字母和数字！";
+        this.isLoading = false;
         return;
       }
 
       try {
-        // 发送 POST 请求到后端进行用户注册
-        const response = await this.$axios.post("/register", {
+        const response = await this.$axios.post("/api/register", {
           username: this.username,
           password: this.password,
         });
 
-        // 假设后端注册成功后返回的是登录页面的重定向信息
-        if (response.data.status === 200) {
-          this.$router.push("/"); // 注册成功后跳转到登录页面
-        } else {
-          throw new Error(response.data.message);
+        // 假设后端返回 HTTP 状态码 200 表示成功
+        if (response.status === 200) {
+          showToast(this.toast, '注册成功！即将跳转到登录页面...', 'success');
+          setTimeout(() => {
+            this.$router.push("/login"); // 明确跳转到登录页
+          }, 3000);
         }
       } catch (error) {
+        // 提取后端返回的具体错误信息
+        const backendError = error.response?.data?.message;
+        this.errorMessage = backendError || "注册失败，请检查网络或稍后重试。";
         console.error("注册失败：", error);
-        this.errorMessage =
-          error.message || "Registration failed, please try again later.";
+      } finally {
+        this.isLoading = false;
       }
     },
   },

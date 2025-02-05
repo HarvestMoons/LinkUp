@@ -25,6 +25,9 @@
 </template>
 
 <script>
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+
 export default {
   name: "LoginPage",
   data() {
@@ -34,17 +37,26 @@ export default {
       errorMessage: "",
     };
   },
+  setup() {
+    const toast = useToast()
+    return { toast }
+  },
   methods: {
     async login() {
       try {
         // 发送 POST 请求到后端进行用户登录
-        const response = await this.$axios.post("/login", {
+        const response = await this.$axios.post("/api/login", {
           username: this.username,
           password: this.password,
         });
+        console.log(response.data.status)
         // 判断后端返回的状态码是否为 200 (表示登录成功)
         if (response.data.status === 200) {
-          this.$router.push("/"); // 登录成功后跳转到主页
+          showToast(this.toast, '登录成功！即将跳转到主页面...', 'success');
+          // 登录成功后跳转到主页
+          setTimeout(() => {
+            this.$router.push("/");
+          }, 3000);
         } else {
           // 登录失败
           throw new Error(response.data.message);
