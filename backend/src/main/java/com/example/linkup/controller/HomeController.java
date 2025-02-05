@@ -66,7 +66,6 @@ public class HomeController {
             // 登录成功
             response.put("status", HttpStatus.OK.value());
             response.put("message", "Login successful.");
-            // response.put("user", user); // 可以将用户信息返回，或者返回一个认证 token 等
             return ResponseEntity.status(HttpStatus.OK).body(response);
 
         }
