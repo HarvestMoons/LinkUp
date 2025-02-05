@@ -1,7 +1,6 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.service.UserService;
-import com.example.linkup.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 public class HomeController {
@@ -26,16 +24,12 @@ public class HomeController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     public HomeController(UserService userService) {
         this.userService = userService;
     }
 
     // 处理用户注册
-    @PostMapping("/api/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
@@ -54,15 +48,12 @@ public class HomeController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @PostMapping("/api/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
         Map<String, Object> response = new HashMap<>();
         try {
-            // 调用findByUsername方法查找用户
-            User user = userService.findByUsername(username);
-
             // 通过 Spring Security 进行身份验证
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
             authentication = authenticationManager.authenticate(authentication);
@@ -84,8 +75,7 @@ public class HomeController {
             response.put("status", HttpStatus.UNAUTHORIZED.value());
             response.put("message", "用户名或密码错误。");
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             response.put("status", HttpStatus.BAD_REQUEST.value());
             response.put("message", "Login Failed.");
             return ResponseEntity.status(HttpStatus.OK).body(response);

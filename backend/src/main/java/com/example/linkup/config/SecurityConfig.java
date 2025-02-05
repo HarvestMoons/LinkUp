@@ -27,9 +27,9 @@ public class SecurityConfig {
         private final UserDetailsService userDetailsService;
         private final PasswordEncoder passwordEncoder;
 
-
         // 构造器注入 UserDetailsService 和 PasswordEncoder
-        public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,@Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
+        public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
+                        @Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
                 this.jwtAuthenticationFilter = jwtAuthenticationFilter;
                 this.userDetailsService = userDetailsService;
                 this.passwordEncoder = passwordEncoder;
@@ -38,26 +38,25 @@ public class SecurityConfig {
         // 暴露 AuthenticationManager 为 Bean
         @Bean
         public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-                AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+                AuthenticationManagerBuilder authManagerBuilder = http
+                                .getSharedObject(AuthenticationManagerBuilder.class);
                 authManagerBuilder
-                        .userDetailsService(userDetailsService)
-                        .passwordEncoder(passwordEncoder);
+                                .userDetailsService(userDetailsService)
+                                .passwordEncoder(passwordEncoder);
                 return authManagerBuilder.build();
         }
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 http
-                        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                        .csrf(AbstractHttpConfigurer::disable)
-                        .sessionManagement(session -> session
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                        )
-                        .authorizeHttpRequests(auth -> auth
-                                .requestMatchers("/api/**").permitAll()
-                                .anyRequest().authenticated()
-                        )
-                        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(AbstractHttpConfigurer::disable)
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers("/auth/**").permitAll()
+                                                .anyRequest().authenticated())
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }

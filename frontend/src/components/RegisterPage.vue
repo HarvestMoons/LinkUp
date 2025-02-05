@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import {showToast} from "@/utils/toast";
-import {useToast} from "vue-toastification";
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "RegisterPage",
@@ -52,8 +52,8 @@ export default {
     };
   },
   setup() {
-    const toast = useToast()
-    return { toast }
+    const toast = useToast();
+    return { toast };
   },
   methods: {
     // 密码强度校验（至少6位，包含字母和数字）
@@ -95,14 +95,14 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post("/api/register", {
+        const response = await this.$axios.post("/auth/register", {
           username: this.username,
           password: this.password,
         });
 
         // 假设后端返回 HTTP 状态码 200 表示成功
         if (response.status === 200) {
-          showToast(this.toast, '注册成功！即将跳转到登录页面...', 'success');
+          showToast(this.toast, "注册成功！即将跳转到登录页面...", "success");
           setTimeout(() => {
             this.$router.push("/login"); // 明确跳转到登录页
           }, 3000);
@@ -120,5 +120,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -1,7 +1,6 @@
 package com.example.linkup.service;
 
 import com.example.linkup.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +12,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserServiceImpl userService;
 
-    @Autowired
     public CustomUserDetailsService(@Lazy UserServiceImpl userService) {
         this.userService = userService;
     }
@@ -31,8 +29,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User
                 .builder()
                 .username(user.getUsername())
-                .password(user.getPassword())  // 使用加密后的密码
-                .roles("USER")  // 可以根据需要设置用户角色
+                .password(user.getPassword()) // 使用加密后的密码
+                .roles("USER") // 可以根据需要设置用户角色
                 .build();
     }
 }

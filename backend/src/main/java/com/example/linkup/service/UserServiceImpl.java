@@ -3,7 +3,6 @@ package com.example.linkup.service;
 import com.example.linkup.model.User;
 import com.example.linkup.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
