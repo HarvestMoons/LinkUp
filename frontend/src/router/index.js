@@ -8,22 +8,26 @@ const routes = [
   {
     path: '/',
     name: 'home1',
-    component: HomePage
+    component: HomePage,
+    meta: { title: '首页' }
   },
   {
     path: '/home',
     name: 'home2',
-    component: HomePage
+    component: HomePage,
+    meta: { title: '首页' }
   },
   {
     path: '/register',
     name: 'register',
-    component: RegisterPage
+    component: RegisterPage,
+    meta: { title: '注册' }
   },
   {
     path: '/login',
     name: 'login',
-    component: LoginPage
+    component: LoginPage,
+    meta: { title: '登录' }
   }/*,
   {
     path: '/about',
@@ -40,5 +44,10 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  document.title = `Link Up - ${to.meta.title}`;
+  next();
+});
 
 export default router
