@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/components/HomePage'
 import LoginPage from '@/components/LoginPage'
 import RegisterPage from '@/components/RegisterPage'
+import { useToast } from 'vue-toastification';
 
 const routes = [
   {
@@ -43,14 +44,19 @@ router.beforeEach((to, from, next) => {
   // 双重验证：本地存储状态 + 实际 token 存在性
   const isAuthenticated = isLoggedIn && hasValidToken
 
+  // 获取toast实例
+  const toast = useToast();
+
   // 处理需要认证的路由
   if (to.meta.requiresAuth && !isAuthenticated) {
+    toast.error('请先登录后再访问此页面');
     next({ name: 'login' })
     return
   }
 
   // 处理仅允许未登录用户访问的路由
   if (to.meta.guestOnly && isAuthenticated) {
+    toast.error('请先登出后再进行登录或注册');
     next({ name: 'home1' }) // 已登录用户访问登录/注册页时重定向到首页
     return
   }
