@@ -2,7 +2,7 @@ package com.example.linkup.controller;
 
 import com.example.linkup.exception.UsernameExistedException;
 import com.example.linkup.service.UserService;
-import com.example.linkup.config.Constant;
+import com.example.linkup.config.ApiConstant;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,14 +30,13 @@ public class HomeController {
     }
 
     // 处理用户注册
-    @PostMapping(Constant.PUBLIC_AUTH_API + "/register")
+    @PostMapping(ApiConstant.PUBLIC_AUTH_API + "/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
         Map<String, Object> response = new HashMap<>();
 
         try {
-            // TODO: 用户名已存在时还能注册
             userService.registerUser(username, password); // 调用服务层处理注册逻辑
             response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
@@ -55,7 +53,7 @@ public class HomeController {
 
     }
 
-    @PostMapping(Constant.PUBLIC_AUTH_API + "/login")
+    @PostMapping(ApiConstant.PUBLIC_AUTH_API + "/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");

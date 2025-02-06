@@ -3,7 +3,7 @@
   <div class="container">
     <h1>Welcome to the Home Page</h1>
     <p>Hello! You have successfully logged in.</p>
-    <img src="@/assets/icon.png" style="padding: 10px" />
+    <img src="@/assets/icon.png" style="padding: 10px"  alt=""/>
 
     <div>
       <button @click="logout" class="logoutButton">Logout</button>
@@ -16,7 +16,6 @@ export default {
   name: "HomePage",
   methods: {
     logout() {
-      // TODO: 清除存储的用户信息
       // 清除登录状态
       localStorage.removeItem('token');
       localStorage.removeItem('isLoggedIn');
