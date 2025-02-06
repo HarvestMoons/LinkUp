@@ -120,12 +120,15 @@ export default {
           }, 3000);
         } else {
           // 注册失败
+          //TODO:这个地方比较重复，看看怎么修改
           throw new Error(response.data.message);
         }
       } catch (error) {
         // 提取后端返回的具体错误信息
-        this.errorMessage = error.message || "注册失败，请检查网络或稍后重试。";
-        console.error("注册失败：", error);
+        const backendError = error.response?.data?.message; // 从响应体中获取错误信息
+        this.errorMessage = backendError || "注册失败，请检查网络或稍后重试。";
+        //showToast(this.toast, this.errorMessage, "error"); // 显示自定义错误提示
+        console.error("注册失败：", backendError || error.message);
       }
     },
   },
