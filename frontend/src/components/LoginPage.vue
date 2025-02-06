@@ -55,7 +55,7 @@ export default {
     },
     // 如果输入不合法，恢复输入前的值，避免非法字符输入
     validateUsernameInput() {
-      if (this.validateUsername(this.username) || this.username.length == 0) {
+      if (this.validateUsername(this.username) || this.username.length === 0) {
         this.errorMessage = "";
       } else {
         this.username = this.username.slice(0, -1);
@@ -75,6 +75,10 @@ export default {
 
         // 判断后端返回的状态码是否为 200 (表示登录成功)
         if (response.data.status === 200) {
+          // 存储 JWT 和登录状态
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('isLoggedIn', 'true');
+
           showToast(this.toast, "登录成功！即将跳转到主页面...", "success");
           // 登录成功后跳转到主页
           setTimeout(() => {
@@ -85,8 +89,7 @@ export default {
           throw new Error(response.data.message);
         }
       } catch (error) {
-        const backendError = error.response?.data?.message;
-        this.errorMessage = backendError || "登录失败，请检查网络或稍后重试。";
+        this.errorMessage = error.message || "登录失败，请检查网络或稍后重试。";
         console.error("登录失败：", error);
       }
     },

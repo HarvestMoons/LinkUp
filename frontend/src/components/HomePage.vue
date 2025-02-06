@@ -17,6 +17,9 @@ export default {
   methods: {
     logout() {
       // TODO: 清除存储的用户信息
+      // 清除登录状态
+      localStorage.removeItem('token');
+      localStorage.removeItem('isLoggedIn');
       this.$router.push("/login"); // 跳转到登录页面
     },
   },

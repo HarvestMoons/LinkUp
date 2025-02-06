@@ -54,7 +54,6 @@ export default {
       password: "",
       confirmPassword: "",
       errorMessage: "",
-      isLoading: false, // 加载状态
     };
   },
   setup() {
@@ -76,7 +75,7 @@ export default {
     },
     // 如果输入不合法，恢复输入前的值，避免非法字符输入
     validateUsernameInput() {
-      if (this.validateUsername(this.username) || this.username.length == 0) {
+      if (this.validateUsername(this.username) || this.username.length === 0) {
         this.errorMessage = "";
       } else {
         this.username = this.username.slice(0, -1);
@@ -85,27 +84,22 @@ export default {
     },
     async register() {
       this.errorMessage = "";
-      this.isLoading = true;
 
       // 输入校验
       if (!this.username.trim()) {
         this.errorMessage = "用户名不能为空！";
-        this.isLoading = false;
         return;
       }
       if (!this.validateUsername(this.username)) {
         this.errorMessage = "用户名只能包含字母、数字和下划线！";
-        this.isLoading = false;
         return;
       }
       if (this.password !== this.confirmPassword) {
         this.errorMessage = "两次输入的密码不一致！";
-        this.isLoading = false;
         return;
       }
       if (!this.validatePassword(this.password)) {
         this.errorMessage = "密码至少6位，且需包含字母和数字！";
-        this.isLoading = false;
         return;
       }
 
@@ -130,11 +124,8 @@ export default {
         }
       } catch (error) {
         // 提取后端返回的具体错误信息
-        const backendError = error.response?.data?.message;
-        this.errorMessage = backendError || "注册失败，请检查网络或稍后重试。";
+        this.errorMessage = error.message || "注册失败，请检查网络或稍后重试。";
         console.error("注册失败：", error);
-      } finally {
-        this.isLoading = false;
       }
     },
   },
