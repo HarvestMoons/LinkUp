@@ -84,13 +84,18 @@ export default {
           setTimeout(() => {
             this.$router.push("/");
           }, 3000);
-        } else {
-          // 登录失败
-          throw new Error(response.data.message);
         }
-      } catch (error) {
-        this.errorMessage = error.message || "登录失败，请检查网络或稍后重试。";
-        console.error("登录失败：", error);
+      }catch (error) {
+        if (error.response) {
+          // 后端返回了错误响应（HTTP 4xx 或 5xx）
+          this.errorMessage = error.response.data.message || "服务器异常，请稍后再试。";
+        } else if (error.request) {
+          // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
+          this.errorMessage = "无法连接到服务器，请检查网络。";
+        } else {
+          // 其他未知错误
+          this.errorMessage = "发生未知错误，请稍后再试。";
+        }
       }
     },
   },
