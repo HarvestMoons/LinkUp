@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
 
 export default {
   name: "RegisterPage",
@@ -118,17 +118,18 @@ export default {
           setTimeout(() => {
             this.$router.push("/login"); // 明确跳转到登录页
           }, 3000);
-        } else {
-          // 注册失败
-          //TODO:这个地方比较重复，看看怎么修改
-          throw new Error(response.data.message);
         }
       } catch (error) {
-        // 提取后端返回的具体错误信息
-        const backendError = error.response?.data?.message; // 从响应体中获取错误信息
-        this.errorMessage = backendError || "注册失败，请检查网络或稍后重试。";
-        //showToast(this.toast, this.errorMessage, "error"); // 显示自定义错误提示
-        console.error("注册失败：", backendError || error.message);
+        if (error.response) {
+          // 后端返回了错误响应（HTTP 4xx 或 5xx）
+          this.errorMessage = error.response.data.message || "服务器异常，请稍后再试。";
+        } else if (error.request) {
+          // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
+          this.errorMessage = "无法连接到服务器，请检查网络。";
+        } else {
+          // 其他未知错误
+          this.errorMessage = "发生未知错误，请稍后再试。";
+        }
       }
     },
   },
