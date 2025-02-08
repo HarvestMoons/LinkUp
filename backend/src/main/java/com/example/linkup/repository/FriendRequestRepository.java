@@ -14,7 +14,5 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, Lo
     FriendRequest findBySenderAndReceiver(User sender, User receiver);
 
     // 根据请求状态查找所有好友请求
-    List<FriendRequest> findByStatus(FriendRequest.RequestStatus status);
-
-    // 其他自定义查询可以添加这里
+    List<FriendRequest> findByReceiverAndStatus(User receiver, FriendRequest.RequestStatus status);
 }

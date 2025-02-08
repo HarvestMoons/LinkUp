@@ -5,6 +5,7 @@ import com.example.linkup.model.FriendRequest;
 import com.example.linkup.model.User;
 import com.example.linkup.repository.FriendRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +40,8 @@ public class FriendRequestService {
     }
 
     // 获取某个用户的所有好友请求（例如，查看所有待处理请求）
-    public List<FriendRequest> getFriendRequestsByStatus(FriendRequest.RequestStatus status) {
-        return friendRequestRepository.findByStatus(status);
+    public List<FriendRequest> getFriendRequestsByReceiverAndStatus(User receiver,FriendRequest.RequestStatus status) {
+        return friendRequestRepository.findByReceiverAndStatus(receiver,status);
     }
 
     // 接受好友请求
@@ -57,6 +58,10 @@ public class FriendRequestService {
         // 更新请求状态
         friendRequest.setStatus(FriendRequest.RequestStatus.REJECTED);
         return friendRequestRepository.save(friendRequest);
+    }
+
+    public FriendRequest findById(Long id) {
+        return friendRequestRepository.findById(id).orElse(null);
     }
 
     // 其他业务逻辑
