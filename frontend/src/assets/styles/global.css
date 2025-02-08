@@ -37,6 +37,7 @@
     width: 100%;
 }
 
+.logoutButton:hover,
 .submitButton:hover {
     background-color: #0056b3;
 }

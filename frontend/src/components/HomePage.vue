@@ -3,7 +3,7 @@
   <div class="container">
     <h1>Welcome to the Home Page</h1>
     <p>Hello! You have successfully logged in.</p>
-    <img src="@/assets/icon.png" style="padding: 10px"  alt=""/>
+    <img src="@/assets/icon.png" style="padding: 10px" alt="" />
 
     <div>
       <button @click="logout" class="logoutButton">Logout</button>
@@ -17,8 +17,8 @@ export default {
   methods: {
     logout() {
       // 清除登录状态
-      localStorage.removeItem('token');
-      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem("token");
+      localStorage.removeItem("isLoggedIn");
       this.$router.push("/login"); // 跳转到登录页面
     },
   },
@@ -28,7 +28,7 @@ export default {
 <style scoped>
 .container {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 .logoutButton {
   padding: 10px 20px;

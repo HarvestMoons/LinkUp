@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from '@/components/HomePage'
 import LoginPage from '@/components/LoginPage'
 import RegisterPage from '@/components/RegisterPage'
+import FriendsPage from '@/components/FriendsPage'
 import { useToast } from 'vue-toastification';
 
 const routes = [
@@ -28,6 +29,12 @@ const routes = [
     name: 'login',
     component: LoginPage,
     meta: { title: '登录', guestOnly: true } // 标记仅允许未登录用户访问
+  },
+  {
+    path: '/friends',
+    name: 'friends',
+    component: FriendsPage,
+    meta: { title: '好友', requiresAuth: true } // 标记仅允许未登录用户访问
   }
 ]
 

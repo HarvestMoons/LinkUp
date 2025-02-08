@@ -41,15 +41,14 @@ public class HomeController {
             response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        }  catch (UsernameExistedException e) {
+        } catch (UsernameExistedException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 业务状态码 500
             response.put("message", "注册失败，请检查网络或稍后重试。"); // 错误信息
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-
 
     }
 
