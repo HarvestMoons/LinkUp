@@ -1,6 +1,7 @@
 package com.example.linkup.controller;
 
-import com.example.linkup.exception.UsernameExistedException;
+import com.example.linkup.config.Constant;
+import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.service.UserService;
 import com.example.linkup.config.ApiConstant;
 
@@ -17,20 +18,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-@Controller
+@RestController
+@RequestMapping(Constant.PUBLIC_AUTH_API)
 public class HomeController {
 
     private final UserService userService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    public HomeController(UserService userService) {
+    public HomeController(UserService userService,AuthenticationManager authenticationManager) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
     }
 
     // 处理用户注册
-    @PostMapping(ApiConstant.PUBLIC_AUTH_API + "/register")
+    @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");
@@ -41,7 +43,7 @@ public class HomeController {
             response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
             return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (UsernameExistedException e) {
+        } catch (ElementExistedException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
         } catch (Exception e) {
@@ -52,7 +54,7 @@ public class HomeController {
 
     }
 
-    @PostMapping(ApiConstant.PUBLIC_AUTH_API + "/login")
+    @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
         String password = body.get("password");

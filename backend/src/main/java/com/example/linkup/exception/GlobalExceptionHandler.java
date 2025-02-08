@@ -13,8 +13,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UsernameExistedException.class)
-    public ResponseEntity<Map<String, Object>> handleUsernameAlreadyExistsException(UsernameExistedException ex) {
+    @ExceptionHandler(ElementExistedException.class)
+    public ResponseEntity<Map<String, Object>> handleUsernameAlreadyExistsException(ElementExistedException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put("status", HttpStatus.BAD_REQUEST.value()); // HTTP 状态码 400
         response.put("message", ex.getMessage());
