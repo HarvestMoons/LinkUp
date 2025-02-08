@@ -1,6 +1,7 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.config.Constant;
+import com.example.linkup.dto.AuthRequestDto;
 import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.service.UserService;
 
@@ -19,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @RequestMapping(Constant.PUBLIC_AUTH_API)
 public class AuthController {
     //todo:添加注销账户功能
+    //todo:response的status被忽略
 
     private final UserService userService;
 
@@ -31,9 +33,9 @@ public class AuthController {
 
     // 处理用户注册
     @PostMapping("/register")
-    public ResponseEntity<Map<String, Object>> register(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<Map<String, Object>> register(@RequestBody AuthRequestDto authRequestDto) {
+        String username = authRequestDto.getUsername();
+        String password = authRequestDto.getPassword();
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -53,9 +55,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> body) {
-        String username = body.get("username");
-        String password = body.get("password");
+    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDto authRequestDto) {
+        String username = authRequestDto.getUsername();
+        String password = authRequestDto.getPassword();
         Map<String, Object> response = new HashMap<>();
         try {
             // 通过 Spring Security 进行身份验证
@@ -70,7 +72,7 @@ public class AuthController {
             response.put("message", "Login successful.");
             return ResponseEntity.status(HttpStatus.OK).body(response);
         } catch (Exception e) {
-            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             response.put("message", "登录失败，请检查网络或稍后重试。");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
