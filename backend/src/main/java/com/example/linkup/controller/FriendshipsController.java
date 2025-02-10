@@ -37,7 +37,7 @@ public class FriendshipsController {
     }
 
     // 获取某用户的所有好友
-    @GetMapping("/user/{userId}")
+    @GetMapping("/find/{userId}")
     public ResponseEntity<List<Friendships>> getFriends(@PathVariable Long userId) {
         User user = userService.findById(userId);
         user.setId(userId);
