@@ -1,6 +1,6 @@
 package com.example.linkup.controller;
 
-import com.example.linkup.config.Constant;
+import com.example.linkup.config.ApiConstant;
 import com.example.linkup.dto.AuthRequestDto;
 import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.service.UserService;
@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 @RestController
-@RequestMapping(Constant.PUBLIC_AUTH_API)
+@RequestMapping(ApiConstant.PUBLIC_AUTH_API)
 public class AuthController {
     //todo:添加注销账户功能
     //todo:response的status被忽略
@@ -71,6 +72,9 @@ public class AuthController {
             response.put("status", HttpStatus.OK.value());
             response.put("message", "Login successful.");
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        }  catch (AuthenticationException e) {
+            // 重新抛出异常，让全局异常处理器处理
+            throw e;
         } catch (Exception e) {
             response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             response.put("message", "登录失败，请检查网络或稍后重试。");
