@@ -20,8 +20,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @RestController
 @RequestMapping(ApiConstant.PUBLIC_AUTH_API)
 public class AuthController {
-    //todo:添加注销账户功能
-    //todo:response的status被忽略
+    // todo:添加注销账户功能
+    // todo:response的status被忽略
 
     private final UserService userService;
 
@@ -41,16 +41,14 @@ public class AuthController {
 
         try {
             userService.registerUser(username, password); // 调用服务层处理注册逻辑
-            response.put("status", HttpStatus.OK.value()); // HTTP状态码 200
             response.put("message", "Registration successful.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (ElementExistedException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
         } catch (Exception e) {
-            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value()); // 业务状态码 500
             response.put("message", "注册失败，请检查网络或稍后重试。"); // 错误信息
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -69,16 +67,14 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // 登录成功
-            response.put("status", HttpStatus.OK.value());
             response.put("message", "Login successful.");
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        }  catch (AuthenticationException e) {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (AuthenticationException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
         } catch (Exception e) {
-            response.put("status", HttpStatus.INTERNAL_SERVER_ERROR);
             response.put("message", "登录失败，请检查网络或稍后重试。");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

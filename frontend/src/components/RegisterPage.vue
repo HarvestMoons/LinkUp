@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import {showToast} from "@/utils/toast";
-import {useToast} from "vue-toastification";
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "RegisterPage",
@@ -104,25 +104,20 @@ export default {
       }
 
       try {
-        const response = await this.$axios.post(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/register`,
-          {
-            username: this.username,
-            password: this.password,
-          }
-        );
+        await this.$axios.post(`${this.$CONSTANT.PUBLIC_AUTH_API}/register`, {
+          username: this.username,
+          password: this.password,
+        });
 
-        // 假设后端返回 HTTP 状态码 200 表示成功
-        if (response.status === 200) {
-          showToast(this.toast, "注册成功！即将跳转到登录页面...", "success");
-          setTimeout(() => {
-            this.$router.push("/login"); // 明确跳转到登录页
-          }, 3000);
-        }
+        showToast(this.toast, "注册成功！即将跳转到登录页面...", "success");
+        setTimeout(() => {
+          this.$router.push("/login"); // 明确跳转到登录页
+        }, 3000);
       } catch (error) {
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
-          this.errorMessage = error.response.data.message || "服务器异常，请稍后再试。";
+          this.errorMessage =
+            error.response.data.message || "服务器异常，请稍后再试。";
         } else if (error.request) {
           // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
           this.errorMessage = "无法连接到服务器，请检查网络。";
