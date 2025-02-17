@@ -19,7 +19,6 @@ public class FriendshipsController {
     private final FriendshipsService friendshipsService;
     private final UserService userService;
 
-    @Autowired
     public FriendshipsController(FriendshipsService friendshipsService, UserService userService) {
         this.friendshipsService = friendshipsService;
         this.userService = userService;

@@ -19,7 +19,6 @@ public class TaskController {
     private final TaskService taskService;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public TaskController(TaskService taskService,  ModelMapper modelMapper) {
         this.taskService = taskService;
         this.modelMapper = modelMapper;

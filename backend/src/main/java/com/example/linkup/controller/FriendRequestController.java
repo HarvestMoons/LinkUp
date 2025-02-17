@@ -20,7 +20,6 @@ public class FriendRequestController {
     private final FriendRequestService friendRequestService;
     private final UserService userService;
 
-    @Autowired
     public FriendRequestController(FriendRequestService friendRequestService, UserService userService) {
         this.friendRequestService = friendRequestService;
         this.userService = userService;
