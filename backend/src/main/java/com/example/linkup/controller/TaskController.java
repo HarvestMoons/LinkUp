@@ -6,7 +6,6 @@ import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.Task;
 import com.example.linkup.service.TaskService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +18,15 @@ public class TaskController {
     private final TaskService taskService;
     private final ModelMapper modelMapper;
 
-    public TaskController(TaskService taskService,  ModelMapper modelMapper) {
+    public TaskController(TaskService taskService, ModelMapper modelMapper) {
         this.taskService = taskService;
         this.modelMapper = modelMapper;
     }
 
     // 创建任务
     @PostMapping("/create")
-    public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto){
-        Task task =taskService.createTask(modelMapper.map(taskDto, Task.class));
+    public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto) {
+        Task task = taskService.createTask(modelMapper.map(taskDto, Task.class));
         return ResponseEntity.status(201).body(task); // 返回 201 Created
     }
 
@@ -44,12 +43,13 @@ public class TaskController {
         // 调用 Service 层来获取符合条件的任务
         List<Task> tasks = taskService.getTasksByStatusAndPriority(taskStatus, taskPriority);
 
-        return ResponseEntity.ok(tasks);  // 返回符合条件的任务列表
+        return ResponseEntity.ok(tasks); // 返回符合条件的任务列表
     }
 
     // 更新任务
     @PutMapping("/update/{id}")
-    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody TaskDto taskDto) throws UnexpectedNullElementException {
+    public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody TaskDto taskDto)
+            throws UnexpectedNullElementException {
         // 查找现有任务
         Task existingTask = taskService.findById(id);
 
@@ -57,9 +57,9 @@ public class TaskController {
             throw new UnexpectedNullElementException("Task with id " + id + " does not exist.");
         }
         // 调用服务层更新任务
-        Task updatedTask =taskService.updateTask(id, modelMapper.map(taskDto, Task.class));
+        Task updatedTask = taskService.updateTask(id, modelMapper.map(taskDto, Task.class));
 
-        return ResponseEntity.ok(updatedTask);  // 返回更新后的任务
+        return ResponseEntity.ok(updatedTask); // 返回更新后的任务
     }
 
     // 获取所有任务
@@ -78,6 +78,6 @@ public class TaskController {
         }
 
         taskService.deleteTask(id); // 调用服务层删除任务
-        return ResponseEntity.noContent().build();  // 返回 204 No Content
+        return ResponseEntity.noContent().build(); // 返回 204 No Content
     }
 }

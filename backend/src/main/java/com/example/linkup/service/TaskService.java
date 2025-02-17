@@ -1,6 +1,5 @@
 package com.example.linkup.service;
 
-import com.example.linkup.dto.TaskDto;
 import com.example.linkup.model.Task;
 import com.example.linkup.repository.TaskRepository;
 import org.modelmapper.ModelMapper;
