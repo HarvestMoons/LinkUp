@@ -4,13 +4,10 @@ import com.example.linkup.dto.FriendRequestRequestDto;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.FriendRequest;
-import com.example.linkup.model.Friendships;
 import com.example.linkup.model.User;
 import com.example.linkup.service.FriendRequestService;
 import com.example.linkup.service.FriendshipsService;
 import com.example.linkup.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.sendgrid.SendGridProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
