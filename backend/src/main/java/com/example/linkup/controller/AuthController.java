@@ -3,6 +3,7 @@ package com.example.linkup.controller;
 import com.example.linkup.config.ApiConstant;
 import com.example.linkup.dto.AuthRequestDto;
 import com.example.linkup.exception.ElementExistedException;
+import com.example.linkup.model.User;
 import com.example.linkup.service.UserService;
 
 import java.util.HashMap;
@@ -11,6 +12,8 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,6 +78,22 @@ public class AuthController {
         } catch (Exception e) {
             response.put("message", "登录失败，请检查网络或稍后重试。");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // 获取当前用户的用户名
+    @GetMapping("/info")
+    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            // 返回当前登录用户信息
+            User user = userService.findByUsername(userDetails.getUsername());
+            if (user != null) {
+                return ResponseEntity.ok(user);  // 返回 HTTP 200 和用户信息
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 用户不存在时返回 404
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // 未登录时返回 401
         }
     }
 }
