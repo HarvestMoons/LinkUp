@@ -1,11 +1,12 @@
 package com.example.linkup.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AuthRequestDto {
+    @NotNull
     private String username;
+    @NotNull
     private String password;
 }

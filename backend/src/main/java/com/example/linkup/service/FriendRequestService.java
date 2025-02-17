@@ -63,6 +63,4 @@ public class FriendRequestService {
     public FriendRequest findById(Long id) {
         return friendRequestRepository.findById(id).orElse(null);
     }
-
-    // 其他业务逻辑
 }
