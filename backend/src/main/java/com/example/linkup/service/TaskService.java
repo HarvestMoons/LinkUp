@@ -14,11 +14,9 @@ import java.util.Optional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final ModelMapper modelMapper;
 
     public TaskService(TaskRepository taskRepository, ModelMapper modelMapper) {
         this.taskRepository = taskRepository;
-        this.modelMapper = modelMapper;
     }
 
     // 创建任务

@@ -1,11 +1,11 @@
 package com.example.linkup.service;
 
+import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.model.Friendships;
 import com.example.linkup.model.User;
 import com.example.linkup.repository.FriendshipsRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,10 +23,9 @@ public class FriendshipsService {
     // 添加好友：确保无重复
     @Transactional
     public Friendships addFriend(User user, User friend) {
-        // findFriendship先按 user -> friend 查找，如果没找到，再查 friend -> user
         Friendships existingFriendship = findFriendship(user, friend);
         if (existingFriendship != null) {
-            throw new IllegalStateException("Already friends.");
+            throw new ElementExistedException("Already friends.");
         }
 
         // 创建好友关系
@@ -40,6 +39,7 @@ public class FriendshipsService {
     }
 
     // 根据用户和好友查找好友关系，先查 (user, friend)，再查 (friend, user)，可能返回空值
+    // 注：数据库的约束已经确保了(user, friend)组合的唯一性
     public Friendships findFriendship(User user, User friend) {
         // 查找顺序 (user, friend)
         Friendships friendship = friendshipsRepository.findByUserAndFriend(user, friend);
