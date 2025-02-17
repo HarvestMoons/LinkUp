@@ -16,7 +16,6 @@ public class FriendRequestService {
 
     private final FriendRequestRepository friendRequestRepository;
 
-    @Autowired
     public FriendRequestService(FriendRequestRepository friendRequestRepository) {
         this.friendRequestRepository = friendRequestRepository;
     }
