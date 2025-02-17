@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/friend-requests")
+@RequestMapping("/friend-requests")
 public class FriendRequestController {
 
     private final FriendRequestService friendRequestService;
@@ -32,7 +32,8 @@ public class FriendRequestController {
 
     // 发送好友请求
     @PostMapping("/send")
-    public ResponseEntity<FriendRequest> sendFriendRequest(@RequestBody FriendRequestRequestDto requestDto) throws ElementNotExistException, UnexpectedNullElementException {
+    public ResponseEntity<FriendRequest> sendFriendRequest(@RequestBody FriendRequestRequestDto requestDto)
+            throws ElementNotExistException, UnexpectedNullElementException {
         // 获取发送者和接收者
         User sender = userService.findById(requestDto.getSenderId());
         User receiver = userService.findById(requestDto.getReceiverId());
@@ -57,16 +58,18 @@ public class FriendRequestController {
         FriendRequest.RequestStatus requestStatus = FriendRequest.RequestStatus.valueOf(status.toUpperCase());
 
         // 获取接收者的 User 对象（可以通过 UserService 查询）
-        User receiver = userService.findById(receiverId);  // 假设 UserService 中有 findById 方法
+        User receiver = userService.findById(receiverId); // 假设 UserService 中有 findById 方法
 
         // 调用 Service 层来获取接收者和状态的好友请求
-        List<FriendRequest> friendRequests = friendRequestService.getFriendRequestsByReceiverAndStatus(receiver, requestStatus);
+        List<FriendRequest> friendRequests = friendRequestService.getFriendRequestsByReceiverAndStatus(receiver,
+                requestStatus);
 
-        return ResponseEntity.ok(friendRequests);  // 返回符合条件的好友请求
+        return ResponseEntity.ok(friendRequests); // 返回符合条件的好友请求
     }
 
     @PostMapping("/accept/{id}")
-    public ResponseEntity<FriendRequest> acceptFriendRequest(@PathVariable("id") Long id) throws UnexpectedNullElementException {
+    public ResponseEntity<FriendRequest> acceptFriendRequest(@PathVariable("id") Long id)
+            throws UnexpectedNullElementException {
         // 查找特定的好友请求
         FriendRequest friendRequest = friendRequestService.findById(id);
 
@@ -89,7 +92,6 @@ public class FriendRequestController {
 
         return ResponseEntity.ok(updatedRequest);
     }
-
 
     // 拒绝好友请求
     @PostMapping("/reject/{id}")
