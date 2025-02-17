@@ -24,7 +24,8 @@ public class FriendRequestController {
     private final UserService userService;
     private final FriendshipsService friendshipsService;
 
-    public FriendRequestController(FriendRequestService friendRequestService, UserService userService, FriendshipsService friendshipsService) {
+    public FriendRequestController(FriendRequestService friendRequestService, UserService userService,
+            FriendshipsService friendshipsService) {
         this.friendRequestService = friendRequestService;
         this.userService = userService;
         this.friendshipsService = friendshipsService;

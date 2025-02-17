@@ -5,10 +5,12 @@ import com.example.linkup.dto.AuthRequestDto;
 import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.model.User;
 import com.example.linkup.service.UserService;
+import com.example.linkup.util.JwtUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -27,12 +29,13 @@ public class AuthController {
     // todo:response的status被忽略
 
     private final UserService userService;
-
     private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
-    public AuthController(UserService userService, AuthenticationManager authenticationManager) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.jwtUtils = jwtUtils;
     }
 
     // 处理用户注册
@@ -68,9 +71,10 @@ public class AuthController {
 
             // 将认证信息保存到 SecurityContext 中
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            String jwtToken = jwtUtils.generateJwtToken(authentication);
             // 登录成功
             response.put("message", "Login successful.");
+            response.put("token", jwtToken);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AuthenticationException e) {
             // 重新抛出异常，让全局异常处理器处理
@@ -88,12 +92,12 @@ public class AuthController {
             // 返回当前登录用户信息
             User user = userService.findByUsername(userDetails.getUsername());
             if (user != null) {
-                return ResponseEntity.ok(user);  // 返回 HTTP 200 和用户信息
+                return ResponseEntity.ok(user); // 返回 HTTP 200 和用户信息
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 用户不存在时返回 404
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 用户不存在时返回 404
             }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);  // 未登录时返回 401
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 未登录时返回 401
         }
     }
 }
