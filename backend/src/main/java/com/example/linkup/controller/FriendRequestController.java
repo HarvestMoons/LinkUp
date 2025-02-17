@@ -4,10 +4,13 @@ import com.example.linkup.dto.FriendRequestRequestDto;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.FriendRequest;
+import com.example.linkup.model.Friendships;
 import com.example.linkup.model.User;
 import com.example.linkup.service.FriendRequestService;
+import com.example.linkup.service.FriendshipsService;
 import com.example.linkup.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.sendgrid.SendGridProperties;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +22,12 @@ public class FriendRequestController {
 
     private final FriendRequestService friendRequestService;
     private final UserService userService;
+    private final FriendshipsService friendshipsService;
 
-    public FriendRequestController(FriendRequestService friendRequestService, UserService userService) {
+    public FriendRequestController(FriendRequestService friendRequestService, UserService userService, FriendshipsService friendshipsService) {
         this.friendRequestService = friendRequestService;
         this.userService = userService;
+        this.friendshipsService = friendshipsService;
     }
 
     // 发送好友请求
@@ -32,11 +37,11 @@ public class FriendRequestController {
         User sender = userService.findById(requestDto.getSenderId());
         User receiver = userService.findById(requestDto.getReceiverId());
 
-        if(sender==null){
+        if (sender == null) {
             throw new UnexpectedNullElementException();
         }
-        if(receiver==null) {
-            throw new ElementNotExistException("id"+requestDto.getReceiverId()+"对应的用户不存在！");
+        if (receiver == null) {
+            throw new ElementNotExistException("id" + requestDto.getReceiverId() + "对应的用户不存在！");
         }
 
         FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
@@ -65,7 +70,7 @@ public class FriendRequestController {
         // 查找特定的好友请求
         FriendRequest friendRequest = friendRequestService.findById(id);
 
-        if(friendRequest==null) {
+        if (friendRequest == null) {
             throw new UnexpectedNullElementException();
         }
 
@@ -76,6 +81,12 @@ public class FriendRequestController {
 
         // 调用服务层来接受好友请求
         FriendRequest updatedRequest = friendRequestService.acceptFriendRequest(friendRequest);
+
+        // 好友请求通过后，调用 service 层方法添加好友关系
+        User sender = friendRequest.getSender();
+        User receiver = friendRequest.getReceiver();
+        friendshipsService.addFriend(sender, receiver);
+
         return ResponseEntity.ok(updatedRequest);
     }
 
