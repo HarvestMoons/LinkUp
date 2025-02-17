@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/friendships")
+@RequestMapping("/friendships")
 public class FriendshipsController {
 
     private final FriendshipsService friendshipsService;
@@ -28,8 +28,8 @@ public class FriendshipsController {
     // 添加好友
     @PostMapping("/add")
     public ResponseEntity<Friendships> addFriend(@RequestBody FriendshipsDto requestDto) {
-        User user = requestDto.getUser();      // 获取请求体中的当前用户
-        User friend = requestDto.getFriend();  // 获取请求体中的目标好友
+        User user = requestDto.getUser(); // 获取请求体中的当前用户
+        User friend = requestDto.getFriend(); // 获取请求体中的目标好友
 
         // 调用 service 层方法添加好友关系
         Friendships friendship = friendshipsService.addFriend(user, friend);
