@@ -24,6 +24,11 @@
             :key="request.id"
             class="friendRequestItem"
           >
+            <img
+              :src="request.avatar || require('@/assets/icon.png')"
+              alt="头像"
+              class="friendAvatar"
+            />
             <span class="friendNickname"
               >{{ request.username }} (#{{ request.id }}) 想加你为好友</span
             >
@@ -103,11 +108,13 @@ export default {
             this.friends.push({
               nickname: friendship.friend.username,
               id: friendship.friend.id,
+              avatar: friendship.friend.avatar,
             });
           } else {
             this.friends.push({
               nickname: friendship.user.username,
               id: friendship.user.id,
+              avatar: friendship.user.avatar,
             });
           }
         });
