@@ -25,13 +25,14 @@
             class="friendRequestItem"
           >
             <img
-              :src="request.avatar || require('@/assets/icon.png')"
+              :src="request.sender.avatar || require('@/assets/icon.png')"
               alt="头像"
               class="friendAvatar"
             />
-            <span class="friendNickname"
-              >{{ request.username }} (#{{ request.id }}) 想加你为好友</span
-            >
+            <span class="friendNickname">
+              {{ request.sender.username }} (#{{ request.sender.id }})
+              想加你为好友
+            </span>
             <button
               class="acceptFriendButton"
               @click="acceptRequest(request.id)"
@@ -134,7 +135,7 @@ export default {
         const response = await this.$axios.get(
           `/friend-requests/receiver/${responseUserId.data.id}/status/pending`
         );
-        this.pendingRequests = response.data.map((request) => request.sender); // 获取待处理的好友申请
+        this.pendingRequests = response.data; // 获取待处理的好友申请
       } catch (error) {
         console.error("获取好友申请数据失败:", error);
       } finally {
