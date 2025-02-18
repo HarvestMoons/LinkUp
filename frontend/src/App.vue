@@ -1,6 +1,16 @@
 <template>
   <div class="navContainer">
     <nav>
+      <div class="userContainer" v-if="isAuthPage">
+        <img
+          :src="user.avatar || require('@/assets/icon.png')"
+          alt="头像"
+          class="friendAvatar"
+        />
+        <span class="friendNickname"
+          >{{ user.username }} (#{{ user.id }})
+        </span>
+      </div>
       <router-link to="/">Home</router-link> |
       <router-link to="/friends">Friends</router-link>
       <button v-if="isAuthPage" @click="logout" class="logoutButton">
@@ -13,9 +23,17 @@
 
 <script>
 export default {
+  data() {
+    return {
+      user: [],
+    };
+  },
   computed: {
     // 判断当前路由是否为 /login 或 /register
     isAuthPage() {
+      if (this.$route.meta.requiresAuth) {
+        this.fetchUserData();
+      }
       return this.$route.meta.requiresAuth;
     },
   },
@@ -25,6 +43,17 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("isLoggedIn");
       this.$router.push("/login"); // 跳转到登录页面
+    },
+    async fetchUserData() {
+      try {
+        const responseUserId = await this.$axios.get(
+          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+        );
+        this.user = responseUserId.data;
+        console.log(this.user);
+      } catch (error) {
+        console.error("获取用户数据失败:", error);
+      }
     },
   },
 };
@@ -40,14 +69,14 @@ export default {
 }
 
 .navContainer {
-  display: flex;
-  align-items: center;
-  height: 30px;
   padding: 30px;
 }
 
 nav {
-  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
+  justify-content: center; /* 水平居中对齐 */
 }
 
 nav a {
@@ -70,5 +99,17 @@ nav a.router-link-exact-active {
   border-radius: 5px;
   cursor: pointer;
   width: 80px;
+}
+
+.friendAvatar {
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1.25%; /* 头像和昵称之间的间距 */
+}
+
+.userContainer {
+  display: flex;
+  align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
+  justify-content: center; /* 水平居中对齐 */
 }
 </style>
