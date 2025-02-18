@@ -65,7 +65,6 @@ public class FriendRequestController {
         return ResponseEntity.ok(friendRequests); // 返回符合条件的好友请求
     }
 
-    // TODO: 接收后形成双向的好友关系 或者 在获取好友列表时user和friend两列都查找
     @PostMapping("/accept/{id}")
     public ResponseEntity<FriendRequest> acceptFriendRequest(@PathVariable("id") Long id)
             throws UnexpectedNullElementException {

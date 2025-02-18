@@ -53,7 +53,9 @@ public class FriendshipsService {
 
     // 获取某用户的所有好友
     public List<Friendships> getFriends(User user) {
-        return friendshipsRepository.findByUser(user);
+        List<Friendships> friendList = friendshipsRepository.findByUser(user);
+        friendList.addAll(friendshipsRepository.findByFriend(user));
+        return friendList;
     }
 
     // 删除好友

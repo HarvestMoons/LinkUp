@@ -24,7 +24,9 @@
             :key="request.id"
             class="friendRequestItem"
           >
-            <span class="friendNickname">#{{ request.id }} 想加你为好友</span>
+            <span class="friendNickname"
+              >{{ request.username }} (#{{ request.id }}) 想加你为好友</span
+            >
             <button
               class="acceptFriendButton"
               @click="acceptRequest(request.id)"
@@ -48,8 +50,14 @@
       <div v-else>
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
-            <img :src="friend.avatar" alt="头像" class="friendAvatar" />
-            <span class="friendNickname">{{ friend.nickname }}</span>
+            <img
+              :src="friend.avatar || require('@/assets/icon.png')"
+              alt="头像"
+              class="friendAvatar"
+            />
+            <span class="friendNickname"
+              >{{ friend.nickname }} (#{{ friend.id }})</span
+            >
           </li>
         </ul>
       </div>
@@ -83,14 +91,27 @@ export default {
   methods: {
     async fetchFriends() {
       try {
+        this.friends = [];
         const responseUserId = await this.$axios.get(
           `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
         );
         const response = await this.$axios.get(
           `/friendships/find/${responseUserId.data.id}`
-        ); // 假设从 store 获取当前用户 ID
-        console.log(response.data);
-        this.friends = response.data; // 获取好友列表
+        );
+        response.data.forEach((friendship) => {
+          if (friendship.user.id == responseUserId.data.id) {
+            this.friends.push({
+              nickname: friendship.friend.username,
+              id: friendship.friend.id,
+            });
+          } else {
+            this.friends.push({
+              nickname: friendship.user.username,
+              id: friendship.user.id,
+            });
+          }
+        });
+        return this.friends;
       } catch (error) {
         console.error("获取好友数据失败:", error);
       } finally {
@@ -98,7 +119,6 @@ export default {
       }
     },
 
-    // TODO: 需要通过id查找到用户名
     async fetchPendingRequests() {
       try {
         const responseUserId = await this.$axios.get(
@@ -107,8 +127,7 @@ export default {
         const response = await this.$axios.get(
           `/friend-requests/receiver/${responseUserId.data.id}/status/pending`
         );
-        console.log(response.data);
-        this.pendingRequests = response.data; // 获取待处理的好友申请
+        this.pendingRequests = response.data.map((request) => request.sender); // 获取待处理的好友申请
       } catch (error) {
         console.error("获取好友申请数据失败:", error);
       } finally {

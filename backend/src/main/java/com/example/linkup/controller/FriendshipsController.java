@@ -34,7 +34,6 @@ public class FriendshipsController {
         return ResponseEntity.ok(friendship);
     }
 
-    // TODO: 不应该返回friends类，而应该返回json格式，包含昵称等
     // 获取某用户的所有好友
     @GetMapping("/find/{userId}")
     public ResponseEntity<List<Friendships>> getFriends(@PathVariable Long userId) {
