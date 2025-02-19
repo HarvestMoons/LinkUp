@@ -3,7 +3,7 @@
   <div class="container">
     <h1>Welcome to the Home Page</h1>
     <p>Hello! You have successfully logged in.</p>
-    <img src="@/assets/icon.png" style="padding: 10px" alt="" />
+    <img src="../assets/images/icon.png" style="padding: 10px" alt="" />
 
     <div>
       <button @click="logout" class="logoutButton">Logout</button>
