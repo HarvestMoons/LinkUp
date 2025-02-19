@@ -3,6 +3,7 @@ import HomePage from '@/components/HomePage'
 import LoginPage from '@/components/LoginPage'
 import RegisterPage from '@/components/RegisterPage'
 import FriendsPage from '@/components/FriendsPage'
+import TasksPage from '@/components/TasksPage'
 import { useToast } from 'vue-toastification';
 
 const routes = [
@@ -35,6 +36,12 @@ const routes = [
     name: 'friends',
     component: FriendsPage,
     meta: { title: '好友', requiresAuth: true } // 标记仅允许未登录用户访问
+  },
+  {
+    path: '/tasks',
+    name: 'tasks',
+    component: TasksPage,
+    meta: { title: '任务', requiresAuth: true } // 标记仅允许未登录用户访问
   }
 ]
 
