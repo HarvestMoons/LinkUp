@@ -64,6 +64,12 @@
             <span class="friendNickname"
               >{{ friend.nickname }} (#{{ friend.id }})</span
             >
+            <button
+              class="deleteFriendButton"
+              @click="deleteFriend(friend.friend)"
+            >
+              删除好友
+            </button>
           </li>
         </ul>
       </div>
@@ -110,12 +116,14 @@ export default {
               nickname: friendship.friend.username,
               id: friendship.friend.id,
               avatar: friendship.friend.avatar,
+              friend: friendship.friend,
             });
           } else {
             this.friends.push({
               nickname: friendship.user.username,
               id: friendship.user.id,
               avatar: friendship.user.avatar,
+              friend: friendship.user,
             });
           }
         });
@@ -200,6 +208,28 @@ export default {
         showToast(this.toast, "拒绝好友申请失败", "error");
       }
     },
+
+    async deleteFriend(friend) {
+      try {
+        const responseUserId = await this.$axios.get(
+          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+        );
+        await this.$axios.delete(`/friendships/remove`, {
+          data: {
+            user: responseUserId.data,
+            friend: friend,
+          },
+        });
+
+        // 更新好友列表
+        this.fetchFriends();
+
+        showToast(this.toast, "已成功删除好友", "success");
+      } catch (error) {
+        console.error("删除好友失败:", error);
+        showToast(this.toast, "删除好友失败", "error");
+      }
+    },
   },
 };
 </script>
@@ -249,7 +279,8 @@ export default {
 
 .addFriendButton,
 .acceptFriendButton,
-.rejectFriendButton {
+.rejectFriendButton,
+.deleteFriendButton {
   margin-left: 1%;
   padding: 10px 20px;
   background-color: #007bff;
