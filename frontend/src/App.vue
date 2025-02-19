@@ -12,7 +12,8 @@
         </span>
       </div>
       <router-link to="/">Home</router-link> |
-      <router-link to="/friends">Friends</router-link>
+      <router-link to="/friends">Friends</router-link> |
+      <router-link to="/tasks">Tasks</router-link>
       <button v-if="isAuthPage" @click="logout" class="logoutButton">
         Logout
       </button>
