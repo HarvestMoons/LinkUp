@@ -1,10 +1,13 @@
 package com.example.linkup.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -28,11 +31,14 @@ public class Task {
     @Column(nullable = false)
     private Status status;
 
-    private LocalDateTime dueDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date dueDate;
 
+    @JsonIgnore
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     public enum Priority {

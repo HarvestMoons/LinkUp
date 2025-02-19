@@ -1,4 +1,5 @@
 package com.example.linkup.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +22,11 @@ public class Friendships {
     @JoinColumn(name = "friend_id", referencedColumnName = "id", nullable = false)
     private User friend;
 
+    @JsonIgnore
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @Column()
     private LocalDateTime updatedAt;
 }
