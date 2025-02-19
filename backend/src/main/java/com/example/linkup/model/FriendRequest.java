@@ -1,5 +1,6 @@
 package com.example.linkup.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,9 +28,11 @@ public class FriendRequest {
     @Column(nullable = false)
     private RequestStatus status;  // 请求状态（PENDING, ACCEPTED, REJECTED）
 
+    @JsonIgnore
     @Column(updatable = false)
     private LocalDateTime createdAt;  // 创建时间
 
+    @JsonIgnore
     @Column()
     private LocalDateTime updatedAt;  // 更新时间
 
