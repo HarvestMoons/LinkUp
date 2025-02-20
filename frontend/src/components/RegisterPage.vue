@@ -45,6 +45,7 @@
 <script>
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import {MAX_STRING_LENGTH} from "@/config/constants";
 
 export default {
   name: "RegisterPage",
@@ -92,6 +93,10 @@ export default {
       }
       if (!this.validateUsername(this.username)) {
         this.errorMessage = "用户名只能包含字母、数字和下划线！";
+        return;
+      }
+      if(this.username.length>MAX_STRING_LENGTH||this.password>MAX_STRING_LENGTH){
+        this.errorMessage = "用户名或密码过长！";
         return;
       }
       if (this.password !== this.confirmPassword) {

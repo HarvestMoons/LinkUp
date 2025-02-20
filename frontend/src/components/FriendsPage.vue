@@ -25,7 +25,7 @@
             class="friendRequestItem"
           >
             <img
-              :src="request.sender.avatar || require('@/assets/icon.png')"
+              :src="request.sender.avatar || require('@/assets/images/icon.png')"
               alt="头像"
               class="friendAvatar"
             />
@@ -51,13 +51,13 @@
     </div>
     <div class="friendListContainer">
       <div v-if="friendListLoading" class="loading">加载中...</div>
-      <div v-else-if="friends.length == 0" class="loading">无好友</div>
+      <div v-else-if="friends.length === 0" class="loading">无好友</div>
       <!-- 显示好友列表 -->
       <div v-else>
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
             <img
-              :src="friend.avatar || require('@/assets/icon.png')"
+              :src="friend.avatar || require('@/assets/images/icon.png')"
               alt="头像"
               class="friendAvatar"
             />
@@ -111,7 +111,7 @@ export default {
           `/friendships/find/${responseUserId.data.id}`
         );
         response.data.forEach((friendship) => {
-          if (friendship.user.id == responseUserId.data.id) {
+          if (friendship.user.id === responseUserId.data.id) {
             this.friends.push({
               nickname: friendship.friend.username,
               id: friendship.friend.id,
@@ -182,8 +182,8 @@ export default {
         await this.$axios.post(`/friend-requests/accept/${requestId}`);
 
         // 更新待处理申请和好友列表
-        this.fetchPendingRequests();
-        this.fetchFriends();
+        await this.fetchPendingRequests();
+        await this.fetchFriends();
 
         // 提示用户已成功接收好友请求
         showToast(this.toast, "已成功接收好友申请", "success");
@@ -199,7 +199,7 @@ export default {
         await this.$axios.post(`/friend-requests/reject/${requestId}`);
 
         // 更新待处理申请
-        this.fetchPendingRequests();
+        await this.fetchPendingRequests();
 
         // 提示用户已成功拒绝好友请求
         showToast(this.toast, "已成功拒绝好友申请", "success");

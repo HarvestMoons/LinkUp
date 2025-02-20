@@ -1,4 +1,5 @@
 package com.example.linkup.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,17 +14,19 @@ public class Friendships {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)  // 级联操作配置
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)  // 级联操作配置
+    @ManyToOne
     @JoinColumn(name = "friend_id", referencedColumnName = "id", nullable = false)
     private User friend;
 
+    @JsonIgnore
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @Column()
     private LocalDateTime updatedAt;
 }

@@ -3,7 +3,7 @@
     <nav>
       <div class="userContainer" v-if="isAuthPage">
         <img
-          :src="user.avatar || require('@/assets/icon.png')"
+          :src="user.avatar || require('@/assets/images/icon.png')"
           alt="头像"
           class="friendAvatar"
         />
