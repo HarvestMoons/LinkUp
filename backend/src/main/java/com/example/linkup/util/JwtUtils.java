@@ -33,7 +33,7 @@ public class JwtUtils {
 
     /**
      * 生成 JWT Token
-     * 
+     *
      * @param authentication 用户认证信息
      * @return 生成的 Token 字符串
      */
@@ -49,7 +49,7 @@ public class JwtUtils {
 
     /**
      * 从请求头中解析 JWT Token
-     * 
+     *
      * @param request HTTP 请求对象
      * @return Token 字符串（无 "Bearer " 前缀）
      */
@@ -63,7 +63,7 @@ public class JwtUtils {
 
     /**
      * 验证 JWT Token 是否有效
-     * 
+     *
      * @param token JWT Token
      * @return true=有效，false=无效
      */
@@ -90,7 +90,7 @@ public class JwtUtils {
 
     /**
      * 从 JWT Token 中提取用户名
-     * 
+     *
      * @param token JWT Token
      * @return 用户名（即 Token 主题）
      */
