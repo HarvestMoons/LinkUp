@@ -48,20 +48,6 @@ public class JwtUtils {
     }
 
     /**
-     * 从请求头中解析 JWT Token
-     *
-     * @param request HTTP 请求对象
-     * @return Token 字符串（无 "Bearer " 前缀）
-     */
-    public String parseJwtToken(jakarta.servlet.http.HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7); // 去除 "Bearer " 前缀
-        }
-        return null;
-    }
-
-    /**
      * 验证 JWT Token 是否有效
      *
      * @param token JWT Token

@@ -56,7 +56,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 6. 继续执行后续过滤器
         filterChain.doFilter(request, response);
     }
-
+    /**
+     * 从请求头中解析 JWT Token
+     *
+     * @param request HTTP 请求对象
+     * @return Token 字符串（无 "Bearer " 前缀）
+     */
     private String parseJwt(HttpServletRequest request) {
         // 从 Authorization 头中提取 Token
         String headerAuth = request.getHeader("Authorization");
