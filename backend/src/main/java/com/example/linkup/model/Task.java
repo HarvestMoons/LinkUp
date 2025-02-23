@@ -31,8 +31,8 @@ public class Task {
     @Column(nullable = false)
     private Status status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date dueDate;
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dueDate;
 
     @JsonIgnore
     @Column(updatable = false)

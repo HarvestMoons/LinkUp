@@ -20,6 +20,7 @@ public class TaskService {
 
     // 创建任务
     public Task createTask(Task task) {
+        System.out.println(task.getDescription());
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);

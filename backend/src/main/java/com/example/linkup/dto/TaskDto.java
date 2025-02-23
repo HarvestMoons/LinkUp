@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import com.example.linkup.model.Task;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.util.Date;
 
 @Data
 public class TaskDto {

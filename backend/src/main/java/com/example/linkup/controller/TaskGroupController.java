@@ -2,7 +2,6 @@ package com.example.linkup.controller;
 
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskGroupService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +50,6 @@ public class TaskGroupController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTaskGroup(@PathVariable("id") Long id) {
         taskGroupService.deleteTaskGroup(id);
-        return ResponseEntity.noContent().build();  // 返回 204 No Content
+        return ResponseEntity.noContent().build(); // 返回 204 No Content
     }
 }
