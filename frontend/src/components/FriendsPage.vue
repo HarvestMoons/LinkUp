@@ -51,58 +51,7 @@
         </ul>
       </div>
     </div>
-    <!-- 添加好友输入框和按钮 -->
-    <div class="addFriendContainer">
-      <input
-        v-model="friendId"
-        type="text"
-        placeholder="输入用户Id"
-        class="addFriendInput"
-      />
-      <button @click="sendFriendRequest" class="addFriendButton">
-        添加好友
-      </button>
-    </div>
-    <!-- 好友申请列表 -->
-    <div v-if="pendingRequests.length > 0" class="friendRequestContainer">
-      <div v-if="friendRequestLoading" class="loading">加载中...</div>
-      <div v-else>
-        <ul class="friendRequestList">
-          <li
-            v-for="request in pendingRequests"
-            :key="request.id"
-            class="friendRequestItem"
-          >
-            <img
-              :src="
-                request.sender.avatar || require('@/assets/images/icon.png')
-              "
-              alt="头像"
-              class="friendAvatar"
-            />
-            <span class="friendNickname">
-              {{ request.sender.username }} (#{{ request.sender.id }})
-              想加你为好友
-            </span>
-            <button
-              class="acceptFriendButton"
-              @click="acceptRequest(request.id)"
-            >
-              接收
-            </button>
-            <button
-              class="rejectFriendButton"
-              @click="rejectRequest(request.id)"
-            >
-              拒绝
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
     <div class="friendListContainer">
-      <div v-if="friendListLoading" class="loading">加载中...</div>
-      <div v-else-if="friends.length === 0" class="loading">无好友</div>
       <div v-if="friendListLoading" class="loading">加载中...</div>
       <div v-else-if="friends.length === 0" class="loading">无好友</div>
       <!-- 显示好友列表 -->
