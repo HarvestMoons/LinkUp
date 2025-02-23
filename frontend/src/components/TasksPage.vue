@@ -74,8 +74,8 @@
 
     <div class="tasksContainer">
       <div v-if="taskListLoading" class="loading">加载中...</div>
-      <div v-else-if="tasks.length === 0" class="noTask">无任务</div>
-      <!-- 显示好友列表 -->
+      <div v-else-if="tasks.length === 0" class="loading">无任务</div>
+      <!-- 显示任务列表 -->
       <div v-else>
         <ul class="tasksList">
           <li
@@ -234,7 +234,7 @@ export default {
   margin: 0;
 }
 
-.noTask,
+.loading,
 .taskItem {
   width: 600px;
   margin: 25px;

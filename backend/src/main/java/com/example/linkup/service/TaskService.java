@@ -2,7 +2,7 @@ package com.example.linkup.service;
 
 import com.example.linkup.model.Task;
 import com.example.linkup.repository.TaskRepository;
-import org.modelmapper.ModelMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,11 +14,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskRepository, ModelMapper modelMapper) {
+    public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
     // 创建任务
+    @Transactional
     public Task createTask(Task task) {
         System.out.println(task.getDescription());
         task.setCreatedAt(LocalDateTime.now());
@@ -27,6 +28,7 @@ public class TaskService {
     }
 
     // 更新任务
+    @Transactional
     public Task updateTask(Long id, Task task) {
         Optional<Task> existingTask = taskRepository.findById(id);
         if (existingTask.isPresent()) {
@@ -63,6 +65,7 @@ public class TaskService {
     }
 
     // 删除任务
+    @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }

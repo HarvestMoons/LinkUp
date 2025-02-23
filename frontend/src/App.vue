@@ -11,8 +11,10 @@
           >{{ user.username }} (#{{ user.id }})
         </span>
       </div>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/friends">Friends</router-link> |
+      <router-link to="/">Home</router-link>
+      |
+      <router-link to="/friends">Friends</router-link>
+      |
       <router-link to="/tasks">Tasks</router-link>
       <button v-if="isAuthPage" @click="logout" class="logoutButton">
         Logout
@@ -54,6 +56,10 @@ export default {
         console.log(this.user);
       } catch (error) {
         console.error("获取用户数据失败:", error);
+        // 捕获 401 错误（JWT 过期或无效）
+        if (error.response && error.response.status === 401) {
+          this.logout();
+        }
       }
     },
   },
