@@ -91,9 +91,26 @@
                 <span class="taskTitle">{{ task.title }}</span>
                 <span
                   class="taskStatus"
-                  :class="task.status ? 'completed' : 'pending'"
-                  >{{ task.status ? "Completed" : "Pending" }}</span
+                  :class="{
+                    todo: task.status === 'TODO',
+                    inProgress: task.status === 'IN_PROGRESS',
+                    completed: task.status === 'COMPLETED',
+                    archived: task.status === 'ARCHIVED',
+                    overdue: isOverdue(task), // 判断是否逾期
+                  }"
                 >
+                  {{
+                    task.status === "TODO"
+                      ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
+                      : task.status === "IN_PROGRESS"
+                      ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
+                      : task.status === "COMPLETED"
+                      ? "Completed"
+                      : task.status === "ARCHIVED"
+                      ? "Archived"
+                      : "Unknown"
+                  }}
+                </span>
                 <span class="taskDueDate">{{ task.dueDate }}</span>
               </div>
               <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
@@ -172,6 +189,7 @@ export default {
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
+        this.fetchTasks();
       } catch (error) {
         console.error("创建任务失败:", error);
         showToast(this.toast, "创建任务失败", "error");
@@ -184,9 +202,20 @@ export default {
         title: "",
         description: "",
         priority: "MEDIUM",
-        status: "PENDING",
+        status: "TODO",
         dueDate: "",
       };
+    },
+
+    isOverdue(task) {
+      const now = new Date();
+      const dueDate = new Date(task.dueDate);
+      // 判断任务是否逾期且未完成或未归档
+      return (
+        dueDate < now &&
+        task.status !== "COMPLETED" &&
+        task.status !== "ARCHIVED"
+      );
     },
 
     // 过渡动画开始前
@@ -270,10 +299,26 @@ export default {
 
 .taskStatus {
   font-weight: bold;
+  color: black;
+}
+
+.taskStatus.todo {
+  color: blue;
+}
+
+.taskStatus.inProgress {
+  color: orange;
+}
+
+.taskStatus.completed {
   color: green;
 }
 
-.taskStatus.pending {
+.taskStatus.archived {
+  color: gray;
+}
+
+.taskStatus.overdue {
   color: red;
 }
 
