@@ -111,14 +111,12 @@
                       : "Unknown"
                   }}
                 </span>
-                <span class="taskDueDate">{{ task.dueDate }}</span>
+                <span class="taskDueDate">{{ formatDate(task.dueDate) }}</span>
               </div>
               <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
               <div class="taskDetails">
                 <p class="taskDescription">{{ task.description }}</p>
                 <p class="taskPriority">Priority: {{ task.priority }}</p>
-                <p class="taskCreateTime">Created: {{ task.createdAt }}</p>
-                <p class="taskUpdateTime">Updated: {{ task.updatedAt }}</p>
               </div>
             </div>
           </li>
@@ -163,6 +161,13 @@ export default {
       }
     },
 
+    formatDate(date) {
+      if (date == null) {
+        return;
+      }
+      return date.replace("T", " ").slice(0, 16);
+    },
+
     // 切换到创建任务模式
     startCreateTask() {
       this.isCreating = true;
@@ -177,12 +182,21 @@ export default {
     // 提交任务到后端
     async submitTask() {
       try {
-        // TODO: 处理任务标题为空、日期为空等情况 以及更多输入限制（如日期范围）
-        // TODO: 日期的自动补全
+        // TODO: 更多输入限制（如日期范围）
+        // TODO: 按照任务优先级排序
         // 调用后端API创建任务
         // const newTaskDueDate = new Date(this.newTask.dueDate);
         //this.newTask.dueDate = newTaskDueDate.toISOString();
         console.log(this.newTask);
+        if (this.newTask.title === "") {
+          showToast(this.toast, "任务名不能为空", "error");
+          return;
+        }
+        if (this.newTask.dueDate === "") {
+          showToast(this.toast, "任务截止日期不能为空", "error");
+          return;
+        }
+
         await this.$axios.post("/tasks/create", this.newTask);
         showToast(this.toast, "任务创建成功", "success");
 
@@ -216,29 +230,6 @@ export default {
         task.status !== "COMPLETED" &&
         task.status !== "ARCHIVED"
       );
-    },
-
-    // 过渡动画开始前
-    beforeEnter(el) {
-      el.style.height = "0";
-      el.style.opacity = "0";
-    },
-
-    // 过渡动画进行时
-    enter(el, done) {
-      el.offsetHeight; // trigger reflow
-      el.style.transition = "height 0.5s ease, opacity 0.5s ease";
-      el.style.height = "auto"; // Set height to auto to expand
-      el.style.opacity = "1";
-      done();
-    },
-
-    // 过渡动画离开时
-    leave(el, done) {
-      el.style.transition = "height 0.5s ease, opacity 0.5s ease";
-      el.style.height = "0";
-      el.style.opacity = "0";
-      done();
     },
   },
 };
@@ -286,7 +277,7 @@ export default {
 }
 
 .taskOverview {
-  width: 80px;
+  width: 90px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -347,9 +338,7 @@ export default {
 }
 
 .taskDescription,
-.taskPriority,
-.taskCreateTime,
-.taskUpdateTime {
+.taskPriority {
   margin: 10px 0;
   font-size: 14px;
   color: #333;
@@ -423,17 +412,5 @@ export default {
 .buttonContainer {
   display: flex;
   align-items: center;
-}
-
-.taskCreator-enter-active,
-.taskCreator-leave-active {
-  transition: all 0.5s ease-in-out;
-}
-
-.taskCreator-enter,
-.taskCreator-leave-to {
-  height: 0;
-  opacity: 0;
-  visibility: hidden;
 }
 </style>
