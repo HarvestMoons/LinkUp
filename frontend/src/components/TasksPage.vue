@@ -3,14 +3,10 @@
   <div class="container">
     <h1>Welcome to the Tasks Page</h1>
 
-    <transition name="taskCreator" class="taskCreator">
-      <div class="taskCreator">
+    <div class="taskCreator">
+      <transition name="taskFormTransition">
         <!-- 控制是否显示输入框 -->
-        <div
-          class="taskForm"
-          v-if="isCreating"
-          @transitionend="onTransitionEnd"
-        >
+        <div class="taskForm" v-if="isCreating">
           <!-- 输入框区域 -->
           <div class="newTaskInputFields">
             <div class="form-group">
@@ -64,13 +60,19 @@
             <button @click="submitTask" class="submitButton">提交任务</button>
           </div>
         </div>
+      </transition>
 
-        <!-- 默认的按钮 -->
-        <button v-else @click="startCreateTask" class="createButton">
+      <!-- 默认的按钮 -->
+      <transition name="createButtonTransition">
+        <button
+          v-if="!isCreating"
+          @click="startCreateTask"
+          class="createButton"
+        >
           创建任务
         </button>
-      </div>
-    </transition>
+      </transition>
+    </div>
 
     <div class="tasksContainer">
       <div v-if="taskListLoading" class="loading">加载中...</div>
@@ -545,5 +547,34 @@ export default {
 .buttonContainer {
   display: flex;
   align-items: center;
+}
+
+.createButtonTransition-enter-active,
+.taskFormTransition-enter-active {
+  transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
+  transition-delay: 0.25s;
+}
+
+.createButtonTransition-leave-active,
+.taskFormTransition-leave-active {
+  transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
+}
+
+.createButtonTransition-enter-from,
+.createButtonTransition-leave-to,
+.taskFormTransition-enter-from,
+.taskFormTransition-leave-to {
+  opacity: 0;
+  max-height: 0;
+  padding: 0;
+}
+
+.createButtonTransition-leave-from,
+.createButtonTransition-enter-to,
+.taskFormTransition-enter-to,
+.taskFormTransition-leave-from {
+  opacity: 1;
+  max-height: 700px;
+  padding: 20x;
 }
 </style>
