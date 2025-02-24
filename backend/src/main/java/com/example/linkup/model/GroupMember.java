@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @Entity
+@IdClass(GroupMemberId.class)  // 这里使用 @IdClass 指定复合主键类
 public class GroupMember {
 
     @Id
