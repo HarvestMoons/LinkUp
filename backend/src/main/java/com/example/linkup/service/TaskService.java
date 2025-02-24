@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;
@@ -19,7 +20,6 @@ public class TaskService {
     }
 
     // 创建任务
-    @Transactional
     public Task createTask(Task task) {
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
@@ -27,7 +27,6 @@ public class TaskService {
     }
 
     // 更新任务
-    @Transactional
     public Task updateTask(Long id, Task task) {
         Optional<Task> existingTask = taskRepository.findById(id);
         if (existingTask.isPresent()) {
@@ -64,7 +63,6 @@ public class TaskService {
     }
 
     // 删除任务
-    @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }

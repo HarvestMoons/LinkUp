@@ -2,6 +2,7 @@ package com.example.linkup.service;
 
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.repository.TaskGroupRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TaskGroupService {
 
-    @Autowired
-    private TaskGroupRepository taskGroupRepository;
+    private final TaskGroupRepository taskGroupRepository;
+
+    public TaskGroupService(TaskGroupRepository taskGroupRepository) {
+        this.taskGroupRepository = taskGroupRepository;
+    }
 
     // 获取所有任务群组
     public List<TaskGroup> getAllTaskGroups() {

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class FriendRequestService {
 
     private final FriendRequestRepository friendRequestRepository;
@@ -19,7 +20,6 @@ public class FriendRequestService {
     }
 
     // 发送好友请求
-    @Transactional
     public FriendRequest sendFriendRequest(User sender, User receiver) {
         // 检查是否已有好友请求
         FriendRequest existingRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver);
@@ -42,7 +42,6 @@ public class FriendRequestService {
     }
 
     // 接受好友请求
-    @Transactional
     public FriendRequest acceptFriendRequest(FriendRequest friendRequest) {
         // 更新请求状态
         friendRequest.setStatus(FriendRequest.RequestStatus.ACCEPTED);
@@ -50,7 +49,6 @@ public class FriendRequestService {
     }
 
     // 拒绝好友请求
-    @Transactional
     public FriendRequest rejectFriendRequest(FriendRequest friendRequest) {
         // 更新请求状态
         friendRequest.setStatus(FriendRequest.RequestStatus.REJECTED);

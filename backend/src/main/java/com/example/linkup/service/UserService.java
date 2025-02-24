@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserService{
 
     private final UserRepository userRepository;
@@ -18,7 +19,6 @@ public class UserService{
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Transactional
     public void registerUser(String username, String password) {
         // 检查是否有相同的用户名
         if (userRepository.findByUsername(username) != null) {

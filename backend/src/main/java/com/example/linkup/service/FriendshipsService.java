@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class FriendshipsService {
 
     private final FriendshipsRepository friendshipsRepository;
@@ -21,7 +22,6 @@ public class FriendshipsService {
     }
 
     // 添加好友：确保无重复
-    @Transactional
     public Friendships addFriend(User user, User friend) {
         Friendships existingFriendship = findFriendship(user, friend);
         if (existingFriendship != null) {
@@ -59,7 +59,6 @@ public class FriendshipsService {
     }
 
     // 删除好友
-    @Transactional
     public void removeFriend(User user, User friend) throws ElementNotExistException {
         Friendships friendship = findFriendship(user, friend);
         if (friendship != null) {
