@@ -18,6 +18,8 @@ public class TaskController {
     private final TaskService taskService;
     private final ModelMapper modelMapper;
 
+    //todo:补充group_id相关的搜索方法
+
     public TaskController(TaskService taskService, ModelMapper modelMapper) {
         this.taskService = taskService;
         this.modelMapper = modelMapper;
@@ -66,6 +68,13 @@ public class TaskController {
     @GetMapping("/all")
     public ResponseEntity<List<Task>> getAllTasks() {
         List<Task> tasks = taskService.getAllTasks();
+        return ResponseEntity.ok(tasks); // 返回所有任务列表
+    }
+
+    // 获取指定群组内的所有任务
+    @GetMapping("/group/{groupId}")
+    public ResponseEntity<List<Task>> getTasksByGroup(@PathVariable Long groupId) {
+        List<Task> tasks = taskService.getTasksByGroupId(groupId);
         return ResponseEntity.ok(tasks); // 返回所有任务列表
     }
 

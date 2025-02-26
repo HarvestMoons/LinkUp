@@ -18,6 +18,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false)
+    private TaskGroup taskGroup;
+
     @Column(nullable = false)
     private String title;
 
@@ -31,7 +35,6 @@ public class Task {
     @Column(nullable = false)
     private Status status;
 
-    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dueDate;
 
     @JsonIgnore

@@ -80,7 +80,7 @@
       <!-- 显示任务列表 -->
       <div v-else>
         <div class="highTaskContainer">
-          <ul v-if="highTasks.length != 0" class="tasksList">
+          <ul v-if="highTasks.length !== 0" class="tasksList">
             <h2>HIGH PRIORITY</h2>
             <li
               v-for="task in highTasks"
@@ -129,7 +129,7 @@
         </div>
 
         <div class="midTaskContainer">
-          <ul v-if="midTasks.length != 0" class="tasksList">
+          <ul v-if="midTasks.length !== 0" class="tasksList">
             <h2>MEDIUM PRIORITY</h2>
             <li
               v-for="task in midTasks"
@@ -178,7 +178,7 @@
         </div>
 
         <div class="lowTaskContainer">
-          <ul v-if="lowTasks.length != 0" class="tasksList">
+          <ul v-if="lowTasks.length !== 0" class="tasksList">
             <h2>LOW PRIORITY</h2>
             <li
               v-for="task in lowTasks"
@@ -328,7 +328,7 @@ export default {
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
-        this.fetchTasks();
+        await this.fetchTasks();
       } catch (error) {
         console.error("创建任务失败:", error);
         showToast(this.toast, "创建任务失败", "error");
@@ -575,6 +575,6 @@ export default {
 .taskFormTransition-leave-from {
   opacity: 1;
   max-height: 700px;
-  padding: 20x;
+  padding: 20px;
 }
 </style>

@@ -57,6 +57,10 @@ public class TaskService {
         return taskRepository.findByTitleContaining(title);
     }
 
+    public List<Task> getTasksByGroupId(long groupId) {
+        return taskRepository.findByTaskGroupId(groupId);
+    }
+
     // 根据状态和优先级查找任务
     public List<Task> getTasksByStatusAndPriority(Task.Status status, Task.Priority priority) {
         return taskRepository.findByStatusAndPriority(status, priority);
