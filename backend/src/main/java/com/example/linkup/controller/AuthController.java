@@ -22,8 +22,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @RestController
 @RequestMapping(ApiConstant.PUBLIC_AUTH_API)
 public class AuthController {
-    // todo:添加注销账户功能
-    // todo:response的status被忽略
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;

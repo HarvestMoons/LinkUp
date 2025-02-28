@@ -108,7 +108,7 @@ export default {
       try {
         this.friends = [];
         const responseUserId = await this.$axios.get(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+          `user/info`
         );
         const response = await this.$axios.get(
           `/friendships/find/${responseUserId.data.id}`
@@ -141,7 +141,7 @@ export default {
     async fetchPendingRequests() {
       try {
         const responseUserId = await this.$axios.get(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+          `user/info`
         );
         const response = await this.$axios.get(
           `/friend-requests/receiver/${responseUserId.data.id}/status/pending`
@@ -163,7 +163,7 @@ export default {
 
       try {
         const responseUserId = await this.$axios.get(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+          `user/info`
         );
         await this.$axios.post(
           "/friend-requests/send", // 后端的接口
@@ -215,7 +215,7 @@ export default {
     async deleteFriend(friend) {
       try {
         const responseUserId = await this.$axios.get(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+          `user/info`
         );
         await this.$axios.delete(`/friendships/remove`, {
           data: {

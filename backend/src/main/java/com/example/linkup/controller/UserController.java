@@ -1,6 +1,5 @@
 package com.example.linkup.controller;
 
-import com.example.linkup.config.ApiConstant;
 import com.example.linkup.model.User;
 import com.example.linkup.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -37,7 +36,7 @@ public class UserController {
     }
 
     // 注销账户
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/closeAccount/{userId}")
     public ResponseEntity<Void> removeUser(@PathVariable long userId) {
         userService.removeUser(userId);
         return ResponseEntity.noContent().build();  // No Content 状态表示删除成功

@@ -50,7 +50,7 @@ export default {
     async fetchUserData() {
       try {
         const responseUserId = await this.$axios.get(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/info`
+          `user/info`
         );
         this.user = responseUserId.data;
         console.log(this.user);
