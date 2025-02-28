@@ -1,14 +1,12 @@
 package com.example.linkup.service;
 
+import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.repository.TaskGroupRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 @Service
 @Transactional
 public class TaskGroupService {
@@ -25,8 +23,8 @@ public class TaskGroupService {
     }
 
     // 获取一个群组
-    public Optional<TaskGroup> getTaskGroupById(Long id) {
-        return taskGroupRepository.findById(id);
+    public TaskGroup getTaskGroupById(Long id) {
+        return taskGroupRepository.findById(id).orElse(null);
     }
 
     // 创建新群组
@@ -35,12 +33,12 @@ public class TaskGroupService {
     }
 
     // 更新群组
-    public TaskGroup updateTaskGroup(Long id, TaskGroup taskGroup) {
+    public TaskGroup updateTaskGroup(Long id, TaskGroup taskGroup) throws ElementNotExistException {
         if (taskGroupRepository.existsById(id)) {
             taskGroup.setId(id);
             return taskGroupRepository.save(taskGroup);
         } else {
-            return null;  // 或抛出异常
+            throw new ElementNotExistException("待更新的任务群组不存在！");
         }
     }
 

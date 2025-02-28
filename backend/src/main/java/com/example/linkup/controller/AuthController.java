@@ -3,7 +3,6 @@ package com.example.linkup.controller;
 import com.example.linkup.config.ApiConstant;
 import com.example.linkup.dto.AuthRequestDto;
 import com.example.linkup.exception.ElementExistedException;
-import com.example.linkup.model.User;
 import com.example.linkup.service.UserService;
 import com.example.linkup.util.JwtUtils;
 

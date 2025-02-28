@@ -71,7 +71,7 @@ export default {
     },
     // 用户名合法性校验（仅允许字母、数字和下划线）
     validateUsername(username) {
-      const regex = /^[a-zA-Z0-9_]+$/;
+      const regex = /^\w+$/;
       return regex.test(username);
     },
     // 如果输入不合法，恢复输入前的值，避免非法字符输入
@@ -135,5 +135,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

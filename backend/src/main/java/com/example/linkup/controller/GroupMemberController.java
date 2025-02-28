@@ -6,6 +6,7 @@ import com.example.linkup.model.GroupMember.Role;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.model.User;
 import com.example.linkup.service.GroupMemberService;
+import com.example.linkup.service.TaskGroupService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,11 @@ import java.util.List;
 public class GroupMemberController {
 
     private final GroupMemberService groupMemberService;
+    private final TaskGroupService taskGroupService;
 
-    public GroupMemberController(GroupMemberService groupMemberService) {
+    public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService) {
         this.groupMemberService = groupMemberService;
+        this.taskGroupService = taskGroupService;
     }
 
     // 获取群组的所有成员
@@ -28,13 +31,6 @@ public class GroupMemberController {
     public ResponseEntity<List<GroupMember>> getAllMembers(@PathVariable long taskGroupId) {
         List<GroupMember> members = groupMemberService.getAllMembers(taskGroupId);
         return ResponseEntity.ok(members);
-    }
-
-    // 获取用户所在的所有群组
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<GroupMember>> getGroupsForUser(@PathVariable long userId) {
-        List<GroupMember> groups = groupMemberService.getGroupsForUser(userId);
-        return ResponseEntity.ok(groups);
     }
 
     // 获取群组中特定角色的成员
@@ -50,8 +46,8 @@ public class GroupMemberController {
             @PathVariable long taskGroupId,
             @RequestBody @Valid User user,  // 假设用户信息通过请求体传递
             @RequestParam(required = false) Role role) {
-        TaskGroup taskGroup = new TaskGroup();  // 假设 TaskGroup 是通过某种方式获取的，或直接在请求体中传递
-        taskGroup.setId(taskGroupId);
+
+        TaskGroup taskGroup =taskGroupService.getTaskGroupById(taskGroupId);
 
         GroupMember newMember = groupMemberService.addMemberToGroup(taskGroup, user, role);
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);

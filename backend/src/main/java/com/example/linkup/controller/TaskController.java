@@ -78,6 +78,24 @@ public class TaskController {
         return ResponseEntity.ok(tasks); // 返回所有任务列表
     }
 
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Task>> getTasksByStatus(@PathVariable Task.Status status) {
+        List<Task> tasks = taskService.getTasksByStatus(status);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/priority/{priority}")
+    public ResponseEntity<List<Task>> getTasksByPriority(@PathVariable Task.Priority priority) {
+        List<Task> tasks = taskService.getTasksByPriority(priority);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("title/{title}")
+    public ResponseEntity<List<Task>> getTasksByTitle(@PathVariable String title) {
+        List<Task> tasks =taskService.searchTasksByTitle(title);
+        return ResponseEntity.ok(tasks);
+    }
+
     // 删除任务
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) throws ElementNotExistException {

@@ -254,7 +254,6 @@ export default {
 }
 
 .friendRequestItem,
-.friendRequestItem,
 .friendItem {
   list-style: none;
   display: flex;
@@ -267,11 +266,6 @@ export default {
   height: 5%;
   border-radius: 50%;
   margin-right: 1.25%; /* 头像和昵称之间的间距 */
-}
-
-.loading {
-  font-size: clamp(1rem, 2vw, 5rem);
-  font-weight: bold;
 }
 
 .loading {

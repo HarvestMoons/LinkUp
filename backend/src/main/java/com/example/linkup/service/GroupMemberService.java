@@ -52,7 +52,7 @@ public class GroupMemberService {
     public GroupMember updateMemberRole(long taskGroupId,long userId, Role newRole) throws ElementNotExistException {
         GroupMember groupMember = groupMemberRepository.findByTaskGroupIdAndUserId(taskGroupId,userId);
         if (groupMember == null) {
-            throw new ElementNotExistException("指定的用户不存在");
+            throw new ElementNotExistException("指定的用户不存在！");
         }
         groupMember.setRole(newRole);
         return groupMemberRepository.save(groupMember);

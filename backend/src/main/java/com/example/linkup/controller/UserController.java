@@ -1,6 +1,8 @@
 package com.example.linkup.controller;
 
+import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
+import com.example.linkup.service.GroupMemberService;
 import com.example.linkup.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,15 +10,19 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
+    private final GroupMemberService groupMemberService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, GroupMemberService groupMemberService) {
         this.userService = userService;
+        this.groupMemberService = groupMemberService;
     }
 
     // 获取当前用户的用户名
@@ -40,5 +46,12 @@ public class UserController {
     public ResponseEntity<Void> removeUser(@PathVariable long userId) {
         userService.removeUser(userId);
         return ResponseEntity.noContent().build();  // No Content 状态表示删除成功
+    }
+
+    // 获取用户加入的所有群组
+    @GetMapping("/groups/{userId}")
+    public ResponseEntity<List<GroupMember>> getGroupsForUser(@PathVariable long userId) {
+        List<GroupMember> groups = groupMemberService.getGroupsForUser(userId);
+        return ResponseEntity.ok(groups);
     }
 }

@@ -75,7 +75,7 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  document.title = `Link Up - ${to.meta.title}`;
+  document.title = `Link Up - ${typeof to.meta.title === 'string' ? to.meta.title : '默认标题'}`;
   next();
 });
 
