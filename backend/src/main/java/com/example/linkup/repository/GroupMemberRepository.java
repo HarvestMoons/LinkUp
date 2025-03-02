@@ -1,6 +1,8 @@
 package com.example.linkup.repository;
 
 import com.example.linkup.model.GroupMember;
+import com.example.linkup.model.GroupMemberId;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
+public interface GroupMemberRepository extends JpaRepository<GroupMember, GroupMemberId> {
 
     // 根据群组查询所有群组成员
     List<GroupMember> findByTaskGroupId(long taskGroupId);
@@ -23,7 +25,6 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
 
     // 根据群组和角色查询指定角色的成员
     List<GroupMember> findByTaskGroupIdAndRole(long taskGroupId, GroupMember.Role role);
-
 
     // 根据群组ID和用户ID删除群组成员
     @Modifying

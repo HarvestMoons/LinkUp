@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/task-group")
@@ -45,7 +44,8 @@ public class TaskGroupController {
 
     // 更新任务群组
     @PutMapping("/{id}")
-    public ResponseEntity<TaskGroup> updateTaskGroup(@PathVariable("id") Long id, @RequestBody TaskGroup taskGroup) throws ElementNotExistException {
+    public ResponseEntity<TaskGroup> updateTaskGroup(@PathVariable("id") Long id, @RequestBody TaskGroup taskGroup)
+            throws ElementNotExistException {
         TaskGroup updatedTaskGroup = taskGroupService.updateTaskGroup(id, taskGroup);
         return ResponseEntity.ok(updatedTaskGroup);
     }
