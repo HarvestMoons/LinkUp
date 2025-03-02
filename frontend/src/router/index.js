@@ -4,6 +4,7 @@ import LoginPage from '@/components/LoginPage'
 import RegisterPage from '@/components/RegisterPage'
 import FriendsPage from '@/components/FriendsPage'
 import TasksPage from '@/components/TasksPage'
+import GroupPage from '@/components/GroupPage'
 import { useToast } from 'vue-toastification';
 
 const routes = [
@@ -42,6 +43,12 @@ const routes = [
     name: 'tasks',
     component: TasksPage,
     meta: { title: '任务', requiresAuth: true } // 标记仅允许未登录用户访问
+  },
+  {
+    path: '/group/:id',
+    name: 'group',
+    component: GroupPage,
+    meta: { title: '群组', guestOnly: true } // 需要登录才能访问
   }
 ]
 

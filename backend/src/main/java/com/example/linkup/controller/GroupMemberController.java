@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/groups/{taskGroupId}/members")  // URL 路径中的群组ID
+@RequestMapping("/groups/{taskGroupId}/members") // URL 路径中的群组ID
 public class GroupMemberController {
 
     private final GroupMemberService groupMemberService;
@@ -44,10 +44,10 @@ public class GroupMemberController {
     @PostMapping
     public ResponseEntity<GroupMember> addMemberToGroup(
             @PathVariable long taskGroupId,
-            @RequestBody @Valid User user,  // 假设用户信息通过请求体传递
+            @RequestBody @Valid User user, // 假设用户信息通过请求体传递
             @RequestParam(required = false) Role role) {
 
-        TaskGroup taskGroup =taskGroupService.getTaskGroupById(taskGroupId);
+        TaskGroup taskGroup = taskGroupService.getTaskGroupById(taskGroupId);
 
         GroupMember newMember = groupMemberService.addMemberToGroup(taskGroup, user, role);
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
@@ -69,6 +69,6 @@ public class GroupMemberController {
             @PathVariable long taskGroupId,
             @PathVariable long userId) {
         groupMemberService.removeMember(taskGroupId, userId);
-        return ResponseEntity.noContent().build();  // No Content 状态表示删除成功
+        return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
     }
 }
