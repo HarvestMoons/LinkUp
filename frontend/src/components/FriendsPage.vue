@@ -101,15 +101,12 @@ export default {
     // 在组件挂载后获取好友数据
     this.fetchFriends();
     this.fetchPendingRequests();
-    this.fetchPendingRequests();
   },
   methods: {
     async fetchFriends() {
       try {
         this.friends = [];
-        const responseUserId = await this.$axios.get(
-          `user/info`
-        );
+        const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
           `/friendships/find/${responseUserId.data.id}`
         );
@@ -140,9 +137,7 @@ export default {
 
     async fetchPendingRequests() {
       try {
-        const responseUserId = await this.$axios.get(
-          `user/info`
-        );
+        const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
           `/friend-requests/receiver/${responseUserId.data.id}/status/pending`
         );
@@ -162,9 +157,7 @@ export default {
       }
 
       try {
-        const responseUserId = await this.$axios.get(
-          `user/info`
-        );
+        const responseUserId = await this.$axios.get(`user/info`);
         await this.$axios.post(
           "/friend-requests/send", // 后端的接口
           { senderId: responseUserId.data.id, receiverId: this.friendId }
@@ -214,9 +207,7 @@ export default {
 
     async deleteFriend(friend) {
       try {
-        const responseUserId = await this.$axios.get(
-          `user/info`
-        );
+        const responseUserId = await this.$axios.get(`user/info`);
         await this.$axios.delete(`/friendships/remove`, {
           data: {
             user: responseUserId.data,

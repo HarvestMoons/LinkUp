@@ -262,6 +262,7 @@ export default {
     this.fetchTasks();
   },
   methods: {
+    //TODO: 用户自定义排序（按优先级、按ddl）
     async fetchTasks() {
       try {
         this.tasks = [];
@@ -310,9 +311,9 @@ export default {
         // TODO: 更多输入限制（如日期范围）
         // TODO: 按照任务优先级排序
         // 调用后端API创建任务
-        // const newTaskDueDate = new Date(this.newTask.dueDate);
-        //this.newTask.dueDate = newTaskDueDate.toISOString();
-        console.log(this.newTask);
+        const responseUserId = await this.$axios.get(`user/info`);
+        this.newTask.userId = responseUserId.data.id;
+        this.newTask.groupId = null;
         if (this.newTask.title === "") {
           showToast(this.toast, "任务名不能为空", "error");
           return;
@@ -364,7 +365,6 @@ export default {
 .container {
   text-align: center;
   margin-top: 30px;
-  overflow-x: hidden;
 }
 
 .tasksContainer {

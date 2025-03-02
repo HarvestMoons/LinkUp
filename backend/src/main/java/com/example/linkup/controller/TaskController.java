@@ -18,8 +18,8 @@ public class TaskController {
     private final TaskService taskService;
     private final ModelMapper modelMapper;
 
-    //todo:补充group_id相关的搜索方法
-
+    // TODO :补充group_id相关的搜索方法
+    // TODO: 查询某个人的所有群组
     public TaskController(TaskService taskService, ModelMapper modelMapper) {
         this.taskService = taskService;
         this.modelMapper = modelMapper;
@@ -92,7 +92,7 @@ public class TaskController {
 
     @GetMapping("title/{title}")
     public ResponseEntity<List<Task>> getTasksByTitle(@PathVariable String title) {
-        List<Task> tasks =taskService.searchTasksByTitle(title);
+        List<Task> tasks = taskService.searchTasksByTitle(title);
         return ResponseEntity.ok(tasks);
     }
 

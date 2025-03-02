@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/task-group")
 public class TaskGroupController {
-
+    // TODO: 查询某个人的所有群组(具体URL可能要和获取某id群组的URL区分一下)
     private final TaskGroupService taskGroupService;
 
     public TaskGroupController(TaskGroupService taskGroupService) {
@@ -28,6 +28,7 @@ public class TaskGroupController {
     // 获取一个任务群组
     @GetMapping("/{id}")
     public ResponseEntity<TaskGroup> getTaskGroupById(@PathVariable("id") Long id) throws ElementNotExistException {
+        System.out.println("1");
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(id);
         if (taskGroup == null) {
             throw new ElementNotExistException("此ID对应的任务群组不存在！");

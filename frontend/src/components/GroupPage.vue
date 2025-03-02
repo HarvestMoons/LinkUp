@@ -1,3 +1,4 @@
+<!-- GroupPage.vue -->
 <template>
   <div>
     <h1>群组详情</h1>
@@ -22,7 +23,7 @@ export default {
   data() {
     return {
       groupId: null,
-      groupData: [],
+      groupData: { id: 1, name: "五菱一车队", description: "1111111" },
       isMember: false,
       loading: true,
     };
@@ -62,7 +63,6 @@ export default {
       try {
         const response = await this.$axios.get(`/task-group/${this.groupId}`);
         this.groupData.value = response.data;
-        console.log(this.groupData);
       } catch (error) {
         console.error("加载群组失败", error);
       }

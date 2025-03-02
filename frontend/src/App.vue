@@ -16,6 +16,8 @@
       <router-link to="/friends">Friends</router-link>
       |
       <router-link to="/tasks">Tasks</router-link>
+      |
+      <router-link to="/groups">Groups</router-link>
       <button v-if="isAuthPage" @click="logout" class="logoutButton">
         Logout
       </button>
@@ -49,9 +51,7 @@ export default {
     },
     async fetchUserData() {
       try {
-        const responseUserId = await this.$axios.get(
-          `user/info`
-        );
+        const responseUserId = await this.$axios.get(`user/info`);
         this.user = responseUserId.data;
         console.log(this.user);
       } catch (error) {
