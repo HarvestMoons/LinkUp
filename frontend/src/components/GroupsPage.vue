@@ -12,7 +12,12 @@
       <!-- 显示群组列表 -->
       <div v-else>
         <ul class="groupsList">
-          <li v-for="group in groups" :key="group.id" class="groupItem">
+          <li
+            v-for="group in groups"
+            :key="group.id"
+            class="groupItem"
+            @click="goToGroup(group.id)"
+          >
             <img
               :src="group.avatar || require('@/assets/images/icon.png')"
               alt="头像"
@@ -33,8 +38,11 @@ export default {
   name: "GroupsPage",
   data() {
     return {
-      groups: [], // 用来存储好友列表
-      groupListLoading: true, // 加载状态
+      groups: [
+        { id: 1, name: "群组1", description: "1111111111111" },
+        { id: 2, name: "群组2", description: "2111111111111" },
+      ],
+      groupListLoading: false, // 加载状态
     };
   },
   setup() {
@@ -42,8 +50,8 @@ export default {
     return { toast };
   },
   mounted() {
-    // 在组件挂载后获取好友数据
-    this.fetchGroups();
+    // 在组件挂载后获取群组数据
+    //this.fetchGroups();
   },
   methods: {
     async fetchGroups() {
@@ -66,6 +74,9 @@ export default {
         console.error("创建群组失败:", error);
       }
     },
+    goToGroup(id) {
+      this.$router.push(`/group/${id}`);
+    },
   },
 };
 </script>
@@ -83,6 +94,7 @@ export default {
   background-color: rgba(128, 128, 128, 0.1); /* 灰色，10%透明度 */
   border-radius: 10px; /* 圆角 */
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+  overflow-x: hidden;
 }
 
 .groupItem {
@@ -90,6 +102,11 @@ export default {
   display: flex;
   align-items: center; /* 使头像和昵称垂直居中 */
   margin-bottom: 15px; /* 每个列表项之间的间距 */
+  transition: 0.2s ease;
+  transform-origin: left;
+}
+.groupItem:hover {
+  transform: scale(1.1);
 }
 
 .groupAvatar {

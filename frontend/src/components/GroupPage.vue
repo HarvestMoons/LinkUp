@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       groupId: null,
-      groupData: { id: 1, name: "五菱一车队", description: "1111111" },
+      groupData: { id: 1, name: "群组名称", description: "群组描述" },
       isMember: false,
       loading: true,
     };
