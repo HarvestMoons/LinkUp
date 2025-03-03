@@ -3,6 +3,8 @@ package com.example.linkup.repository;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.GroupMemberId;
 
+import com.example.linkup.model.TaskGroup;
+import com.example.linkup.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -30,4 +32,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, GroupM
     @Modifying
     @Query("DELETE FROM GroupMember gm WHERE gm.taskGroup.id = :groupId AND gm.user.id = :userId")
     void deleteByGroupIdAndUserId(@Param("groupId") Long groupId, @Param("userId") Long userId);
+
+    // 检查某用户是否在某群组中
+    boolean existsByTaskGroupAndUser(TaskGroup taskGroup, User user);
 }

@@ -64,11 +64,25 @@ public class GroupMemberController {
     }
 
     // 删除群组成员
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/delete/user/{userId}")
     public ResponseEntity<Void> removeMember(
             @PathVariable long taskGroupId,
             @PathVariable long userId) {
         groupMemberService.removeMember(taskGroupId, userId);
         return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
+    }
+
+
+
+    /**
+     * 判断指定用户是否在指定群组中
+     * @param userId 指定的用户ID
+     * @return true/false
+     */
+    @GetMapping("/is-member/{userId}")
+    public ResponseEntity<Boolean> isUserInGroup(@PathVariable long taskGroupId, @PathVariable Long userId) throws ElementNotExistException {
+
+        boolean isMember = groupMemberService.isUserInGroup(taskGroupId, userId);
+        return ResponseEntity.ok(isMember);
     }
 }
