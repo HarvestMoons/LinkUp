@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Getter
@@ -13,17 +15,19 @@ public class TaskGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;  // 群组ID
+    private Long id; // 群组ID
 
     @Column(nullable = false)
-    private String name;  // 群组名称
+    private String name; // 群组名称
 
-    private String description;  // 群组描述
+    private String description; // 群组描述
 
+    @JsonIgnore
     @Column(name = "created_at", updatable = false)
-    private Timestamp createdAt;  // 创建时间
+    private LocalDateTime createdAt; // 创建时间
 
+    @JsonIgnore
     @Column(name = "updated_at")
-    private Timestamp updatedAt;  // 更新时间
+    private LocalDateTime updatedAt; // 更新时间
 
 }

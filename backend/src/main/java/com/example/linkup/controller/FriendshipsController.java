@@ -39,7 +39,6 @@ public class FriendshipsController {
     public ResponseEntity<List<Friendships>> getFriends(@PathVariable Long userId) {
         User user = userService.findById(userId);
         List<Friendships> friends = friendshipsService.getFriends(user);
-        System.out.println(userId + " " + friends.size());
         return ResponseEntity.ok(friends);
     }
 

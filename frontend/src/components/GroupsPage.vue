@@ -4,7 +4,90 @@
     <h1>Welcome to the Groups Page</h1>
     <!-- 添加好友输入框和按钮 -->
     <div class="createGroupContainer">
-      <button @click="createGroup" class="createGroupButton">创建群聊</button>
+      <transition name="groupFormTransition">
+        <!-- 控制是否显示输入框 -->
+        <div class="groupForm" v-if="isCreating">
+          <!-- 输入框区域 -->
+          <div class="newGroupInputFields">
+            <div class="form-group">
+              <label for="newGroupName">群组名称:</label>
+              <input
+                type="text"
+                id="newGroupName"
+                v-model="newGroup.name"
+                placeholder="请输入群组名称"
+              />
+            </div>
+            <div class="form-group">
+              <label for="newGroupDescription">群组描述:</label>
+              <textarea
+                id="newGroupDescription"
+                v-model="newGroup.description"
+                placeholder="请输入群组描述"
+              ></textarea>
+            </div>
+
+            <!-- 好友选择部分 -->
+            <div class="form-group">
+              <label for="selectFriends">选择好友:</label>
+              <div class="friends-dropdown">
+                <div v-if="friendListLoading" class="loading">加载中...</div>
+                <div v-else-if="friends.length === 0" class="loading">
+                  无好友
+                </div>
+                <div v-else>
+                  <ul class="friendsList">
+                    <li
+                      v-for="friend in friends"
+                      :key="friend.id"
+                      class="friendItem"
+                      @click="toggleSelection(friend)"
+                      :class="{ selected: selectedFriends.includes(friend) }"
+                    >
+                      <img
+                        :src="
+                          friend.avatar || require('@/assets/images/icon.png')
+                        "
+                        alt="头像"
+                        class="friendAvatar"
+                      />
+                      <span class="friendNickname"
+                        >{{ friend.nickname }} (#{{ friend.id }})</span
+                      >
+                      <span
+                        v-if="selectedFriends.includes(friend)"
+                        class="checkmark"
+                        >✔</span
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="buttonContainer">
+            <!-- 取消按钮 -->
+            <button @click="cancelCreateGroup" class="cancelButton">
+              取消
+            </button>
+
+            <!-- 提交按钮 -->
+            <button @click="createGroup" class="submitButton">创建群聊</button>
+          </div>
+        </div>
+      </transition>
+
+      <!-- 默认的按钮 -->
+      <transition name="createGroupButton">
+        <button
+          v-if="!isCreating"
+          @click="startCreateGroup"
+          class="createGroupButton"
+        >
+          创建群组
+        </button>
+      </transition>
     </div>
     <div class="groupListContainer">
       <div v-if="groupListLoading" class="loading">加载中...</div>
@@ -13,15 +96,15 @@
       <div v-else>
         <ul class="groupsList">
           <li
-              v-for="group in groups"
-              :key="group.id"
-              class="groupItem"
-              @click="goToGroup(group.id)"
+            v-for="group in groups"
+            :key="group.id"
+            class="groupItem"
+            @click="goToGroup(group.id)"
           >
             <img
-                :src="group.avatar || require('@/assets/images/icon.png')"
-                alt="头像"
-                class="groupAvatar"
+              :src="group.avatar || require('@/assets/images/icon.png')"
+              alt="头像"
+              class="groupAvatar"
             />
             <span class="groupName">{{ group.name }} (#{{ group.id }})</span>
           </li>
@@ -32,17 +115,19 @@
 </template>
 
 <script>
-//import { showToast } from "@/utils/toast";
+import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 export default {
   name: "GroupsPage",
   data() {
     return {
-      groups: [
-        { id: 1, name: "群组1", description: "1111111111111" },
-        { id: 2, name: "群组2", description: "2111111111111" },
-      ],
-      groupListLoading: false, // 加载状态
+      groups: [],
+      groupListLoading: true, // 加载状态
+      friendListLoading: true,
+      isCreating: false,
+      newGroup: [],
+      selectedFriends: [],
+      friends: [],
     };
   },
   setup() {
@@ -51,14 +136,16 @@ export default {
   },
   mounted() {
     // 在组件挂载后获取群组数据
-    //this.fetchGroups();
+    this.fetchGroups();
   },
   methods: {
     async fetchGroups() {
       try {
         this.groups = [];
-        //const responseUserId = await this.$axios.get(`user/info`);
-        const response = await this.$axios.get(`/task-group`);
+        const responseUserId = await this.$axios.get(`user/info`);
+        const response = await this.$axios.get(
+          `/user/groups/${responseUserId.data.id}`
+        );
         this.groups = response.data;
       } catch (error) {
         console.error("获取群组数据失败:", error);
@@ -68,17 +155,110 @@ export default {
     },
     async createGroup() {
       try {
-        // TODO: 在下一行代码中需要传入TaskGroup(name和description)
-        await this.$axios.post(`/task-group`);
+        console.log(this.newGroup);
+        // NOTE: 创建群组和拉人分两步会不会不好回滚
+        if (this.newGroup.name === "") {
+          showToast(this.toast, "群组名不能为空", "error");
+          return;
+        }
+        if (this.selectedFriends.length === 0) {
+          showToast(this.toast, "至少需要选择一个好友", "error");
+          return;
+        }
+        const responseNewGroup = await this.$axios.post(
+          `/task-group`,
+          this.newGroup
+        );
+        console.log(responseNewGroup.data);
+        const responseUserId = await this.$axios.get(`user/info`);
+        await this.$axios.post(
+          `/groups/${responseNewGroup.data.id}/members`,
+          responseUserId.data,
+          "OWNER"
+        );
+        this.selectedFriends.forEach(async (friend) => {
+          await this.$axios.post(
+            `/groups/${responseNewGroup.data.id}/members`,
+            friend,
+            "MEMBER"
+          );
+        });
       } catch (error) {
         console.error("创建群组失败:", error);
       }
     },
+
     goToGroup(id) {
       this.$router.push(`/group/${id}`);
     },
+
+    // 选择或取消选择好友
+    toggleSelection(friend) {
+      const index = this.selectedFriends.indexOf(friend);
+      if (index === -1) {
+        // 如果好友未被选中，添加到选中列表
+        this.selectedFriends.push(friend);
+      } else {
+        // 如果好友已经选中，取消选择
+        this.selectedFriends.splice(index, 1);
+      }
+    },
+
+    async fetchFriends() {
+      try {
+        this.friends = [];
+        const responseUserId = await this.$axios.get(`user/info`);
+        const response = await this.$axios.get(
+          `/friendships/find/${responseUserId.data.id}`
+        );
+        response.data.forEach((friendship) => {
+          if (friendship.user.id === responseUserId.data.id) {
+            this.friends.push({
+              nickname: friendship.friend.username,
+              id: friendship.friend.id,
+              avatar: friendship.friend.avatar,
+              friend: friendship.friend,
+            });
+          } else {
+            this.friends.push({
+              nickname: friendship.user.username,
+              id: friendship.user.id,
+              avatar: friendship.user.avatar,
+              friend: friendship.user,
+            });
+          }
+        });
+        return this.friends;
+      } catch (error) {
+        console.error("获取好友数据失败:", error);
+      } finally {
+        this.friendListLoading = false; // 加载完成，更新状态
+      }
+    },
+
+    // 切换到创建任务模式
+    startCreateGroup() {
+      this.fetchFriends();
+      this.isCreating = true;
+    },
+
+    // 取消创建任务
+    cancelCreateGroup() {
+      this.friendListLoading = true;
+      this.isCreating = false;
+      this.resetForm(); // 重置表单
+    },
+
+    resetForm() {
+      this.newGroup = {
+        name: "",
+        description: "",
+      };
+    },
   },
 };
+// TODO: 整理css
+// TODO: 抽取复用好友列表
 </script>
 
 <style scoped>
@@ -128,14 +308,86 @@ export default {
   flex-grow: 1; /* 如果有更多的空间，昵称会自动占用 */
 }
 
-.createGroupButton {
-  margin-left: 1%;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+.groupForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+.newGroupInputFields {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 70%;
+}
+
+.newGroupInputFields input,
+.newGroupInputFields textarea,
+.newGroupInputFields select {
+  padding: 10px;
+  margin-top: 5px;
   border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.submitButton,
+.cancelButton,
+.createGroupButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
   cursor: pointer;
+
+  margin-left: 10px;
+  color: white;
   width: 100px;
+}
+
+.submitButton {
+  background-color: #007bff;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+}
+
+.createGroupButton {
+  background-color: #28a745;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.friendsList {
+  padding: 0;
+}
+
+.friendItem {
+  list-style: none;
+  display: flex;
+  align-items: center; /* 使头像和昵称垂直居中 */
+  margin-bottom: 15px; /* 每个列表项之间的间距 */
+}
+
+.friendAvatar {
+  width: 5%;
+  height: 5%;
+  border-radius: 50%;
+  margin-right: 1.25%; /* 头像和昵称之间的间距 */
+}
+
+.friendNickname {
+  font-size: clamp(1rem, 2vw, 5rem);
+  font-weight: bold;
+  text-align: left; /* 确保昵称居中对齐 */
+  flex-grow: 1; /* 如果有更多的空间，昵称会自动占用 */
 }
 </style>
