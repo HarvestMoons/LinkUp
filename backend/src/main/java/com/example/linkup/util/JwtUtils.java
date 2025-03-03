@@ -62,16 +62,20 @@ public class JwtUtils {
             return true;
         } catch (SecurityException e) {
             System.err.println("无效的 JWT 签名: " + e.getMessage());
+            throw e;
         } catch (MalformedJwtException e) {
             System.err.println("无效的 JWT 格式: " + e.getMessage());
+            throw e;
         } catch (ExpiredJwtException e) {
             System.err.println("JWT 已过期: " + e.getMessage());
+            throw e;
         } catch (UnsupportedJwtException e) {
             System.err.println("不支持的 JWT 类型: " + e.getMessage());
+            throw e;
         } catch (IllegalArgumentException e) {
             System.err.println("JWT 参数错误: " + e.getMessage());
+            throw e;
         }
-        return false;
     }
 
     /**
