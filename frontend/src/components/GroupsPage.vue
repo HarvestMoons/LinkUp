@@ -13,15 +13,15 @@
       <div v-else>
         <ul class="groupsList">
           <li
-            v-for="group in groups"
-            :key="group.id"
-            class="groupItem"
-            @click="goToGroup(group.id)"
+              v-for="group in groups"
+              :key="group.id"
+              class="groupItem"
+              @click="goToGroup(group.id)"
           >
             <img
-              :src="group.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="groupAvatar"
+                :src="group.avatar || require('@/assets/images/icon.png')"
+                alt="头像"
+                class="groupAvatar"
             />
             <span class="groupName">{{ group.name }} (#{{ group.id }})</span>
           </li>

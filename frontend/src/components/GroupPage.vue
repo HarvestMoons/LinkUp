@@ -36,7 +36,7 @@ export default {
     this.groupId = useRoute().params.id;
     //await this.checkMembership();
     //if (this.isMember) {
-    this.fetchGroup();
+    await this.fetchGroup();
     //}
   },
   methods: {

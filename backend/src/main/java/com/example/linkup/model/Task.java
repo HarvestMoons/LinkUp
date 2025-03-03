@@ -17,7 +17,11 @@ public class Task {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name="creator_id",referencedColumnName = "id",nullable = false)
+    private User creator;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
     private TaskGroup taskGroup;
 
     @Column(nullable = false)

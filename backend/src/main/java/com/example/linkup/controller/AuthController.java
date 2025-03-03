@@ -22,6 +22,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 @RequestMapping(ApiConstant.PUBLIC_AUTH_API)
 public class AuthController {
 
+    //todo:bug：JWT失效
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;

@@ -23,4 +23,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // 根据任务状态和优先级查找任务
     List<Task> findByStatusAndPriority(Task.Status status, Task.Priority priority);
+
+    // 查询某用户创建的所有单人任务（taskGroup 为空）
+    List<Task> findByCreatorIdAndTaskGroupIsNull(Long userId);
+
+    // 查询某些群组（taskGroup）内的所有任务
+    List<Task> findByTaskGroupIdIn(List<Long> groupIds);
 }

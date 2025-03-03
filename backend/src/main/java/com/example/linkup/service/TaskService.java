@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.model.Task;
+import com.example.linkup.repository.GroupMemberRepository;
 import com.example.linkup.repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -8,15 +9,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TaskService {
 
     private final TaskRepository taskRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, GroupMemberRepository groupMemberRepository) {
         this.taskRepository = taskRepository;
+        this.groupMemberRepository = groupMemberRepository;
     }
 
     // 创建任务
@@ -59,6 +63,27 @@ public class TaskService {
 
     public List<Task> getTasksByGroupId(long groupId) {
         return taskRepository.findByTaskGroupId(groupId);
+    }
+
+    // 获取某个用户的所有单人任务
+    public List<Task> getPersonalTasks(Long userId) {
+        return taskRepository.findByCreatorIdAndTaskGroupIsNull(userId);
+    }
+
+
+    // 获取某个用户所在群组的所有任务
+    public List<Task> getGroupTasks(Long userId) {
+        // 找到该用户所在的所有群组
+        List<Long> groupIds = groupMemberRepository.findByUserId(userId)
+                .stream()
+                .map(gm -> gm.getTaskGroup().getId()) // 提取 groupId
+                .collect(Collectors.toList());
+
+        if (groupIds.isEmpty()) {
+            return List.of(); // 该用户没有加入任何群组
+        }
+
+        return taskRepository.findByTaskGroupIdIn(groupIds);
     }
 
     // 根据状态和优先级查找任务
