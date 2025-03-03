@@ -39,5 +39,20 @@ public class FriendRequest {
     public enum RequestStatus {
         PENDING, ACCEPTED, REJECTED
     }
+
+    /** 在实体插入前，自动填充 createdAt 和 updatedAt */
+    @PrePersist
+    protected void onCreate() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    /** 在实体更新前，自动更新 updatedAt */
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }
 

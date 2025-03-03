@@ -2,9 +2,11 @@
 <template>
   <div class="container">
     <h1>Welcome to the Friends Page</h1>
+    //todo:查找搜索速度慢的问题
     <!-- 添加好友输入框和按钮 -->
     <div class="addFriendContainer">
       <input
+
         v-model="friendId"
         type="text"
         placeholder="输入用户Id"

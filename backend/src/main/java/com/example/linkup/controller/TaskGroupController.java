@@ -1,8 +1,10 @@
 package com.example.linkup.controller;
 
+import com.example.linkup.dto.TaskGroupDto;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskGroupService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/task-group")
 public class TaskGroupController {
     private final TaskGroupService taskGroupService;
+    private final ModelMapper modelMapper;
 
-    public TaskGroupController(TaskGroupService taskGroupService) {
+    public TaskGroupController(TaskGroupService taskGroupService, ModelMapper modelMapper) {
         this.taskGroupService = taskGroupService;
+        this.modelMapper = modelMapper;
     }
 
     // 获取所有任务群组
@@ -36,17 +40,19 @@ public class TaskGroupController {
     }
 
     // 创建任务群组
-    @PostMapping
-    public ResponseEntity<TaskGroup> createTaskGroup(@RequestBody TaskGroup taskGroup) {
-        TaskGroup createdTaskGroup = taskGroupService.createTaskGroup(taskGroup);
+    @PostMapping("/create")
+    public ResponseEntity<TaskGroup> createTaskGroup(@RequestBody TaskGroupDto taskGroupDto) {
+        System.out.println(taskGroupDto.getName());
+        System.out.println(taskGroupDto.getDescription());
+        TaskGroup createdTaskGroup = taskGroupService.createTaskGroup(modelMapper.map(taskGroupDto, TaskGroup.class));
         return new ResponseEntity<>(createdTaskGroup, HttpStatus.CREATED);
     }
 
     // 更新任务群组
     @PutMapping("/{id}")
-    public ResponseEntity<TaskGroup> updateTaskGroup(@PathVariable("id") Long id, @RequestBody TaskGroup taskGroup)
+    public ResponseEntity<TaskGroup> updateTaskGroup(@PathVariable("id") Long id, @RequestBody TaskGroupDto taskGroupDto)
             throws ElementNotExistException {
-        TaskGroup updatedTaskGroup = taskGroupService.updateTaskGroup(id, taskGroup);
+        TaskGroup updatedTaskGroup = taskGroupService.updateTaskGroup(id, modelMapper.map(taskGroupDto, TaskGroup.class));
         return ResponseEntity.ok(updatedTaskGroup);
     }
 

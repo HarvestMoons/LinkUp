@@ -12,18 +12,18 @@
             <div class="form-group">
               <label for="newGroupName">群组名称:</label>
               <input
-                type="text"
-                id="newGroupName"
-                v-model="newGroup.name"
-                placeholder="请输入群组名称"
+                  type="text"
+                  id="newGroupName"
+                  v-model="newGroup.name"
+                  placeholder="请输入群组名称"
               />
             </div>
             <div class="form-group">
               <label for="newGroupDescription">群组描述:</label>
               <textarea
-                id="newGroupDescription"
-                v-model="newGroup.description"
-                placeholder="请输入群组描述"
+                  id="newGroupDescription"
+                  v-model="newGroup.description"
+                  placeholder="请输入群组描述"
               ></textarea>
             </div>
 
@@ -38,26 +38,26 @@
                 <div v-else>
                   <ul class="friendsList">
                     <li
-                      v-for="friend in friends"
-                      :key="friend.id"
-                      class="friendItem"
-                      @click="toggleSelection(friend)"
-                      :class="{ selected: selectedFriends.includes(friend) }"
+                        v-for="friend in friends"
+                        :key="friend.id"
+                        class="friendItem"
+                        @click="toggleSelection(friend)"
+                        :class="{ selected: selectedFriends.includes(friend) }"
                     >
                       <img
-                        :src="
+                          :src="
                           friend.avatar || require('@/assets/images/icon.png')
                         "
-                        alt="头像"
-                        class="friendAvatar"
+                          alt="头像"
+                          class="friendAvatar"
                       />
                       <span class="friendNickname"
-                        >{{ friend.nickname }} (#{{ friend.id }})</span
+                      >{{ friend.nickname }} (#{{ friend.id }})</span
                       >
                       <span
-                        v-if="selectedFriends.includes(friend)"
-                        class="checkmark"
-                        >✔</span
+                          v-if="selectedFriends.includes(friend)"
+                          class="checkmark"
+                      >✔</span
                       >
                     </li>
                   </ul>
@@ -81,9 +81,9 @@
       <!-- 默认的按钮 -->
       <transition name="createGroupButton">
         <button
-          v-if="!isCreating"
-          @click="startCreateGroup"
-          class="createGroupButton"
+            v-if="!isCreating"
+            @click="startCreateGroup"
+            class="createGroupButton"
         >
           创建群组
         </button>
@@ -96,15 +96,15 @@
       <div v-else>
         <ul class="groupsList">
           <li
-            v-for="group in groups"
-            :key="group.id"
-            class="groupItem"
-            @click="goToGroup(group.id)"
+              v-for="group in groups"
+              :key="group.id"
+              class="groupItem"
+              @click="goToGroup(group.id)"
           >
             <img
-              :src="group.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="groupAvatar"
+                :src="group.avatar || require('@/assets/images/icon.png')"
+                alt="头像"
+                class="groupAvatar"
             />
             <span class="groupName">{{ group.name }} (#{{ group.id }})</span>
           </li>
@@ -115,8 +115,9 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+
 export default {
   name: "GroupsPage",
   data() {
@@ -132,7 +133,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   mounted() {
     // 在组件挂载后获取群组数据
@@ -144,7 +145,7 @@ export default {
         this.groups = [];
         const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
-          `/user/groups/${responseUserId.data.id}`
+            `/user/groups/${responseUserId.data.id}`
         );
         this.groups = response.data;
       } catch (error) {
@@ -166,23 +167,27 @@ export default {
           return;
         }
         const responseNewGroup = await this.$axios.post(
-          `/task-group`,
-          this.newGroup
+            `/task-group/create`,
+            //todo:修改这个补丁
+            {
+              name: this.newGroup.name,
+              description: this.newGroup.description
+            }
         );
         console.log(responseNewGroup.data);
         const responseUserId = await this.$axios.get(`user/info`);
         await this.$axios.post(
-          `/groups/${responseNewGroup.data.id}/members`,
-          responseUserId.data,
-          "OWNER"
-        );
-        this.selectedFriends.forEach(async (friend) => {
-          await this.$axios.post(
             `/groups/${responseNewGroup.data.id}/members`,
-            friend,
-            "MEMBER"
+            responseUserId.data,
+            "OWNER"
+        );
+        for (const friend of this.selectedFriends) {
+          await this.$axios.post(
+              `/groups/${responseNewGroup.data.id}/members`,
+              friend,
+              "MEMBER"
           );
-        });
+        }
       } catch (error) {
         console.error("创建群组失败:", error);
       }
@@ -209,7 +214,7 @@ export default {
         this.friends = [];
         const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
-          `/friendships/find/${responseUserId.data.id}`
+            `/friendships/find/${responseUserId.data.id}`
         );
         response.data.forEach((friendship) => {
           if (friendship.user.id === responseUserId.data.id) {
@@ -285,6 +290,7 @@ export default {
   transition: 0.2s ease;
   transform-origin: left;
 }
+
 .groupItem:hover {
   transform: scale(1.1);
 }
