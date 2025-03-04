@@ -56,6 +56,7 @@ public class JwtUtils {
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder()
+                    .setAllowedClockSkewSeconds(60) // 允许60秒的时间偏差
                     .setSigningKey(key) // 使用密钥验证签名
                     .build()
                     .parseClaimsJws(token);

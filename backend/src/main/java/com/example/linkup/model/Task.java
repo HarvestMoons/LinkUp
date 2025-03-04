@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -40,10 +42,12 @@ public class Task {
     private LocalDateTime dueDate;
 
     @JsonIgnore
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @JsonIgnore
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public enum Priority {

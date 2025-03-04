@@ -1,5 +1,6 @@
 package com.example.linkup.service;
 
+import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.model.Task;
 import com.example.linkup.repository.GroupMemberRepository;
 import com.example.linkup.repository.TaskRepository;
@@ -25,20 +26,17 @@ public class TaskService {
 
     // 创建任务
     public Task createTask(Task task) {
-        task.setCreatedAt(LocalDateTime.now());
-        task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);
     }
 
     // 更新任务
-    public Task updateTask(Long id, Task task) {
+    public Task updateTask(Long id, Task task) throws ElementNotExistException {
         Optional<Task> existingTask = taskRepository.findById(id);
         if (existingTask.isPresent()) {
             task.setId(id);
-            task.setUpdatedAt(LocalDateTime.now());
             return taskRepository.save(task);
         }
-        throw new IllegalStateException("Task not found");
+        throw new ElementNotExistException("Task not found");
     }
 
     // 获取所有任务

@@ -61,7 +61,6 @@ export default {
   methods: {
     async checkMembership() {
       try {
-        // TODO: 需要后端做一个检查用户是否在群组中的url
         const response = await this.$axios.get(
           `/groups/${this.groupId}/members/check-member`
         );

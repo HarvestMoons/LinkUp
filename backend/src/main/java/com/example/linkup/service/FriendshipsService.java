@@ -32,8 +32,6 @@ public class FriendshipsService {
         Friendships friendship = new Friendships();
         friendship.setUser(user);
         friendship.setFriend(friend);
-        friendship.setCreatedAt(LocalDateTime.now());
-        friendship.setUpdatedAt(LocalDateTime.now());
 
         return friendshipsRepository.save(friendship);
     }

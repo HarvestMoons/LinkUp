@@ -55,7 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 } catch (ExpiredJwtException ex) {
                     logger.warn("JWT 令牌已过期: {}");
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 返回 401
-                    System.out.println("111");
                     response.getWriter().write("{\"error\": \"JWT 令牌已过期\"}");
                     return;
                 }

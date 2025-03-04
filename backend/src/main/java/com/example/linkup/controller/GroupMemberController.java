@@ -7,6 +7,7 @@ import com.example.linkup.model.TaskGroup;
 import com.example.linkup.model.User;
 import com.example.linkup.service.GroupMemberService;
 import com.example.linkup.service.TaskGroupService;
+import com.example.linkup.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/groups/{taskGroupId}/members") // URL 路径中的群组ID
 public class GroupMemberController {
-    // TODO: 检查某用户是否存在与该群组的URL
     private final GroupMemberService groupMemberService;
     private final TaskGroupService taskGroupService;
+    private final UserService userService;
 
-    public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService) {
+    public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService, UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
+        this.userService = userService;
     }
 
     // 获取群组的所有成员
@@ -41,14 +43,14 @@ public class GroupMemberController {
     }
 
     // 添加成员到群组
-    @PostMapping
+    @PostMapping("/add/{userId}")
     public ResponseEntity<GroupMember> addMemberToGroup(
             @PathVariable long taskGroupId,
-            @RequestBody @Valid User user, // 假设用户信息通过请求体传递
+            @PathVariable @Valid long userId,
             @RequestParam(required = false) Role role) {
 
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(taskGroupId);
-
+        User user= userService.findById(userId);
         GroupMember newMember = groupMemberService.addMemberToGroup(taskGroup, user, role);
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }
