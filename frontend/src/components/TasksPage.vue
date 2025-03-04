@@ -12,18 +12,18 @@
             <div class="form-group">
               <label for="newTaskTitle">任务标题:</label>
               <input
-                  type="text"
-                  id="newTaskTitle"
-                  v-model="newTask.title"
-                  placeholder="请输入任务标题"
+                type="text"
+                id="newTaskTitle"
+                v-model="newTask.title"
+                placeholder="请输入任务标题"
               />
             </div>
             <div class="form-group">
               <label for="newTaskDescription">任务描述:</label>
               <textarea
-                  id="newTaskDescription"
-                  v-model="newTask.description"
-                  placeholder="请输入任务描述"
+                id="newTaskDescription"
+                v-model="newTask.description"
+                placeholder="请输入任务描述"
               ></textarea>
             </div>
             <div class="form-group">
@@ -46,9 +46,9 @@
             <div class="form-group">
               <label for="newTaskDueDate">截止日期:</label>
               <input
-                  type="datetime-local"
-                  v-model="newTask.dueDate"
-                  id="newTaskDueDate"
+                type="datetime-local"
+                v-model="newTask.dueDate"
+                id="newTaskDueDate"
               />
             </div>
           </div>
@@ -65,9 +65,9 @@
       <!-- 默认的按钮 -->
       <transition name="createButtonTransition">
         <button
-            v-if="!isCreating"
-            @click="startCreateTask"
-            class="createButton"
+          v-if="!isCreating"
+          @click="startCreateTask"
+          class="createButton"
         >
           创建任务
         </button>
@@ -79,23 +79,23 @@
       <div v-else-if="tasks.length === 0" class="loading">无任务</div>
       <!-- 显示任务列表 -->
       <div v-else>
-        <div class="highTaskContainer">
-          <ul v-if="highTasks.length !== 0" class="tasksList">
+        <div v-if="highTasks.length !== 0" class="highTaskContainer">
+          <ul class="tasksList">
             <h2>HIGH PRIORITY</h2>
             <li
-                v-for="task in highTasks"
-                :key="task.id"
-                class="taskItem"
-                @mouseover="hoverTask = task.id"
-                @mouseleave="hoverTask = null"
+              v-for="task in highTasks"
+              :key="task.id"
+              class="taskItem"
+              @mouseover="hoverTask = task.id"
+              @mouseleave="hoverTask = null"
             >
               <!-- 任务块 -->
               <div class="taskContent">
                 <div class="taskOverview">
                   <span class="taskTitle">{{ task.title }}</span>
                   <span
-                      class="taskStatus"
-                      :class="{
+                    class="taskStatus"
+                    :class="{
                       todo: task.status === 'TODO',
                       inProgress: task.status === 'IN_PROGRESS',
                       completed: task.status === 'COMPLETED',
@@ -105,19 +105,19 @@
                   >
                     {{
                       task.status === "TODO"
-                          ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                          : task.status === "IN_PROGRESS"
-                              ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                              : task.status === "COMPLETED"
-                                  ? "Completed"
-                                  : task.status === "ARCHIVED"
-                                      ? "Archived"
-                                      : "Unknown"
+                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "IN_PROGRESS"
+                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "COMPLETED"
+                        ? "Completed"
+                        : task.status === "ARCHIVED"
+                        ? "Archived"
+                        : "Unknown"
                     }}
                   </span>
                   <span class="taskDueDate">{{
-                      formatDate(task.dueDate)
-                    }}</span>
+                    formatDate(task.dueDate)
+                  }}</span>
                 </div>
                 <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
                 <div class="taskDetails">
@@ -128,23 +128,23 @@
           </ul>
         </div>
 
-        <div class="midTaskContainer">
-          <ul v-if="midTasks.length !== 0" class="tasksList">
+        <div v-if="midTasks.length !== 0" class="midTaskContainer">
+          <ul class="tasksList">
             <h2>MEDIUM PRIORITY</h2>
             <li
-                v-for="task in midTasks"
-                :key="task.id"
-                class="taskItem"
-                @mouseover="hoverTask = task.id"
-                @mouseleave="hoverTask = null"
+              v-for="task in midTasks"
+              :key="task.id"
+              class="taskItem"
+              @mouseover="hoverTask = task.id"
+              @mouseleave="hoverTask = null"
             >
               <!-- 任务块 -->
               <div class="taskContent">
                 <div class="taskOverview">
                   <span class="taskTitle">{{ task.title }}</span>
                   <span
-                      class="taskStatus"
-                      :class="{
+                    class="taskStatus"
+                    :class="{
                       todo: task.status === 'TODO',
                       inProgress: task.status === 'IN_PROGRESS',
                       completed: task.status === 'COMPLETED',
@@ -154,19 +154,19 @@
                   >
                     {{
                       task.status === "TODO"
-                          ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                          : task.status === "IN_PROGRESS"
-                              ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                              : task.status === "COMPLETED"
-                                  ? "Completed"
-                                  : task.status === "ARCHIVED"
-                                      ? "Archived"
-                                      : "Unknown"
+                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "IN_PROGRESS"
+                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "COMPLETED"
+                        ? "Completed"
+                        : task.status === "ARCHIVED"
+                        ? "Archived"
+                        : "Unknown"
                     }}
                   </span>
                   <span class="taskDueDate">{{
-                      formatDate(task.dueDate)
-                    }}</span>
+                    formatDate(task.dueDate)
+                  }}</span>
                 </div>
                 <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
                 <div class="taskDetails">
@@ -177,23 +177,23 @@
           </ul>
         </div>
 
-        <div class="lowTaskContainer">
-          <ul v-if="lowTasks.length !== 0" class="tasksList">
+        <div v-if="lowTasks.length !== 0" class="lowTaskContainer">
+          <ul class="tasksList">
             <h2>LOW PRIORITY</h2>
             <li
-                v-for="task in lowTasks"
-                :key="task.id"
-                class="taskItem"
-                @mouseover="hoverTask = task.id"
-                @mouseleave="hoverTask = null"
+              v-for="task in lowTasks"
+              :key="task.id"
+              class="taskItem"
+              @mouseover="hoverTask = task.id"
+              @mouseleave="hoverTask = null"
             >
               <!-- 任务块 -->
               <div class="taskContent">
                 <div class="taskOverview">
                   <span class="taskTitle">{{ task.title }}</span>
                   <span
-                      class="taskStatus"
-                      :class="{
+                    class="taskStatus"
+                    :class="{
                       todo: task.status === 'TODO',
                       inProgress: task.status === 'IN_PROGRESS',
                       completed: task.status === 'COMPLETED',
@@ -203,27 +203,27 @@
                   >
                     {{
                       task.status === "TODO"
-                          ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                          : task.status === "IN_PROGRESS"
-                              ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                              : task.status === "COMPLETED"
-                                  ? "Completed"
-                                  : task.status === "ARCHIVED"
-                                      ? "Archived"
-                                      : "Unknown"
+                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "IN_PROGRESS"
+                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
+                        : task.status === "COMPLETED"
+                        ? "Completed"
+                        : task.status === "ARCHIVED"
+                        ? "Archived"
+                        : "Unknown"
                     }}
                   </span>
                   <span class="taskDueDate">{{
-                      formatDate(task.dueDate)
-                    }}</span>
+                    formatDate(task.dueDate)
+                  }}</span>
                 </div>
                 <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
                 <div class="taskDetails">
                   <p class="taskDescription">
                     {{
                       task.description === ""
-                          ? "No Task Description"
-                          : task.description
+                        ? "No Task Description"
+                        : task.description
                     }}
                   </p>
                 </div>
@@ -237,8 +237,8 @@
 </template>
 
 <script>
-import {showToast} from "@/utils/toast";
-import {useToast} from "vue-toastification";
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "TasksPage",
@@ -256,7 +256,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return {toast};
+    return { toast };
   },
   mounted() {
     this.resetForm();
@@ -312,7 +312,8 @@ export default {
         // TODO: 更多输入限制（如日期范围）
         // TODO: 按照任务优先级排序
         // 调用后端API创建任务
-        this.newTask.userId = localStorage.getItem("userId");
+        const responseUser = await this.$axios.get(`user/info`);
+        this.newTask.creator = responseUser.data;
         this.newTask.groupId = null;
         if (this.newTask.title === "") {
           showToast(this.toast, "任务名不能为空", "error");
@@ -352,9 +353,9 @@ export default {
       const dueDate = new Date(task.dueDate);
       // 判断任务是否逾期且未完成或未归档
       return (
-          dueDate < now &&
-          task.status !== "COMPLETED" &&
-          task.status !== "ARCHIVED"
+        dueDate < now &&
+        task.status !== "COMPLETED" &&
+        task.status !== "ARCHIVED"
       );
     },
   },

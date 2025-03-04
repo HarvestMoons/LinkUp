@@ -26,7 +26,6 @@
   <router-view />
 </template>
 <script>
-
 export default {
   data() {
     return {
@@ -47,7 +46,7 @@ export default {
       // 清除登录状态
       localStorage.removeItem("token");
       localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userId")
+      localStorage.removeItem("userId");
       this.$router.push("/login"); // 跳转到登录页面
       window.location.reload(); // 刷新页面
     },
@@ -55,7 +54,7 @@ export default {
       try {
         const responseUser = await this.$axios.get(`user/info`);
         this.user = responseUser.data;
-        localStorage.setItem("userId",responseUser.data.id)
+        localStorage.setItem("userId", responseUser.data.id);
       } catch (error) {
         console.error("获取用户数据失败:", error);
         // 捕获 401 错误（JWT 过期或无效）

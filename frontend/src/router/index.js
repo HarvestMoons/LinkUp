@@ -4,8 +4,8 @@ import LoginPage from '@/components/LoginPage'
 import RegisterPage from '@/components/RegisterPage'
 import FriendsPage from '@/components/FriendsPage'
 import TasksPage from '@/components/TasksPage'
-import GroupsPage from '@/components/GroupsPage'
-import GroupPage from '@/components/GroupPage'
+import GroupListPage from '@/components/GroupListPage'
+import GroupChatPage from '@/components/GroupChatPage'
 import { useToast } from 'vue-toastification';
 
 const routes = [
@@ -48,13 +48,13 @@ const routes = [
   {
     path: '/groups',
     name: 'groups',
-    component: GroupsPage,
+    component: GroupListPage,
     meta: { title: '群组', requiresAuth: true } // 需要登录才能访问
   },
   {
     path: '/group/:id',
     name: 'group',
-    component: GroupPage,
+    component: GroupChatPage,
     meta: { title: '群组', requiresAuth: true } // 需要登录才能访问
   }
 ]

@@ -1,4 +1,4 @@
-<!-- GroupPage.vue -->
+<!-- GroupChatPage.vue -->
 <template>
   <div class="container">
     <!-- 顶部群组名称 -->
@@ -33,7 +33,7 @@ import { useToast } from "vue-toastification";
 import { useRoute } from "vue-router";
 
 export default {
-  name: "GroupPage",
+  name: "GroupChatPage",
   data() {
     return {
       groupId: null,
@@ -53,16 +53,17 @@ export default {
   },
   async mounted() {
     this.groupId = useRoute().params.id;
-    //await this.checkMembership();
-    //if (this.isMember) {
-    //await this.fetchGroup();
-    //}
+    await this.checkMembership();
+    if (this.isMember) {
+      await this.fetchGroup();
+    }
   },
   methods: {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/check-member`
+          `/groups/${this.groupId}/members/is-member/
+          ${localStorage.getItem("userId")}`
         );
         this.isMember = response.data;
         if (!this.isMember) {
@@ -70,6 +71,7 @@ export default {
           this.$router.push("/"); // 重定向到首页
         }
       } catch (error) {
+        // TODO: 当群组不存在时也会跳转到此处权限检查失败，需要修改
         console.error("检查群组权限失败", error);
         showToast(this.toast, "权限检查失败，请重试！", "error");
         this.$router.push("/");
