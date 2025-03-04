@@ -146,7 +146,8 @@ export default {
         const response = await this.$axios.get(
           `/user/groups/${responseUserId.data.id}`
         );
-        this.groups = response.data;
+        this.groups = response.data.map((item) => item.taskGroup);
+        console.log(this.groups);
       } catch (error) {
         console.error("获取群组数据失败:", error);
       } finally {
