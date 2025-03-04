@@ -1,15 +1,29 @@
 <!-- GroupPage.vue -->
 <template>
-  <div>
-    <h1>群组详情</h1>
-    <p>群组 ID: {{ groupId }}</p>
-    <div v-if="groupData">
-      <h2>{{ groupData.name }}</h2>
+  <div class="container">
+    <!-- 顶部群组名称 -->
+    <header class="groupHeader">
+      <h1>
+        {{ groupData.name }} (#{{ groupId }}) ({{ groupData.members.length }})
+      </h1>
       <p>{{ groupData.description }}</p>
+    </header>
+
+    <!-- 聊天记录区域 -->
+    <div class="chatArea">
+      <p>这里是聊天内容区域...</p>
     </div>
-    <div v-else>
-      <p>加载中...</p>
-    </div>
+
+    <!-- 底部输入框 -->
+    <footer class="chatInputArea">
+      <input
+        type="text"
+        v-model="message"
+        placeholder="输入消息..."
+        class="chatInput"
+      />
+      <button @click="sendMessage" class="sendButton">发送</button>
+    </footer>
   </div>
 </template>
 
@@ -23,7 +37,12 @@ export default {
   data() {
     return {
       groupId: null,
-      groupData: { id: 1, name: "群组名称", description: "群组描述" },
+      groupData: {
+        id: 1,
+        name: "群组名称",
+        description: "群组描述",
+        members: [{ id: 111 }, { id: 12 }],
+      },
       isMember: false,
       loading: true,
     };
@@ -36,7 +55,7 @@ export default {
     this.groupId = useRoute().params.id;
     //await this.checkMembership();
     //if (this.isMember) {
-    await this.fetchGroup();
+    //await this.fetchGroup();
     //}
   },
   methods: {
@@ -70,3 +89,62 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 30px;
+  min-height: 100vh;
+}
+
+.groupHeader {
+  background: #4caf50;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+/* 聊天区域 */
+.chatArea {
+  flex-grow: 1;
+  padding: 20px;
+  background: white;
+  overflow-y: auto;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 底部输入框 */
+.chatInputArea {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 输入框 */
+.chatInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+}
+
+.sendButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  color: white;
+  width: 100px;
+  background-color: #007bff;
+}
+</style>
