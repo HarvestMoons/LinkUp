@@ -26,6 +26,7 @@
   <router-view />
 </template>
 <script>
+import { fetchFriends } from "@/utils/friendService";
 export default {
   data() {
     return {
@@ -47,6 +48,7 @@ export default {
       localStorage.removeItem("token");
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("userId");
+      localStorage.removeItem("user");
       this.$router.push("/login"); // 跳转到登录页面
       window.location.reload(); // 刷新页面
     },
@@ -55,6 +57,8 @@ export default {
         const responseUser = await this.$axios.get(`user/info`);
         this.user = responseUser.data;
         localStorage.setItem("userId", responseUser.data.id);
+        localStorage.setItem("user", JSON.stringify(responseUser.data));
+        await fetchFriends(responseUser.data.id);
       } catch (error) {
         console.error("获取用户数据失败:", error);
         // 捕获 401 错误（JWT 过期或无效）

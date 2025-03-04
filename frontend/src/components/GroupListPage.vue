@@ -117,8 +117,8 @@
 <script>
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import { fetchFriends } from "@/utils/friendService";
 import { Role } from "@/config/constants";
+import { getFriendList } from "@/utils/friendService";
 
 export default {
   name: "GroupListPage",
@@ -163,7 +163,7 @@ export default {
     async createGroup() {
       try {
         console.log(this.newGroup);
-        // NOTE: 创建群组和拉人分两步会不会不好回滚
+        // TODO: 创建群组和拉人分两步会不会不好回滚
         if (this.newGroup.name === "") {
           showToast(this.toast, "群组名不能为空", "error");
           return;
@@ -189,8 +189,10 @@ export default {
             `/groups/${responseNewGroup.data.id}/members/add/${friend.id}?role=${Role.Admin}`
           );
         }
+        showToast(this.toast, "群组创建成功", "success");
       } catch (error) {
         console.error("创建群组失败:", error);
+        showToast(this.toast, "创建群组失败", "error");
       }
     },
 
@@ -213,7 +215,7 @@ export default {
     // 切换到创建任务模式
     async startCreateGroup() {
       this.isCreating = true;
-      this.friends = await fetchFriends(this.userId);
+      this.friends = await getFriendList(this.userId);
       this.friendListLoading = false;
     },
 
