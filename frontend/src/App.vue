@@ -50,7 +50,6 @@ export default {
       localStorage.removeItem("userId");
       localStorage.removeItem("user");
       this.$router.push("/login"); // 跳转到登录页面
-      window.location.reload(); // 刷新页面
     },
     async fetchUserData() {
       try {
