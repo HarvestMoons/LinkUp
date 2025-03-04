@@ -97,26 +97,24 @@ export default {
   flex-direction: column;
   text-align: center;
   margin-top: 30px;
-  min-height: 100vh;
+  height: calc(100vh - 157px);
 }
 
 .groupHeader {
   background: #4caf50;
   color: white;
   text-align: center;
-  padding: 15px;
+  padding: 10px;
   font-size: 18px;
   font-weight: bold;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 /* 聊天区域 */
 .chatArea {
   flex-grow: 1;
   padding: 20px;
-  background: white;
   overflow-y: auto;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
 }
 
 /* 底部输入框 */
@@ -124,8 +122,9 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
-  background: white;
-  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* 输入框 */
