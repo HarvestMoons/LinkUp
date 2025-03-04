@@ -312,8 +312,7 @@ export default {
         // TODO: 更多输入限制（如日期范围）
         // TODO: 按照任务优先级排序
         // 调用后端API创建任务
-        const responseUserId = await this.$axios.get(`user/info`);
-        this.newTask.userId = responseUserId.data.id;
+        this.newTask.userId = localStorage.getItem("userId");
         this.newTask.groupId = null;
         if (this.newTask.title === "") {
           showToast(this.toast, "任务名不能为空", "error");

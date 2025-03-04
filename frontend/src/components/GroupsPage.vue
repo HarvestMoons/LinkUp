@@ -117,6 +117,8 @@
 <script>
 import {showToast} from "@/utils/toast";
 import {useToast} from "vue-toastification";
+import {fetchFriends} from "@/utils/friendService";
+import {Role} from "@/config/constants";
 
 export default {
   name: "GroupsPage",
@@ -136,6 +138,11 @@ export default {
     return {toast};
   },
   mounted() {
+    this.userId = localStorage.getItem("userId"); // 读取 userId
+    if (!this.userId) {
+      console.error("用户ID不存在，请重新登录");
+      return;
+    }
     // 在组件挂载后获取群组数据
     this.fetchGroups();
   },
@@ -143,9 +150,8 @@ export default {
     async fetchGroups() {
       try {
         this.groups = [];
-        const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
-            `/user/groups/${responseUserId.data.id}`
+            `/user/groups/${this.userId}`
         );
         this.groups = response.data;
       } catch (error) {
@@ -175,17 +181,12 @@ export default {
             }
         );
         console.log(responseNewGroup.data);
-        const responseUserId = await this.$axios.get(`user/info`);
         await this.$axios.post(
-            `/groups/${responseNewGroup.data.id}/members`,
-            responseUserId.data,
-            "OWNER"
+            `/groups/${responseNewGroup.data.id}/members/add/${this.userId}?role=${Role.Owner}`,
         );
         for (const friend of this.selectedFriends) {
           await this.$axios.post(
-              `/groups/${responseNewGroup.data.id}/members`,
-              friend,
-              "MEMBER"
+              `/groups/${responseNewGroup.data.id}/members/add/${friend.id}?role=${Role.Admin}`,
           );
         }
       } catch (error) {
@@ -209,41 +210,10 @@ export default {
       }
     },
 
-    async fetchFriends() {
-      try {
-        this.friends = [];
-        const responseUserId = await this.$axios.get(`user/info`);
-        const response = await this.$axios.get(
-            `/friendships/find/${responseUserId.data.id}`
-        );
-        response.data.forEach((friendship) => {
-          if (friendship.user.id === responseUserId.data.id) {
-            this.friends.push({
-              nickname: friendship.friend.username,
-              id: friendship.friend.id,
-              avatar: friendship.friend.avatar,
-              friend: friendship.friend,
-            });
-          } else {
-            this.friends.push({
-              nickname: friendship.user.username,
-              id: friendship.user.id,
-              avatar: friendship.user.avatar,
-              friend: friendship.user,
-            });
-          }
-        });
-        return this.friends;
-      } catch (error) {
-        console.error("获取好友数据失败:", error);
-      } finally {
-        this.friendListLoading = false; // 加载完成，更新状态
-      }
-    },
-
     // 切换到创建任务模式
-    startCreateGroup() {
-      this.fetchFriends();
+    async startCreateGroup() {
+      this.friends = await fetchFriends(this.userId);
+      this.friendListLoading=false;
       this.isCreating = true;
     },
 

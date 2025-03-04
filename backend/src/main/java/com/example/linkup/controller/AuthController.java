@@ -67,14 +67,12 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwtToken = jwtUtils.generateJwtToken(authentication);
             // 登录成功
-            response.put("message", "Login successful.");
             response.put("token", jwtToken);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AuthenticationException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
         } catch (Exception e) {
-            response.put("message", "登录失败，请检查网络或稍后重试。");
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -2,15 +2,13 @@
 <template>
   <div class="container">
     <h1>Welcome to the Friends Page</h1>
-    //todo:查找搜索速度慢的问题
     <!-- 添加好友输入框和按钮 -->
     <div class="addFriendContainer">
       <input
-
-        v-model="friendId"
-        type="text"
-        placeholder="输入用户Id"
-        class="addFriendInput"
+          v-model="friendId"
+          type="text"
+          placeholder="输入用户Id"
+          class="addFriendInput"
       />
       <button @click="sendFriendRequest" class="addFriendButton">
         添加好友
@@ -22,30 +20,30 @@
       <div v-else>
         <ul class="friendRequestList">
           <li
-            v-for="request in pendingRequests"
-            :key="request.id"
-            class="friendRequestItem"
+              v-for="request in pendingRequests"
+              :key="request.id"
+              class="friendRequestItem"
           >
             <img
-              :src="
+                :src="
                 request.sender.avatar || require('@/assets/images/icon.png')
               "
-              alt="头像"
-              class="friendAvatar"
+                alt="头像"
+                class="friendAvatar"
             />
             <span class="friendNickname">
               {{ request.sender.username }} (#{{ request.sender.id }})
               想加你为好友
             </span>
             <button
-              class="acceptFriendButton"
-              @click="acceptRequest(request.id)"
+                class="acceptFriendButton"
+                @click="acceptRequest(request.id)"
             >
               接收
             </button>
             <button
-              class="rejectFriendButton"
-              @click="rejectRequest(request.id)"
+                class="rejectFriendButton"
+                @click="rejectRequest(request.id)"
             >
               拒绝
             </button>
@@ -61,16 +59,16 @@
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
             <img
-              :src="friend.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="friendAvatar"
+                :src="friend.avatar || require('@/assets/images/icon.png')"
+                alt="头像"
+                class="friendAvatar"
             />
             <span class="friendNickname"
-              >{{ friend.nickname }} (#{{ friend.id }})</span
+            >{{ friend.nickname }} (#{{ friend.id }})</span
             >
             <button
-              class="deleteFriendButton"
-              @click="deleteFriend(friend.friend)"
+                class="deleteFriendButton"
+                @click="deleteFriend(friend.friend)"
             >
               删除好友
             </button>
@@ -82,8 +80,10 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {fetchFriends} from "@/utils/friendService";
+//todo:删除好友后无法添加回来
 export default {
   name: "FriendsPage",
   data() {
@@ -97,51 +97,25 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
-  mounted() {
+  async mounted() {
+    this.userId = localStorage.getItem("userId"); // 读取 userId
+    if (!this.userId) {
+      console.error("用户ID不存在，请重新登录");
+      return;
+    }
     // 在组件挂载后获取好友数据
-    this.fetchFriends();
-    this.fetchPendingRequests();
+    // 调用公共方法
+    this.friends = await fetchFriends(this.userId);
+    this.friendListLoading = false;
+    await this.fetchPendingRequests();
   },
   methods: {
-    async fetchFriends() {
-      try {
-        this.friends = [];
-        const responseUserId = await this.$axios.get(`user/info`);
-        const response = await this.$axios.get(
-          `/friendships/find/${responseUserId.data.id}`
-        );
-        response.data.forEach((friendship) => {
-          if (friendship.user.id === responseUserId.data.id) {
-            this.friends.push({
-              nickname: friendship.friend.username,
-              id: friendship.friend.id,
-              avatar: friendship.friend.avatar,
-              friend: friendship.friend,
-            });
-          } else {
-            this.friends.push({
-              nickname: friendship.user.username,
-              id: friendship.user.id,
-              avatar: friendship.user.avatar,
-              friend: friendship.user,
-            });
-          }
-        });
-        return this.friends;
-      } catch (error) {
-        console.error("获取好友数据失败:", error);
-      } finally {
-        this.friendListLoading = false; // 加载完成，更新状态
-      }
-    },
-
     async fetchPendingRequests() {
       try {
-        const responseUserId = await this.$axios.get(`user/info`);
         const response = await this.$axios.get(
-          `/friend-requests/receiver/${responseUserId.data.id}/status/pending`
+            `/friend-requests/receiver/${this.userId}/status/pending`
         );
         this.pendingRequests = response.data; // 获取待处理的好友申请
       } catch (error) {
@@ -159,15 +133,16 @@ export default {
       }
 
       try {
-        const responseUserId = await this.$axios.get(`user/info`);
         await this.$axios.post(
-          "/friend-requests/send", // 后端的接口
-          { senderId: responseUserId.data.id, receiverId: this.friendId }
+            "/friend-requests/send", // 后端的接口
+            {
+              senderId: Number(this.userId), // 将字符串转换为数字
+              receiverId: Number(this.friendId) // 将字符串转换为数字
+            },
         );
 
         // 处理成功的响应
         showToast(this.toast, "好友请求已发送！", "success");
-        this.friendUsername = ""; // 清空输入框
       } catch (error) {
         console.error("发送好友请求失败:", error);
         showToast(this.toast, "发送好友请求失败，请稍后再试！", "error");
@@ -177,11 +152,12 @@ export default {
     async acceptRequest(requestId) {
       try {
         // 接受好友申请
+        console.log(localStorage.getItem("userId"))
         await this.$axios.post(`/friend-requests/accept/${requestId}`);
 
         // 更新待处理申请和好友列表
         await this.fetchPendingRequests();
-        await this.fetchFriends();
+        await fetchFriends();
 
         // 提示用户已成功接收好友请求
         showToast(this.toast, "已成功接收好友申请", "success");
@@ -209,17 +185,15 @@ export default {
 
     async deleteFriend(friend) {
       try {
-        const responseUserId = await this.$axios.get(`user/info`);
+        const responseUser = await this.$axios.get(`user/info`);
         await this.$axios.delete(`/friendships/remove`, {
           data: {
-            user: responseUserId.data,
+            user: responseUser.data,
             friend: friend,
           },
         });
-
         // 更新好友列表
-        this.fetchFriends();
-
+        await fetchFriends();
         showToast(this.toast, "已成功删除好友", "success");
       } catch (error) {
         console.error("删除好友失败:", error);

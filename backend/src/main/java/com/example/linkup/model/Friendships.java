@@ -3,6 +3,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -23,25 +25,12 @@ public class Friendships {
     private User friend;
 
     @JsonIgnore
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @JsonIgnore
+    @UpdateTimestamp
     @Column()
     private LocalDateTime updatedAt;
-
-    /** 在实体插入前，自动填充 createdAt 和 updatedAt */
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    /** 在实体更新前，自动更新 updatedAt */
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
 }

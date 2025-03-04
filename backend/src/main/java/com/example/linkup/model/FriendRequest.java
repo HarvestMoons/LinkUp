@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -29,29 +31,17 @@ public class FriendRequest {
     private RequestStatus status;  // 请求状态（PENDING, ACCEPTED, REJECTED）
 
     @JsonIgnore
+    @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;  // 创建时间
 
     @JsonIgnore
+    @UpdateTimestamp
     @Column()
     private LocalDateTime updatedAt;  // 更新时间
 
     public enum RequestStatus {
         PENDING, ACCEPTED, REJECTED
-    }
-
-    /** 在实体插入前，自动填充 createdAt 和 updatedAt */
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    /** 在实体更新前，自动更新 updatedAt */
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 
 }
