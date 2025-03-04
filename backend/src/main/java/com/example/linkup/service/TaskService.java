@@ -7,7 +7,6 @@ import com.example.linkup.repository.TaskRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -67,7 +66,6 @@ public class TaskService {
     public List<Task> getPersonalTasks(Long userId) {
         return taskRepository.findByCreatorIdAndTaskGroupIsNull(userId);
     }
-
 
     // 获取某个用户所在群组的所有任务
     public List<Task> getGroupTasks(Long userId) {

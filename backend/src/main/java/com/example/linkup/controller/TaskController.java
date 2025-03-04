@@ -24,6 +24,7 @@ public class TaskController {
 
     /**
      * 创建任务
+     * 
      * @param taskDto 任务的数据传输对象
      * @return 创建的任务
      */
@@ -35,7 +36,8 @@ public class TaskController {
 
     /**
      * 获取指定状态和优先级的任务
-     * @param status 任务状态
+     * 
+     * @param status   任务状态
      * @param priority 任务优先级
      * @return 符合条件的任务列表
      */
@@ -52,7 +54,8 @@ public class TaskController {
 
     /**
      * 更新任务
-     * @param id 任务ID
+     * 
+     * @param id      任务ID
      * @param taskDto 任务的数据传输对象
      * @return 更新后的任务
      * @throws ElementNotExistException 如果任务不存在
@@ -70,6 +73,7 @@ public class TaskController {
 
     /**
      * 获取所有任务
+     * 
      * @return 任务列表
      */
     @GetMapping("/all")
@@ -80,6 +84,7 @@ public class TaskController {
 
     /**
      * 获取指定群组内的所有任务
+     * 
      * @param groupId 群组ID
      * @return 群组任务列表
      */
@@ -91,6 +96,7 @@ public class TaskController {
 
     /**
      * 获取指定状态的任务
+     * 
      * @param status 任务状态
      * @return 任务列表
      */
@@ -102,6 +108,7 @@ public class TaskController {
 
     /**
      * 获取指定优先级的任务
+     * 
      * @param priority 任务优先级
      * @return 任务列表
      */
@@ -113,6 +120,7 @@ public class TaskController {
 
     /**
      * 根据标题搜索任务
+     * 
      * @param title 任务标题
      * @return 符合条件的任务列表
      */
@@ -124,26 +132,29 @@ public class TaskController {
 
     /**
      * 获取某用户的所有单人任务
+     * 
      * @param userId 用户ID
      * @return 任务列表
      */
-    @GetMapping("/personal/{userId}")
+    @GetMapping("/user/{userId}/personal-tasks")
     public List<Task> getPersonalTasks(@PathVariable Long userId) {
         return taskService.getPersonalTasks(userId);
     }
 
     /**
      * 获取某用户所在群组的所有任务
+     * 
      * @param userId 用户ID
      * @return 任务列表
      */
-    @GetMapping("/group/{userId}")
+    @GetMapping("/user/{userId}/group-tasks")
     public List<Task> getGroupTasks(@PathVariable Long userId) {
         return taskService.getGroupTasks(userId);
     }
 
     /**
      * 删除任务
+     * 
      * @param id 任务ID
      * @return 无内容响应
      * @throws ElementNotExistException 如果任务不存在

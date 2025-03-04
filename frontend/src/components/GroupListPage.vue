@@ -125,8 +125,8 @@ export default {
   data() {
     return {
       groups: [],
-      groupListLoading: true, // 加载状态
-      friendListLoading: true,
+      groupListLoading: false, // 加载状态
+      friendListLoading: false,
       isCreating: false,
       newGroup: [],
       selectedFriends: [],
@@ -149,6 +149,7 @@ export default {
   methods: {
     async fetchGroups() {
       try {
+        this.groupListLoading = true;
         this.groups = [];
         const response = await this.$axios.get(`/user/groups/${this.userId}`);
         this.groups = response.data.map((item) => item.taskGroup);
@@ -215,13 +216,13 @@ export default {
     // 切换到创建任务模式
     async startCreateGroup() {
       this.isCreating = true;
+      this.friendListLoading = true;
       this.friends = await getFriendList(this.userId);
       this.friendListLoading = false;
     },
 
     // 取消创建任务
     cancelCreateGroup() {
-      this.friendListLoading = true;
       this.isCreating = false;
       this.resetForm(); // 重置表单
     },

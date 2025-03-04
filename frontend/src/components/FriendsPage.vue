@@ -91,8 +91,8 @@ export default {
       friendId: "",
       friends: [], // 用来存储好友列表
       pendingRequests: [], // 存储待处理的好友申请列表
-      friendListLoading: true, // 加载状态
-      friendRequestLoading: true,
+      friendListLoading: false, // 加载状态
+      friendRequestLoading: false,
     };
   },
   setup() {
@@ -107,7 +107,8 @@ export default {
     }
     // 在组件挂载后获取好友数据
     // 调用公共方法
-    console.log(localStorage);
+
+    this.friendListLoading = true;
     this.friends = await getFriendList(this.userId);
     this.friendListLoading = false;
     await this.fetchPendingRequests();
@@ -115,6 +116,7 @@ export default {
   methods: {
     async fetchPendingRequests() {
       try {
+        this.friendRequestLoading = true;
         const response = await this.$axios.get(
           `/friend-requests/receiver/${this.userId}/status/pending`
         );

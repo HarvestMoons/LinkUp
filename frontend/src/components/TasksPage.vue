@@ -244,7 +244,7 @@ export default {
   name: "TasksPage",
   data() {
     return {
-      taskListLoading: true,
+      taskListLoading: false,
       hoverTask: null, // 记录当前悬浮的任务ID
       tasks: [],
       highTasks: [],
@@ -259,19 +259,33 @@ export default {
     return { toast };
   },
   mounted() {
+    this.userId = localStorage.getItem("userId"); // 读取 userId
+    if (!this.userId) {
+      console.error("用户ID不存在，请重新登录");
+      return;
+    }
     this.resetForm();
     this.fetchTasks();
   },
   methods: {
-    //TODO: 用户自定义排序（按优先级、按ddl）
+    // TODO: 用户自定义排序（按优先级、按ddl）
+    // TODO: 改为查询用户自己的任务（当前是全局查询）
+    // TODO: 任务编辑功能
     async fetchTasks() {
       try {
+        this.taskListLoading = true;
         this.tasks = [];
         this.highTasks = [];
         this.midTasks = [];
         this.lowTasks = [];
-        const response = await this.$axios.get(`/tasks/all`);
-        response.data.forEach((task) => {
+        const responsePersonalTasks = await this.$axios.get(
+          `/tasks/user/${this.userId}/personal-tasks`
+        );
+        const responseGroupTasks = await this.$axios.get(
+          `/tasks/user/${this.userId}/group-tasks`
+        );
+        this.tasks = responsePersonalTasks.data.concat(responseGroupTasks.data);
+        this.tasks.forEach((task) => {
           if (task.priority === "HIGH") {
             this.highTasks.push(task);
           } else if (task.priority === "MEDIUM") {
@@ -280,7 +294,7 @@ export default {
             this.lowTasks.push(task);
           }
         });
-        this.tasks = response.data;
+        console.log(this.tasks);
       } catch (error) {
         console.error("获取任务数据失败:", error);
       } finally {
