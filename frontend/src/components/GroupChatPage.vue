@@ -68,7 +68,8 @@
 // TODO: 任务显示、群组信息编辑组件
 import {showToast} from "@/utils/toast";
 import {useToast} from "vue-toastification";
-import {useRoute} from "vue-router";
+import SockJS from "sockjs-client";  // 新增
+import { Client } from '@stomp/stompjs';  // 新增
 
 export default {
   name: "GroupChatPage",
@@ -85,7 +86,7 @@ export default {
       messageLoading: true,
       newMessage: "",
       messageList: [],
-      socket: null, // WebSocket 实例
+      stompClient: null, // 修改为STOMP客户端
     };
   },
   setup() {
@@ -93,22 +94,26 @@ export default {
     return {toast};
   },
   async mounted() {
-    this.userId = localStorage.getItem("userId"); // 读取 userId
+    this.userId = localStorage.getItem("userId");
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;
     }
-    this.groupId = useRoute().params.id;
-    await this.checkMembership();
-    if (this.isMember) {
-      await this.fetchGroup();
-      await this.fetchMessages();
-      this.initWebSocket(); // 启动 WebSocket 连接
-    }
+
+    this.groupId = this.$route.params.id;
+    this.connectWebSocket(); // 修改后的连接方法
+
+    this.checkMembership()
+        .then(() => {
+          if (this.isMember) {
+            this.fetchGroup();
+            this.fetchMessages();
+          }
+        });
   },
   beforeUnmount() {
-    if (this.socket) {
-      this.socket.close(); // 组件卸载时关闭 WebSocket 连接
+    if (this.stompClient) {
+      this.stompClient.deactivate(); // 安全断开连接
     }
   },
   methods: {
@@ -151,49 +156,64 @@ export default {
     isSentByCurrentUser(message) {
       return this.userId === message.sender.id;
     },
-    async sendMessage() {
-      try {
-        if (this.newMessage === "") {
-          showToast(this.toast, "发送的内容不能为空", "error");
-          return;
+    //todo:自己发的消息没有显示为自己发送
+    connectWebSocket() {
+      const serverUrl = `http://localhost:8099/chatroom`;
+      const socket = new SockJS(serverUrl);
+
+      this.stompClient = new Client({
+        webSocketFactory: () => socket,
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        onConnect: () => {
+          console.log("STOMP连接成功");
+
+          // 订阅群组主题（匹配后端@SendTo配置）
+          // 保存subscription以便取消订阅
+          this.subscription = this.stompClient.subscribe(
+              `/topic/group/${this.groupId}`,
+              message => {
+                const newMessage = JSON.parse(message.body);
+                this.messageList.push(newMessage);
+              }
+          );
+        },
+        onStompError: (frame) => {
+          console.error("STOMP协议错误:", frame.headers.message);
+        },
+        onWebSocketClose: () => {
+          console.log("连接关闭，尝试重连...");
         }
-        await this.$axios.post("/chat-message/send", null, {
-          params: {
-            groupId: this.groupId,
-            senderId: this.userId,
-            content: this.newMessage,
-          },
+      });
+
+      this.stompClient.activate();
+    },
+
+    sendMessage() {
+      if (!this.newMessage.trim()) {
+        showToast(this.toast, "发送的内容不能为空", "error");
+        return;
+      }
+
+      // 消息结构需要匹配后端的ChatMessage对象
+      const message = {
+        content: this.newMessage,
+        sender: { id: this.userId },
+        taskGroup: { id: this.groupId } // 关键字段，用于后端路由
+      };
+
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.publish({
+          destination: `/chat/sendMessage`, // 匹配@MessageMapping
+          body: JSON.stringify(message)
         });
         this.newMessage = "";
-        // 这里不再调用 `fetchMessages()`，因为 WebSocket 会自动更新
-      } catch (error) {
-        console.error("发送信息失败", error);
+      } else {
+        console.error("STOMP连接未就绪");
+        showToast(this.toast, "连接尚未建立，请稍后重试", "error");
       }
-    },
-    initWebSocket() {
-      this.socket = new WebSocket(`ws://8.155.47.138/ws/chat/${this.groupId}`);
-
-      this.socket.onopen = () => {
-        console.log("WebSocket 连接已建立");
-      };
-
-      this.socket.onmessage = (event) => {
-        try {
-          const newMessage = JSON.parse(event.data);
-          this.messageList.push(newMessage); // 直接更新消息列表
-        } catch (error) {
-          console.error("解析 WebSocket 消息失败", error);
-        }
-      };
-
-      this.socket.onerror = (error) => {
-        console.error("WebSocket 发生错误", error);
-      };
-
-      this.socket.onclose = () => {
-        console.log("WebSocket 连接已关闭");
-      };
-    },
+    }
   },
 };
 </script>
