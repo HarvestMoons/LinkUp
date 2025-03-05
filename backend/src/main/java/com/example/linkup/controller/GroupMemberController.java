@@ -22,7 +22,8 @@ public class GroupMemberController {
     private final TaskGroupService taskGroupService;
     private final UserService userService;
 
-    public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService, UserService userService) {
+    public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
+            UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;
@@ -50,7 +51,7 @@ public class GroupMemberController {
             @RequestParam(required = false) Role role) {
 
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(taskGroupId);
-        User user= userService.findById(userId);
+        User user = userService.findById(userId);
         GroupMember newMember = groupMemberService.addMemberToGroup(taskGroup, user, role);
         return ResponseEntity.status(HttpStatus.CREATED).body(newMember);
     }
@@ -74,15 +75,16 @@ public class GroupMemberController {
         return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
     }
 
-
-
+    // TODO: 需要自定义异常类，用来区分并抛出因为群组不存在导致的异常
     /**
      * 判断指定用户是否在指定群组中
+     * 
      * @param userId 指定的用户ID
      * @return true/false
      */
     @GetMapping("/is-member/{userId}")
-    public ResponseEntity<Boolean> isUserInGroup(@PathVariable long taskGroupId, @PathVariable Long userId) throws ElementNotExistException {
+    public ResponseEntity<Boolean> isUserInGroup(@PathVariable long taskGroupId, @PathVariable Long userId)
+            throws ElementNotExistException {
 
         boolean isMember = groupMemberService.isUserInGroup(taskGroupId, userId);
         return ResponseEntity.ok(isMember);

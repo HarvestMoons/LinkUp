@@ -53,11 +53,15 @@ export default {
     },
     async fetchUserData() {
       try {
-        const responseUser = await this.$axios.get(`user/info`);
-        this.user = responseUser.data;
-        localStorage.setItem("userId", responseUser.data.id);
-        localStorage.setItem("user", JSON.stringify(responseUser.data));
-        await fetchFriends(responseUser.data.id);
+        if (localStorage.getItem("userId") && localStorage.getItem("user")) {
+          this.user = JSON.parse(localStorage.getItem("user"));
+        } else {
+          const responseUser = await this.$axios.get(`user/info`);
+          this.user = responseUser.data;
+          localStorage.setItem("userId", responseUser.data.id);
+          localStorage.setItem("user", JSON.stringify(responseUser.data));
+        }
+        await fetchFriends(this.user.id);
       } catch (error) {
         console.error("获取用户数据失败:", error);
         // 捕获 401 错误（JWT 过期或无效）

@@ -83,7 +83,7 @@
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { fetchFriends, getFriendList } from "@/utils/friendService";
-//todo:删除好友后无法添加回来
+// TODO:删除好友后无法添加回来
 export default {
   name: "FriendsPage",
   data() {

@@ -28,8 +28,6 @@ public class FriendRequestController {
         this.friendshipsService = friendshipsService;
     }
 
-    // TODO: 直接在这里加上 查询该好友是否已存在 的逻辑
-    // TODO: 可能需要给前端提示不同的错误信息 用来区分“您已经发送过请求”“您已经有该好友”等等
     // 发送好友请求
     @PostMapping("/send")
     public ResponseEntity<FriendRequest> sendFriendRequest(@RequestBody FriendRequestRequestDto requestDto)

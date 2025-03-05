@@ -2,7 +2,6 @@ package com.example.linkup.dto;
 
 import java.time.LocalDateTime;
 import com.example.linkup.model.Task;
-import com.example.linkup.model.TaskGroup;
 import com.example.linkup.model.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,7 +11,7 @@ public class TaskDto {
     @NotNull
     private String title;
 
-    private TaskGroup taskGroup;
+    private Long taskGroupId;
 
     @NotNull
     private User creator;

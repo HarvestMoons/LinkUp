@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 @Transactional
 public class TaskGroupService {
@@ -45,5 +46,9 @@ public class TaskGroupService {
     // 删除群组
     public void deleteTaskGroup(Long id) {
         taskGroupRepository.deleteById(id);
+    }
+
+    public TaskGroup findById(Long id) {
+        return taskGroupRepository.findById(id).orElse(null);
     }
 }

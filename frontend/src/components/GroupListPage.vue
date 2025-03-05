@@ -175,7 +175,7 @@ export default {
         }
         const responseNewGroup = await this.$axios.post(
           `/task-group/create`,
-          //todo:修改这个补丁
+          // TODO:修改这个补丁
           {
             name: this.newGroup.name,
             description: this.newGroup.description,

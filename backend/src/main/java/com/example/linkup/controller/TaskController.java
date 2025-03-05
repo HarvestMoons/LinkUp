@@ -3,7 +3,9 @@ package com.example.linkup.controller;
 import com.example.linkup.dto.TaskDto;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.model.Task;
+import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskService;
+import com.example.linkup.service.TaskGroupService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,12 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskGroupService taskGroupService;
     private final ModelMapper modelMapper;
 
-    public TaskController(TaskService taskService, ModelMapper modelMapper) {
+    public TaskController(TaskService taskService, TaskGroupService taskGroupService, ModelMapper modelMapper) {
         this.taskService = taskService;
+        this.taskGroupService = taskGroupService;
         this.modelMapper = modelMapper;
     }
 
@@ -30,7 +34,9 @@ public class TaskController {
      */
     @PostMapping("/create")
     public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto) {
+        TaskGroup taskGroup = taskGroupService.findById(taskDto.getTaskGroupId());
         Task task = taskService.createTask(modelMapper.map(taskDto, Task.class));
+        task.setTaskGroup(taskGroup);
         return ResponseEntity.status(201).body(task); // 返回 201 Created
     }
 

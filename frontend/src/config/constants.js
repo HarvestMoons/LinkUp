@@ -5,7 +5,7 @@ export const MAX_STRING_LENGTH = 25;
 export const Role = {
     Admin: 'ADMIN',
     User: 'USER',
-    Owner:'OWNER'
+    Owner: 'OWNER'
 };
 
-//todo:引入ts环境
+// TODO:引入ts环境

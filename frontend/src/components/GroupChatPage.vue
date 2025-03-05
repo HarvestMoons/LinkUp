@@ -1,66 +1,83 @@
 <!-- GroupChatPage.vue -->
 <template>
   <div class="container">
-    <!-- 顶部群组名称 -->
-    <header class="groupHeader">
-      <h1>{{ groupData.name }} (#{{ groupId }})</h1>
-      <p>{{ groupData.description }}</p>
-    </header>
+    <div class="chatContainer">
+      <!-- 顶部群组名称 -->
+      <header class="groupHeader">
+        <h1>{{ groupData.name }} (#{{ groupId }})</h1>
+        <p>{{ groupData.description }}</p>
+        <button @click="toggleTaskSidebar">📋 任务</button>
+      </header>
 
-    <!-- 聊天记录区域 -->
-    <div class="chatArea">
-      <div v-if="messageLoading" class="loading">加载中...</div>
-      <div v-else>
-        <ul class="messageList">
-          <li
-            v-for="message in messageList"
-            :key="message.id"
-            class="messageItem"
-            :class="{
-              'align-right': isSentByUserself(message),
-              'align-left': !isSentByUserself(message),
-            }"
-          >
-            <img
-              v-if="!isSentByUserself(message)"
-              :src="
-                message.sender.avatar || require('@/assets/images/icon.png')
-              "
-              alt="头像"
-              class="messageAvatar leftAvatar"
-            />
-            <div
-              class="messageContent"
+      <!-- 聊天记录区域 -->
+      <div class="chatArea">
+        <div v-if="messageLoading" class="loading">加载中...</div>
+        <div v-else>
+          <ul class="messageList">
+            <li
+              v-for="message in messageList"
+              :key="message.id"
+              class="messageItem"
               :class="{
-                rightContent: isSentByUserself(message),
-                leftContent: !isSentByUserself(message),
+                'align-right': isSentByUserself(message),
+                'align-left': !isSentByUserself(message),
               }"
             >
-              {{ message.content }}
-            </div>
-            <img
-              v-if="isSentByUserself(message)"
-              :src="
-                message.sender.avatar || require('@/assets/images/icon.png')
-              "
-              alt="头像"
-              class="messageAvatar rightAvatar"
-            />
-          </li>
-        </ul>
+              <img
+                v-if="!isSentByUserself(message)"
+                :src="
+                  message.sender.avatar || require('@/assets/images/icon.png')
+                "
+                alt="头像"
+                class="messageAvatar leftAvatar"
+              />
+              <div>
+                <div>{{ message.sender.username }}</div>
+                <div
+                  class="messageContent"
+                  :class="{
+                    rightContent: isSentByUserself(message),
+                    leftContent: !isSentByUserself(message),
+                  }"
+                >
+                  {{ message.content }}
+                </div>
+              </div>
+              <img
+                v-if="isSentByUserself(message)"
+                :src="
+                  message.sender.avatar || require('@/assets/images/icon.png')
+                "
+                alt="头像"
+                class="messageAvatar rightAvatar"
+              />
+            </li>
+          </ul>
+        </div>
       </div>
+
+      <!-- 底部输入框 -->
+      <footer class="chatInputArea">
+        <input
+          type="text"
+          v-model="newMessage"
+          placeholder="输入消息..."
+          class="chatInput"
+        />
+        <button @click="sendMessage" class="sendButton">发送</button>
+      </footer>
     </div>
 
-    <!-- 底部输入框 -->
-    <footer class="chatInputArea">
-      <input
-        type="text"
-        v-model="newMessage"
-        placeholder="输入消息..."
-        class="chatInput"
-      />
-      <button @click="sendMessage" class="sendButton">发送</button>
-    </footer>
+    <!-- 右侧任务侧边栏 -->
+    <TaskSideBar
+      title="群组任务"
+      :isVisible="showTaskSidebar"
+      :tasks="groupTasks"
+      :taskListLoading="taskListLoading"
+      :groupId="groupId"
+      :fetchTasks="fetchGroupTasks"
+      @close="toggleTaskSidebar"
+    />
   </div>
 </template>
 
@@ -69,22 +86,26 @@
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { useRoute } from "vue-router";
+import TaskSideBar from "@/components/TaskSideBar.vue";
 
 export default {
+  components: { TaskSideBar },
   name: "GroupChatPage",
   data() {
     return {
       groupId: null,
       groupData: {
         id: 1,
-        name: "群组名称",
-        description: "群组描述",
+        name: "群组名称加载中",
+        description: "群组描述加载中",
         members: [{ id: 111 }, { id: 12 }],
       },
       isMember: false,
       messageLoading: true,
       newMessage: "",
       messageList: [],
+      showTaskSidebar: false,
+      groupTasks: [],
     };
   },
   setup() {
@@ -119,7 +140,11 @@ export default {
       } catch (error) {
         // TODO: 当群组不存在时也会跳转到此处权限检查失败，需要修改
         console.error("检查群组权限失败", error);
-        showToast(this.toast, "权限检查失败，请重试！", "error");
+        if (error.response.data.message) {
+          showToast(this.toast, error.response.data.message, "error");
+        } else {
+          showToast(this.toast, "权限检查失败，请重试！", "error");
+        }
         this.$router.push("/");
       }
     },
@@ -165,16 +190,36 @@ export default {
         console.error("发送信息失败", error);
       }
     },
+    toggleTaskSidebar() {
+      this.showTaskSidebar = !this.showTaskSidebar;
+      if (this.showTaskSidebar) {
+        this.fetchGroupTasks();
+      }
+    },
+    async fetchGroupTasks() {
+      this.taskListLoading = true;
+      try {
+        const response = await this.$axios.get(`/tasks/group/${this.groupId}`);
+        this.groupTasks = response.data;
+      } catch (error) {
+        console.error("获取任务失败", error);
+      } finally {
+        this.taskListLoading = false;
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
 .container {
+  margin-top: 30px;
+}
+
+.chatContainer {
   display: flex;
   flex-direction: column;
   text-align: center;
-  margin-top: 30px;
   height: calc(100vh - 157px);
 }
 
@@ -217,10 +262,12 @@ export default {
 }
 
 .align-left {
+  text-align: left;
   align-self: flex-start; /* 左对齐 */
 }
 
 .align-right {
+  text-align: right;
   align-self: flex-end; /* 右对齐 */
 }
 
