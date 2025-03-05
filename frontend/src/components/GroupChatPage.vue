@@ -3,9 +3,7 @@
   <div class="container">
     <!-- 顶部群组名称 -->
     <header class="groupHeader">
-      <h1>
-        {{ groupData.name }} (#{{ groupId }}) ({{ groupData.members.length }})
-      </h1>
+      <h1>{{ groupData.name }} (#{{ groupId }})</h1>
       <p>{{ groupData.description }}</p>
     </header>
 
@@ -102,9 +100,9 @@ export default {
     this.groupId = useRoute().params.id;
     await this.checkMembership();
     if (this.isMember) {
-      await this.fetchGroup();
+      this.fetchGroup();
+      this.fetchMessages();
     }
-    this.fetchMessages();
   },
   methods: {
     async checkMembership() {
@@ -128,7 +126,7 @@ export default {
     async fetchGroup() {
       try {
         const response = await this.$axios.get(`/task-group/${this.groupId}`);
-        this.groupData.value = response.data;
+        this.groupData = response.data;
       } catch (error) {
         console.error("加载群组失败", error);
       }
