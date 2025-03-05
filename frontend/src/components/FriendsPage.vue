@@ -148,7 +148,11 @@ export default {
         showToast(this.toast, "好友请求已发送！", "success");
       } catch (error) {
         console.error("发送好友请求失败:", error);
-        showToast(this.toast, "发送好友请求失败，请稍后再试！", "error");
+        if (error.response.data.message) {
+          showToast(this.toast, error.response.data.message, "error");
+        } else {
+          showToast(this.toast, "发送好友请求失败，请稍后再试！", "error");
+        }
       }
     },
 

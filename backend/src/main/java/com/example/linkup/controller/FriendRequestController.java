@@ -42,7 +42,7 @@ public class FriendRequestController {
             throw new UnexpectedNullElementException();
         }
         if (receiver == null) {
-            throw new ElementNotExistException("id" + requestDto.getReceiverId() + "对应的用户不存在！");
+            throw new ElementNotExistException("id #" + requestDto.getReceiverId() + " 对应的用户不存在！");
         }
 
         FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
