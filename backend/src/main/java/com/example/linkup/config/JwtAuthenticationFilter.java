@@ -32,6 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
             throws ServletException, IOException {
+        if (request.getRequestURI().startsWith("/chatroom")) {
+            filterChain.doFilter(request, response); // 放行 WebSocket 请求
+            return;
+        }
         try {
             // 1. 从请求头中提取 Token
             String jwt = parseJwt(request);

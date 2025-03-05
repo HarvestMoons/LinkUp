@@ -31,7 +31,6 @@ public class TaskGroupController {
     // 获取一个任务群组
     @GetMapping("/{id}")
     public ResponseEntity<TaskGroup> getTaskGroupById(@PathVariable("id") Long id) throws ElementNotExistException {
-        System.out.println("1");
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(id);
         if (taskGroup == null) {
             throw new ElementNotExistException("此ID对应的任务群组不存在！");
@@ -42,8 +41,6 @@ public class TaskGroupController {
     // 创建任务群组
     @PostMapping("/create")
     public ResponseEntity<TaskGroup> createTaskGroup(@RequestBody TaskGroupDto taskGroupDto) {
-        System.out.println(taskGroupDto.getName());
-        System.out.println(taskGroupDto.getDescription());
         TaskGroup createdTaskGroup = taskGroupService.createTaskGroup(modelMapper.map(taskGroupDto, TaskGroup.class));
         return new ResponseEntity<>(createdTaskGroup, HttpStatus.CREATED);
     }

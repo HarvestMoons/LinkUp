@@ -19,12 +19,12 @@
               :key="message.id"
               class="messageItem"
               :class="{
-                'align-right': isSentByUserself(message),
-                'align-left': !isSentByUserself(message),
+                'align-right': isSentByCurrentUser(message),
+                'align-left': !isSentByCurrentUser(message),
               }"
             >
               <img
-                v-if="!isSentByUserself(message)"
+                v-if="!isSentByCurrentUser(message)"
                 :src="
                   message.sender.avatar || require('@/assets/images/icon.png')
                 "
@@ -36,15 +36,15 @@
                 <div
                   class="messageContent"
                   :class="{
-                    rightContent: isSentByUserself(message),
-                    leftContent: !isSentByUserself(message),
+                    rightContent: isSentByCurrentUser(message),
+                    leftContent: !isSentByCurrentUser(message),
                   }"
                 >
                   {{ message.content }}
                 </div>
               </div>
               <img
-                v-if="isSentByUserself(message)"
+                v-if="isSentByCurrentUser(message)"
                 :src="
                   message.sender.avatar || require('@/assets/images/icon.png')
                 "
@@ -85,7 +85,8 @@
 // TODO: 任务显示、群组信息编辑组件
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import { useRoute } from "vue-router";
+import SockJS from "sockjs-client"; // 新增
+import { Client } from "@stomp/stompjs"; // 新增
 import TaskSideBar from "@/components/TaskSideBar.vue";
 
 export default {
@@ -106,6 +107,7 @@ export default {
       messageList: [],
       showTaskSidebar: false,
       groupTasks: [],
+      stompClient: null, // 修改为STOMP客户端
     };
   },
   setup() {
@@ -113,32 +115,39 @@ export default {
     return { toast };
   },
   async mounted() {
-    this.userId = localStorage.getItem("userId"); // 读取 userId
+    this.userId = localStorage.getItem("userId");
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;
     }
-    this.groupId = useRoute().params.id;
-    await this.checkMembership();
-    if (this.isMember) {
-      this.fetchGroup();
-      this.fetchMessages();
+
+    this.groupId = this.$route.params.id;
+    this.connectWebSocket(); // 修改后的连接方法
+
+    this.checkMembership().then(() => {
+      if (this.isMember) {
+        this.fetchGroup();
+        this.fetchMessages();
+      }
+    });
+  },
+  beforeUnmount() {
+    if (this.stompClient) {
+      this.stompClient.deactivate(); // 安全断开连接
     }
   },
   methods: {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/is-member/
-          ${this.userId}`
+          `/groups/${this.groupId}/members/is-member/${this.userId}`
         );
         this.isMember = response.data;
         if (!this.isMember) {
           showToast(this.toast, "你不是该群组的成员，无法访问！", "error");
-          this.$router.push("/"); // 重定向到首页
+          this.$router.push("/");
         }
       } catch (error) {
-        // TODO: 当群组不存在时也会跳转到此处权限检查失败，需要修改
         console.error("检查群组权限失败", error);
         if (error.response.data.message) {
           showToast(this.toast, error.response.data.message, "error");
@@ -168,26 +177,65 @@ export default {
         this.messageLoading = false;
       }
     },
-    isSentByUserself(message) {
+    isSentByCurrentUser(message) {
       return this.userId == message.sender.id;
     },
-    async sendMessage() {
-      try {
-        if (this.newMessage == "") {
-          showToast(this.toast, "发送的内容不能为空", "error");
-          return;
-        }
-        await this.$axios.post("/chat-message/send", null, {
-          params: {
-            groupId: this.groupId, // 群组 ID
-            senderId: this.userId, // 发送者 ID
-            content: this.newMessage, // 发送的消息内容
-          },
+    //todo:自己发的消息没有显示为自己发送
+    connectWebSocket() {
+      const serverUrl = `http://localhost:8099/chatroom`;
+      const socket = new SockJS(serverUrl);
+
+      this.stompClient = new Client({
+        webSocketFactory: () => socket,
+        reconnectDelay: 5000,
+        heartbeatIncoming: 4000,
+        heartbeatOutgoing: 4000,
+        onConnect: () => {
+          console.log("STOMP连接成功");
+
+          // 订阅群组主题（匹配后端@SendTo配置）
+          // 保存subscription以便取消订阅
+          this.subscription = this.stompClient.subscribe(
+            `/topic/group/${this.groupId}`,
+            (message) => {
+              const newMessage = JSON.parse(message.body);
+              this.messageList.push(newMessage);
+            }
+          );
+        },
+        onStompError: (frame) => {
+          console.error("STOMP协议错误:", frame.headers.message);
+        },
+        onWebSocketClose: () => {
+          console.log("连接关闭，尝试重连...");
+        },
+      });
+
+      this.stompClient.activate();
+    },
+
+    sendMessage() {
+      if (!this.newMessage.trim()) {
+        showToast(this.toast, "发送的内容不能为空", "error");
+        return;
+      }
+
+      // 消息结构需要匹配后端的ChatMessage对象
+      const message = {
+        content: this.newMessage,
+        sender: { id: this.userId },
+        taskGroup: { id: this.groupId }, // 关键字段，用于后端路由
+      };
+
+      if (this.stompClient && this.stompClient.connected) {
+        this.stompClient.publish({
+          destination: `/chat/sendMessage`, // 匹配@MessageMapping
+          body: JSON.stringify(message),
         });
         this.newMessage = "";
-        this.fetchMessages();
-      } catch (error) {
-        console.error("发送信息失败", error);
+      } else {
+        console.error("STOMP连接未就绪");
+        showToast(this.toast, "连接尚未建立，请稍后重试", "error");
       }
     },
     toggleTaskSidebar() {

@@ -40,7 +40,7 @@ public class FriendRequestService {
         friendRequest.setReceiver(receiver);
         friendRequest.setStatus(FriendRequest.RequestStatus.PENDING);
 
-        return friendRequestRepository.save(friendRequest); // 保存到数据库
+        return friendRequestRepository.save(friendRequest);
     }
 
     // 获取某个用户的所有好友请求（例如，查看所有待处理请求）
