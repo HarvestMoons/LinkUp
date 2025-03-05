@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ ElementExistedException.class, ElementNotExistException.class,
             UnexpectedNullElementException.class })
-    public ResponseEntity<Map<String, Object>> handleUsernameAlreadyExistsException(ElementExistedException ex) {
+    public ResponseEntity<Map<String, Object>> handleCustomException(ElementExistedException ex) {
         Map<String, Object> response = new HashMap<>();
         response.put(ErrorMessageConstants.MESSAGE, ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

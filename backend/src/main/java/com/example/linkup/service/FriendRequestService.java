@@ -14,17 +14,24 @@ import java.util.List;
 public class FriendRequestService {
 
     private final FriendRequestRepository friendRequestRepository;
+    private final FriendshipsService friendshipsService;
 
-    public FriendRequestService(FriendRequestRepository friendRequestRepository) {
+    public FriendRequestService(FriendRequestRepository friendRequestRepository, FriendshipsService friendshipsService) {
         this.friendRequestRepository = friendRequestRepository;
+        this.friendshipsService = friendshipsService;
     }
 
     // 发送好友请求
     public FriendRequest sendFriendRequest(User sender, User receiver) {
+        // 检查是否已经是好友
+        if (friendshipsService.findFriendship(sender, receiver) != null) {
+            throw new ElementExistedException("不能向已经是好友的用户发送好友请求");
+        }
+
         // 检查是否已有好友请求
         FriendRequest existingRequest = friendRequestRepository.findBySenderAndReceiver(sender, receiver);
-        if (existingRequest != null) {
-            throw new ElementExistedException("好友请求已发送！");
+        if (existingRequest != null && existingRequest.getStatus() == FriendRequest.RequestStatus.PENDING) {
+            throw new ElementExistedException("已有待处理的好友请求！");
         }
 
         // 创建新的好友请求
