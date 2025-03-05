@@ -11,14 +11,33 @@
 
     <!-- 聊天记录区域 -->
     <div class="chatArea">
-      <p>这里是聊天内容区域...</p>
+      <ul class="messageList">
+        <li
+          v-for="message in messageList"
+          :key="message.id"
+          class="messageItem"
+          :class="{
+            'align-right': isSentByUserself(message),
+            'align-left': !isSentByUserself(message),
+          }"
+        >
+          <img
+            :src="message.sender.avatar || require('@/assets/images/icon.png')"
+            alt="头像"
+            class="friendAvatar"
+          />
+          <span class="friendNickname">
+            {{ message.content }}
+          </span>
+        </li>
+      </ul>
     </div>
 
     <!-- 底部输入框 -->
     <footer class="chatInputArea">
       <input
         type="text"
-        v-model="message"
+        v-model="newMessage"
         placeholder="输入消息..."
         class="chatInput"
       />
@@ -45,7 +64,9 @@ export default {
         members: [{ id: 111 }, { id: 12 }],
       },
       isMember: false,
-      loading: true,
+      loading: false,
+      newMessage: "",
+      messageList: [],
     };
   },
   setup() {
@@ -53,18 +74,25 @@ export default {
     return { toast };
   },
   async mounted() {
+    this.userId = localStorage.getItem("userId"); // 读取 userId
+    if (!this.userId) {
+      console.error("用户ID不存在，请重新登录");
+      return;
+    }
     this.groupId = useRoute().params.id;
     await this.checkMembership();
     if (this.isMember) {
       await this.fetchGroup();
     }
+    this.fetchMessages();
   },
   methods: {
     async checkMembership() {
       try {
+        this.loading = true;
         const response = await this.$axios.get(
           `/groups/${this.groupId}/members/is-member/
-          ${localStorage.getItem("userId")}`
+          ${this.userId}`
         );
         this.isMember = response.data;
         if (!this.isMember) {
@@ -86,6 +114,34 @@ export default {
         this.groupData.value = response.data;
       } catch (error) {
         console.error("加载群组失败", error);
+      }
+    },
+    async fetchMessages() {
+      const response = await this.$axios.get(
+        `/chat-message/group/${this.groupId}`
+      );
+      this.messageList = response.data;
+    },
+    isSentByUserself(message) {
+      return this.userId == message.sender.id;
+    },
+    async sendMessage() {
+      try {
+        if (this.newMessage == "") {
+          showToast(this.toast, "发送的内容不能为空", "error");
+          return;
+        }
+        await this.$axios.post("/chat-message/send", null, {
+          params: {
+            groupId: this.groupId, // 群组 ID
+            senderId: this.userId, // 发送者 ID
+            content: this.newMessage, // 发送的消息内容
+          },
+        });
+        this.newMessage = "";
+        this.fetchMessages();
+      } catch (error) {
+        console.error("发送信息失败", error);
       }
     },
   },
@@ -111,11 +167,38 @@ export default {
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 /* 聊天区域 */
 .chatArea {
   flex-grow: 1;
   padding: 20px;
   overflow-y: auto;
+}
+
+.messageList {
+  display: flex;
+  flex-direction: column; /* 纵向排列 */
+  gap: 10px; /* 每个消息之间的间距 */
+  list-style: none;
+  padding: 0;
+}
+
+.messageItem {
+  max-width: 60%; /* 限制消息宽度 */
+  padding: 10px;
+  border-radius: 8px;
+  word-wrap: break-word;
+}
+
+.align-left {
+  align-self: flex-start; /* 左对齐 */
+  background-color: #f0f0f0;
+}
+
+.align-right {
+  align-self: flex-end; /* 右对齐 */
+  background-color: #007bff;
+  color: white;
 }
 
 /* 底部输入框 */
