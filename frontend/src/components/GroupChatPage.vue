@@ -171,7 +171,7 @@ export default {
       }
     },
     initWebSocket() {
-      this.socket = new WebSocket(`ws://your-server-address/ws/chat/${this.groupId}`);
+      this.socket = new WebSocket(`ws://8.155.47.138/ws/chat/${this.groupId}`);
 
       this.socket.onopen = () => {
         console.log("WebSocket 连接已建立");
