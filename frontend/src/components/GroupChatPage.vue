@@ -22,13 +22,26 @@
           }"
         >
           <img
+            v-if="!isSentByUserself(message)"
             :src="message.sender.avatar || require('@/assets/images/icon.png')"
             alt="头像"
-            class="friendAvatar"
+            class="messageAvatar leftAvatar"
           />
-          <span class="friendNickname">
+          <div
+            class="messageContent"
+            :class="{
+              rightContent: isSentByUserself(message),
+              leftContent: !isSentByUserself(message),
+            }"
+          >
             {{ message.content }}
-          </span>
+          </div>
+          <img
+            v-if="isSentByUserself(message)"
+            :src="message.sender.avatar || require('@/assets/images/icon.png')"
+            alt="头像"
+            class="messageAvatar rightAvatar"
+          />
         </li>
       </ul>
     </div>
@@ -184,19 +197,30 @@ export default {
 }
 
 .messageItem {
-  max-width: 60%; /* 限制消息宽度 */
+  display: flex;
+}
+
+.messageContent {
+  max-width: 600px; /* 限制消息宽度 */
   padding: 10px;
   border-radius: 8px;
   word-wrap: break-word;
+  text-align: left;
 }
 
 .align-left {
   align-self: flex-start; /* 左对齐 */
-  background-color: #f0f0f0;
 }
 
 .align-right {
   align-self: flex-end; /* 右对齐 */
+}
+
+.leftContent {
+  background-color: #f0f0f0;
+}
+
+.rightContent {
   background-color: #007bff;
   color: white;
 }
@@ -230,5 +254,20 @@ export default {
   color: white;
   width: 100px;
   background-color: #007bff;
+}
+
+.messageAvatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  margin: 0 8px;
+}
+
+.leftAvatar {
+  margin-right: 8px; /* 让头像和文字有间距 */
+}
+
+.rightAvatar {
+  margin-left: 8px;
 }
 </style>
