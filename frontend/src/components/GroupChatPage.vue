@@ -11,39 +11,46 @@
 
     <!-- 聊天记录区域 -->
     <div class="chatArea">
-      <ul class="messageList">
-        <li
-          v-for="message in messageList"
-          :key="message.id"
-          class="messageItem"
-          :class="{
-            'align-right': isSentByUserself(message),
-            'align-left': !isSentByUserself(message),
-          }"
-        >
-          <img
-            v-if="!isSentByUserself(message)"
-            :src="message.sender.avatar || require('@/assets/images/icon.png')"
-            alt="头像"
-            class="messageAvatar leftAvatar"
-          />
-          <div
-            class="messageContent"
+      <div v-if="messageLoading" class="loading">加载中...</div>
+      <div v-else>
+        <ul class="messageList">
+          <li
+            v-for="message in messageList"
+            :key="message.id"
+            class="messageItem"
             :class="{
-              rightContent: isSentByUserself(message),
-              leftContent: !isSentByUserself(message),
+              'align-right': isSentByUserself(message),
+              'align-left': !isSentByUserself(message),
             }"
           >
-            {{ message.content }}
-          </div>
-          <img
-            v-if="isSentByUserself(message)"
-            :src="message.sender.avatar || require('@/assets/images/icon.png')"
-            alt="头像"
-            class="messageAvatar rightAvatar"
-          />
-        </li>
-      </ul>
+            <img
+              v-if="!isSentByUserself(message)"
+              :src="
+                message.sender.avatar || require('@/assets/images/icon.png')
+              "
+              alt="头像"
+              class="messageAvatar leftAvatar"
+            />
+            <div
+              class="messageContent"
+              :class="{
+                rightContent: isSentByUserself(message),
+                leftContent: !isSentByUserself(message),
+              }"
+            >
+              {{ message.content }}
+            </div>
+            <img
+              v-if="isSentByUserself(message)"
+              :src="
+                message.sender.avatar || require('@/assets/images/icon.png')
+              "
+              alt="头像"
+              class="messageAvatar rightAvatar"
+            />
+          </li>
+        </ul>
+      </div>
     </div>
 
     <!-- 底部输入框 -->
@@ -77,7 +84,7 @@ export default {
         members: [{ id: 111 }, { id: 12 }],
       },
       isMember: false,
-      loading: false,
+      messageLoading: true,
       newMessage: "",
       messageList: [],
     };
@@ -102,7 +109,6 @@ export default {
   methods: {
     async checkMembership() {
       try {
-        this.loading = true;
         const response = await this.$axios.get(
           `/groups/${this.groupId}/members/is-member/
           ${this.userId}`
@@ -117,8 +123,6 @@ export default {
         console.error("检查群组权限失败", error);
         showToast(this.toast, "权限检查失败，请重试！", "error");
         this.$router.push("/");
-      } finally {
-        this.loading = false;
       }
     },
     async fetchGroup() {
@@ -130,10 +134,16 @@ export default {
       }
     },
     async fetchMessages() {
-      const response = await this.$axios.get(
-        `/chat-message/group/${this.groupId}`
-      );
-      this.messageList = response.data;
+      try {
+        const response = await this.$axios.get(
+          `/chat-message/group/${this.groupId}`
+        );
+        this.messageList = response.data;
+      } catch (error) {
+        console.error("加载聊天记录失败", error);
+      } finally {
+        this.messageLoading = false;
+      }
     },
     isSentByUserself(message) {
       return this.userId == message.sender.id;
