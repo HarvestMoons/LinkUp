@@ -13,38 +13,38 @@
       <div v-else>
         <ul class="messageList">
           <li
-            v-for="message in messageList"
-            :key="message.id"
-            class="messageItem"
-            :class="{
-              'align-right': isSentByUserself(message),
-              'align-left': !isSentByUserself(message),
+              v-for="message in messageList"
+              :key="message.id"
+              class="messageItem"
+              :class="{
+              'align-right': isSentByCurrentUser(message),
+              'align-left': !isSentByCurrentUser(message),
             }"
           >
             <img
-              v-if="!isSentByUserself(message)"
-              :src="
+                v-if="!isSentByCurrentUser(message)"
+                :src="
                 message.sender.avatar || require('@/assets/images/icon.png')
               "
-              alt="头像"
-              class="messageAvatar leftAvatar"
+                alt="头像"
+                class="messageAvatar leftAvatar"
             />
             <div
-              class="messageContent"
-              :class="{
-                rightContent: isSentByUserself(message),
-                leftContent: !isSentByUserself(message),
+                class="messageContent"
+                :class="{
+                rightContent: isSentByCurrentUser(message),
+                leftContent: !isSentByCurrentUser(message),
               }"
             >
               {{ message.content }}
             </div>
             <img
-              v-if="isSentByUserself(message)"
-              :src="
+                v-if="isSentByCurrentUser(message)"
+                :src="
                 message.sender.avatar || require('@/assets/images/icon.png')
               "
-              alt="头像"
-              class="messageAvatar rightAvatar"
+                alt="头像"
+                class="messageAvatar rightAvatar"
             />
           </li>
         </ul>
@@ -54,10 +54,10 @@
     <!-- 底部输入框 -->
     <footer class="chatInputArea">
       <input
-        type="text"
-        v-model="newMessage"
-        placeholder="输入消息..."
-        class="chatInput"
+          type="text"
+          v-model="newMessage"
+          placeholder="输入消息..."
+          class="chatInput"
       />
       <button @click="sendMessage" class="sendButton">发送</button>
     </footer>
@@ -66,9 +66,9 @@
 
 <script>
 // TODO: 任务显示、群组信息编辑组件
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
-import { useRoute } from "vue-router";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {useRoute} from "vue-router";
 
 export default {
   name: "GroupChatPage",
@@ -79,17 +79,18 @@ export default {
         id: 1,
         name: "群组名称",
         description: "群组描述",
-        members: [{ id: 111 }, { id: 12 }],
+        members: [{id: 111}, {id: 12}],
       },
       isMember: false,
       messageLoading: true,
       newMessage: "",
       messageList: [],
+      socket: null, // WebSocket 实例
     };
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   async mounted() {
     this.userId = localStorage.getItem("userId"); // 读取 userId
@@ -100,24 +101,28 @@ export default {
     this.groupId = useRoute().params.id;
     await this.checkMembership();
     if (this.isMember) {
-      this.fetchGroup();
-      this.fetchMessages();
+      await this.fetchGroup();
+      await this.fetchMessages();
+      this.initWebSocket(); // 启动 WebSocket 连接
+    }
+  },
+  beforeUnmount() {
+    if (this.socket) {
+      this.socket.close(); // 组件卸载时关闭 WebSocket 连接
     }
   },
   methods: {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/is-member/
-          ${this.userId}`
+            `/groups/${this.groupId}/members/is-member/${this.userId}`
         );
         this.isMember = response.data;
         if (!this.isMember) {
           showToast(this.toast, "你不是该群组的成员，无法访问！", "error");
-          this.$router.push("/"); // 重定向到首页
+          this.$router.push("/");
         }
       } catch (error) {
-        // TODO: 当群组不存在时也会跳转到此处权限检查失败，需要修改
         console.error("检查群组权限失败", error);
         showToast(this.toast, "权限检查失败，请重试！", "error");
         this.$router.push("/");
@@ -134,7 +139,7 @@ export default {
     async fetchMessages() {
       try {
         const response = await this.$axios.get(
-          `/chat-message/group/${this.groupId}`
+            `/chat-message/group/${this.groupId}`
         );
         this.messageList = response.data;
       } catch (error) {
@@ -143,27 +148,51 @@ export default {
         this.messageLoading = false;
       }
     },
-    isSentByUserself(message) {
-      return this.userId == message.sender.id;
+    isSentByCurrentUser(message) {
+      return this.userId === message.sender.id;
     },
     async sendMessage() {
       try {
-        if (this.newMessage == "") {
+        if (this.newMessage === "") {
           showToast(this.toast, "发送的内容不能为空", "error");
           return;
         }
         await this.$axios.post("/chat-message/send", null, {
           params: {
-            groupId: this.groupId, // 群组 ID
-            senderId: this.userId, // 发送者 ID
-            content: this.newMessage, // 发送的消息内容
+            groupId: this.groupId,
+            senderId: this.userId,
+            content: this.newMessage,
           },
         });
         this.newMessage = "";
-        this.fetchMessages();
+        // 这里不再调用 `fetchMessages()`，因为 WebSocket 会自动更新
       } catch (error) {
         console.error("发送信息失败", error);
       }
+    },
+    initWebSocket() {
+      this.socket = new WebSocket(`ws://your-server-address/ws/chat/${this.groupId}`);
+
+      this.socket.onopen = () => {
+        console.log("WebSocket 连接已建立");
+      };
+
+      this.socket.onmessage = (event) => {
+        try {
+          const newMessage = JSON.parse(event.data);
+          this.messageList.push(newMessage); // 直接更新消息列表
+        } catch (error) {
+          console.error("解析 WebSocket 消息失败", error);
+        }
+      };
+
+      this.socket.onerror = (error) => {
+        console.error("WebSocket 发生错误", error);
+      };
+
+      this.socket.onclose = () => {
+        console.log("WebSocket 连接已关闭");
+      };
     },
   },
 };
