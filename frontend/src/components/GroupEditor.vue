@@ -62,10 +62,12 @@ import { useToast } from "vue-toastification";
 export default {
   name: "GroupEditor",
   props: {
-    groupMembers: Array,
+    groupId: Number,
     groupName: String,
     groupDescription: String,
+    groupMembers: Array,
     userRole: String, // 'owner', 'admin', 'member'
+    userId: Number,
   },
   data() {
     return {
@@ -110,11 +112,33 @@ export default {
       // TODO: 调用后端保存
       this.isEditingDescription = false;
     },
-    disbandGroup() {
+    async disbandGroup() {
       // TODO: 解散群聊逻辑
+      try {
+        await this.$axios.delete(`/task-group/${this.groupId}`);
+        showToast(this.toast, "群组解散成功", "success");
+        this.$router.push("/groups");
+      } catch (error) {
+        console.error("群组解散失败", error);
+        showToast(this.toast, "群组解散失败，请稍后重试", "error");
+      }
     },
-    leaveGroup() {
+    async leaveGroup() {
       // TODO: 退出群聊逻辑
+      try {
+        if (this.groupMembers.length === 2) {
+          await this.$axios.delete(`/task-group/${this.groupId}`);
+        } else {
+          await this.$axios.delete(
+            `/groups/${this.groupId}/members/${this.userId}`
+          );
+        }
+        showToast(this.toast, "群组退出成功", "success");
+        this.$router.push("/groups");
+      } catch (error) {
+        console.error("退出群组失败", error);
+        showToast(this.toast, "退出群组失败，请稍后重试", "error");
+      }
     },
   },
 };

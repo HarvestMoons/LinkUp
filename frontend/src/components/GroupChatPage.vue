@@ -4,7 +4,9 @@
     <div class="chatContainer">
       <!-- 顶部群组名称 -->
       <header class="groupHeader">
-        <h1>{{ groupData.name }} (#{{ groupId }})</h1>
+        <h1>
+          {{ groupData.name }} (#{{ groupId }}) ({{ groupMembers.length }})
+        </h1>
         <p>{{ groupData.description }}</p>
         <div class="sideBarButtonContainer">
           <button @click="toggleTaskSidebar" class="sideBarButton">
@@ -95,10 +97,12 @@
       :isVisible="showGroupSidebar"
       :contentComponent="GroupEditor"
       :contentProps="{
-        groupMembers: [user, user],
+        groupId: groupId,
         groupName: groupData.name,
         groupDescription: groupData.description,
+        groupMembers: groupMembers,
         userRole: 'admin',
+        userId: userId,
       }"
       @close="toggleGroupSidebar"
     />
@@ -125,8 +129,8 @@ export default {
         id: 1,
         name: "群组名称加载中",
         description: "群组描述加载中",
-        members: [{ id: 111 }, { id: 12 }],
       },
+      groupMembers: [],
       isMember: false,
       messageLoading: true,
       newMessage: "",
@@ -157,6 +161,7 @@ export default {
     this.checkMembership().then(() => {
       if (this.isMember) {
         this.fetchGroup();
+        this.fetchMembers();
         this.fetchMessages();
       }
     });
@@ -170,7 +175,7 @@ export default {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/is-member/${this.userId}`
+          `/groups/${this.groupId}/members/${this.userId}/is-member`
         );
         this.isMember = response.data;
         if (!this.isMember) {
@@ -193,6 +198,22 @@ export default {
         this.groupData = response.data;
       } catch (error) {
         console.error("加载群组失败", error);
+      }
+    },
+    async fetchMembers() {
+      try {
+        const response = await this.$axios.get(
+          `/groups/${this.groupId}/members`
+        );
+        this.groupMembers = response.data.map((item) => {
+          return {
+            role: item.role,
+            ...item.user,
+          };
+        });
+        console.log(this.groupMembers);
+      } catch (error) {
+        console.error("加载群组成员失败", error);
       }
     },
     async fetchMessages() {

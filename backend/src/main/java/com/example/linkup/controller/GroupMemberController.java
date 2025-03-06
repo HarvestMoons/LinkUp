@@ -24,7 +24,7 @@ public class GroupMemberController {
     private final UserService userService;
 
     public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
-                                 UserService userService) {
+            UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;
@@ -45,7 +45,7 @@ public class GroupMemberController {
     }
 
     // 添加成员到群组
-    @PostMapping("/add/{userId}")
+    @PostMapping("/{userId}")
     public ResponseEntity<GroupMember> addMemberToGroup(
             @PathVariable long taskGroupId,
             @PathVariable @Valid long userId,
@@ -58,7 +58,7 @@ public class GroupMemberController {
     }
 
     // 更新群组成员角色
-    @PutMapping("/user/{userId}/role")
+    @PutMapping("/{userId}/update-role")
     public ResponseEntity<GroupMember> updateMemberRole(
             @PathVariable long taskGroupId,
             @PathVariable long userId,
@@ -68,7 +68,7 @@ public class GroupMemberController {
     }
 
     // 删除群组成员
-    @DeleteMapping("/delete/user/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> removeMember(
             @PathVariable long taskGroupId,
             @PathVariable long userId) {
@@ -76,7 +76,7 @@ public class GroupMemberController {
         return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
     }
 
-    // TODO: 需要自定义异常类，用来区分并抛出因为群组不存在导致的异常
+    // TODO: 需要自定义异常类，用来区分并抛出因为群组不存在导致的异常 (好像好了？)
 
     /**
      * 判断指定用户是否在指定群组中
@@ -84,11 +84,13 @@ public class GroupMemberController {
      * @param userId 指定的用户ID
      * @return true/false
      */
-    @GetMapping("/is-member/{userId}")
+    @GetMapping("/{userId}/is-member")
     public ResponseEntity<Boolean> isUserInGroup(@PathVariable long taskGroupId, @PathVariable Long userId)
             throws ElementNotExistException {
 
         boolean isMember = groupMemberService.isUserInGroup(taskGroupId, userId);
         return ResponseEntity.ok(isMember);
     }
+
+    // TODO: 获取某一用户的role
 }
