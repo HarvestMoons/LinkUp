@@ -95,7 +95,7 @@
       :isVisible="showGroupSidebar"
       :contentComponent="GroupEditor"
       :contentProps="{
-        groupMembers: [user],
+        groupMembers: [user, user],
         groupName: groupData.name,
         groupDescription: groupData.description,
         userRole: 'admin',

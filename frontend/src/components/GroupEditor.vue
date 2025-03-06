@@ -4,19 +4,27 @@
       <h2>群成员</h2>
       <ul class="membersList">
         <li v-for="member in groupMembers" :key="member.id" class="memberItem">
-          <img :src="member.avatar" alt="头像" class="memberAvatar" />
-          <span class="memberName">{{ member.name }}</span>
+          <img
+            :src="member.avatar || require('@/assets/images/icon.png')"
+            alt="头像"
+            class="memberAvatar"
+          />
+          <span class="memberNickname"
+            >{{ member.username }} (#{{ member.id }})
+          </span>
         </li>
       </ul>
     </div>
 
     <div class="groupInfo">
       <h2>群组信息</h2>
-      <div class="groupField" @click="editGroupName" v-if="isEditingName">
+      <div class="groupField" v-if="isEditingName">
         <input
+          ref="groupNameInput"
           v-model="editableGroupName"
           @blur="saveGroupName"
           @keyup.enter="saveGroupName"
+          class=""
         />
       </div>
       <div class="groupField" @click="startEditing('name')" v-else>
@@ -24,12 +32,9 @@
         <span class="editableText">{{ groupName }}</span>
       </div>
 
-      <div
-        class="groupField"
-        @click="editGroupDescription"
-        v-if="isEditingDescription"
-      >
+      <div class="groupField" v-if="isEditingDescription">
         <textarea
+          ref="groupDescriptionInput"
           v-model="editableGroupDescription"
           @blur="saveGroupDescription"
           @keyup.enter="saveGroupDescription"
@@ -40,10 +45,20 @@
         <span class="editableText">{{ groupDescription }}</span>
       </div>
     </div>
+
+    <button class="disbandButton" @click="disbandGroup" v-if="isGroupOwner()">
+      解散群聊
+    </button>
+    <button class="leaveButton" @click="leaveGroup" v-if="!isGroupOwner()">
+      退出群聊
+    </button>
   </div>
 </template>
 
 <script>
+// TODO: 新增群成员，右键踢出群聊或添加好友
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 export default {
   name: "GroupEditor",
   props: {
@@ -60,23 +75,46 @@ export default {
       editableGroupDescription: this.groupDescription,
     };
   },
+  setup() {
+    const toast = useToast();
+    return { toast };
+  },
   methods: {
+    isGroupOwner() {
+      this.userRole === "owner";
+    },
     startEditing(field) {
       if (this.userRole === "owner" || this.userRole === "admin") {
         if (field === "name") {
+          this.editableGroupName = this.groupName;
           this.isEditingName = true;
+          setTimeout(() => {
+            this.$refs.groupNameInput.focus();
+          }, 0);
         } else if (field === "description") {
+          this.editableGroupDescription = this.groupDescription;
           this.isEditingDescription = true;
+          setTimeout(() => {
+            this.$refs.groupDescriptionInput.focus();
+          }, 0);
         }
+      } else {
+        showToast(this.toast, "你不是该群组的管理员，无权修改！", "error");
       }
     },
     saveGroupName() {
-      this.$emit("updateGroupName", this.editableGroupName);
+      // TODO: 调用后端保存
       this.isEditingName = false;
     },
     saveGroupDescription() {
-      this.$emit("updateGroupDescription", this.editableGroupDescription);
+      // TODO: 调用后端保存
       this.isEditingDescription = false;
+    },
+    disbandGroup() {
+      // TODO: 解散群聊逻辑
+    },
+    leaveGroup() {
+      // TODO: 退出群聊逻辑
     },
   },
 };
@@ -89,6 +127,8 @@ export default {
 
 .groupMembers,
 .groupInfo {
+  display: flex;
+  flex-direction: column;
   margin: 25px;
   padding: 25px;
   background-color: rgba(128, 128, 128, 0.1);
@@ -106,12 +146,13 @@ export default {
 
 .memberItem {
   display: flex;
+  justify-content: center;
   align-items: center;
   margin: 10px;
   padding: 10px;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .memberAvatar {
@@ -127,11 +168,15 @@ export default {
 }
 
 .groupField {
-  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 35px;
+  margin: 15px;
   padding: 10px;
-  background: white;
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(128, 128, 128, 0.1);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 }
 
@@ -142,9 +187,21 @@ export default {
 
 .groupField input,
 .groupField textarea {
-  width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.disbandButton,
+.leaveButton {
+  background: red;
+  padding: 10px 20px;
   border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  width: 100px;
 }
 </style>
