@@ -3,7 +3,13 @@
     <div class="groupMembers">
       <h2>群成员</h2>
       <ul class="membersList">
-        <li v-for="member in groupMembers" :key="member.id" class="memberItem">
+        <div v-if="groupMembers.length === 0" class="loading">加载中...</div>
+        <li
+          v-else
+          v-for="member in groupMembers"
+          :key="member.id"
+          class="memberItem"
+        >
           <img
             :src="member.avatar || require('@/assets/images/icon.png')"
             alt="头像"
@@ -83,7 +89,7 @@ export default {
   },
   methods: {
     isGroupOwner() {
-      return this.userRole === "owner";
+      return this.userRolGroupOwnere === "owner";
     },
     startEditing(field) {
       if (this.userRole === "owner" || this.userRole === "admin") {
@@ -113,7 +119,6 @@ export default {
       this.isEditingDescription = false;
     },
     async disbandGroup() {
-      // TODO: 解散群聊逻辑
       try {
         await this.$axios.delete(`/task-group/${this.groupId}`);
         showToast(this.toast, "群组解散成功", "success");
@@ -124,7 +129,6 @@ export default {
       }
     },
     async leaveGroup() {
-      // TODO: 退出群聊逻辑
       try {
         if (this.groupMembers.length === 2) {
           await this.$axios.delete(`/task-group/${this.groupId}`);
@@ -195,6 +199,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 5px;
   min-height: 35px;
   margin: 15px;
   padding: 10px;
