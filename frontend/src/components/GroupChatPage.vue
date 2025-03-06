@@ -6,7 +6,14 @@
       <header class="groupHeader">
         <h1>{{ groupData.name }} (#{{ groupId }})</h1>
         <p>{{ groupData.description }}</p>
-        <button @click="toggleTaskSidebar">📋 任务</button>
+        <div class="sideBarButtonContainer">
+          <button @click="toggleTaskSidebar" class="sideBarButton">
+            📋 任务
+          </button>
+          <button @click="toggleGroupSidebar" class="sideBarButton">
+            群组信息
+          </button>
+        </div>
       </header>
 
       <!-- 聊天记录区域 -->
@@ -69,14 +76,31 @@
     </div>
 
     <!-- 右侧任务侧边栏 -->
-    <TaskSideBar
+    <SideBar
       title="群组任务"
       :isVisible="showTaskSidebar"
-      :tasks="groupTasks"
-      :taskListLoading="taskListLoading"
-      :groupId="groupId"
-      :fetchTasks="fetchGroupTasks"
+      :contentComponent="TaskList"
+      :contentProps="{
+        tasks: groupTasks,
+        taskListLoading: taskListLoading,
+        groupId: groupId,
+        fetchTasks: fetchGroupTasks,
+      }"
       @close="toggleTaskSidebar"
+    />
+
+    <!-- 右侧群组信息侧边栏 -->
+    <SideBar
+      title="群组信息"
+      :isVisible="showGroupSidebar"
+      :contentComponent="GroupEditor"
+      :contentProps="{
+        groupMembers: [user],
+        groupName: groupData.name,
+        groupDescription: groupData.description,
+        userRole: 'admin',
+      }"
+      @close="toggleGroupSidebar"
     />
   </div>
 </template>
@@ -87,10 +111,12 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import SockJS from "sockjs-client"; // 新增
 import { Client } from "@stomp/stompjs"; // 新增
-import TaskSideBar from "@/components/TaskSideBar.vue";
+import SideBar from "@/components/SideBar.vue";
+import TaskList from "@/components/TaskList.vue";
+import GroupEditor from "@/components/GroupEditor.vue";
 
 export default {
-  components: { TaskSideBar },
+  components: { SideBar },
   name: "GroupChatPage",
   data() {
     return {
@@ -106,8 +132,11 @@ export default {
       newMessage: "",
       messageList: [],
       showTaskSidebar: false,
+      showGroupSidebar: false,
       groupTasks: [],
       stompClient: null, // 修改为STOMP客户端
+      TaskList,
+      GroupEditor,
     };
   },
   setup() {
@@ -236,12 +265,15 @@ export default {
         showToast(this.toast, "连接尚未建立，请稍后重试", "error");
       }
     },
+
     toggleTaskSidebar() {
       this.showTaskSidebar = !this.showTaskSidebar;
+      this.showGroupSidebar = false;
       if (this.showTaskSidebar) {
         this.fetchGroupTasks();
       }
     },
+
     async fetchGroupTasks() {
       this.taskListLoading = true;
       try {
@@ -252,6 +284,11 @@ export default {
       } finally {
         this.taskListLoading = false;
       }
+    },
+
+    toggleGroupSidebar() {
+      this.showGroupSidebar = !this.showGroupSidebar;
+      this.showTaskSidebar = false;
     },
   },
 };
@@ -278,6 +315,23 @@ export default {
   font-weight: bold;
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.sideBarButtonContainer {
+  display: flex;
+  gap: 10px;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.sideBarButton {
+  background: lightgreen;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 100px;
 }
 
 /* 聊天区域 */

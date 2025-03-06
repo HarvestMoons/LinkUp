@@ -1,33 +1,27 @@
-<!-- TaskSideBar.vue -->
+<!-- SideBar.vue -->
 <template>
   <transition name="slide">
     <div v-if="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <button class="closeBtn" @click="$emit('close')">✖ 关闭</button>
-      <TaskList
-        :tasks="tasks"
-        :taskListLoading="taskListLoading"
-        :groupId="groupId"
-        :fetchTasks="fetchTasks"
-      />
+      <component :is="contentComponent" v-bind="contentProps"></component>
     </div>
   </transition>
 </template>
 
 <script>
 //todo:点击侧边栏之外的地方时缩起侧边栏
-import TaskList from "@/components/TaskList.vue";
 export default {
-  components: { TaskList },
   props: {
     title: String,
     isVisible: Boolean, // 控制侧边栏是否显示
-    tasks: Array,
-    taskListLoading: Boolean,
-    groupId: Number,
-    fetchTasks: {
-      type: Function,
-      required: true, // 确保调用 TaskList 时必须提供
+    contentComponent: {
+      type: Object, // 这里传递的是 Vue 组件对象
+      required: true,
+    },
+    contentProps: {
+      type: Object, // 传递给组件的 props
+      default: () => ({}), // 默认是空对象
     },
   },
 };
