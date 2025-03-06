@@ -115,11 +115,12 @@ export default {
     return { toast };
   },
   async mounted() {
-    this.userId = localStorage.getItem("userId");
-    if (!this.userId) {
-      console.error("用户ID不存在，请重新登录");
+    this.user = JSON.parse(localStorage.getItem("user"));
+    if (!this.user) {
+      console.error("用户不存在，请重新登录");
       return;
     }
+    this.userId = this.user.id;
 
     this.groupId = this.$route.params.id;
     this.connectWebSocket(); // 修改后的连接方法
@@ -196,11 +197,7 @@ export default {
           // 订阅群组主题（匹配后端@SendTo配置）
           // 保存subscription以便取消订阅
           this.subscription = this.stompClient.subscribe(
-            `/topic/group/${this.groupId}`,
-            (message) => {
-              const newMessage = JSON.parse(message.body);
-              this.messageList.push(newMessage);
-            }
+            `/topic/group/${this.groupId}`
           );
         },
         onStompError: (frame) => {
@@ -223,7 +220,7 @@ export default {
       // 消息结构需要匹配后端的ChatMessage对象
       const message = {
         content: this.newMessage,
-        sender: { id: this.userId },
+        sender: this.user,
         taskGroup: { id: this.groupId }, // 关键字段，用于后端路由
       };
 
@@ -232,6 +229,7 @@ export default {
           destination: `/chat/sendMessage`, // 匹配@MessageMapping
           body: JSON.stringify(message),
         });
+        this.messageList.push(message);
         this.newMessage = "";
       } else {
         console.error("STOMP连接未就绪");
