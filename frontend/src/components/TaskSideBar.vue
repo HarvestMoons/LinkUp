@@ -15,6 +15,7 @@
 </template>
 
 <script>
+//todo:点击侧边栏之外的地方时缩起侧边栏
 import TaskList from "@/components/TaskList.vue";
 export default {
   components: { TaskList },

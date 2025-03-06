@@ -3,7 +3,6 @@ package com.example.linkup.controller;
 import com.example.linkup.model.ChatMessage;
 import com.example.linkup.service.ChatMessageService;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
