@@ -178,10 +178,10 @@ export default {
       }
     },
     isSentByCurrentUser(message) {
-      return this.userId == message.sender.id;
+      return this.userId === String(message.sender.id);
     },
-    //todo:自己发的消息没有显示为自己发送
     connectWebSocket() {
+      //todo:接收到新消息时，滚轮自动划到最下面
       const serverUrl = `http://localhost:8099/chatroom`;
       const socket = new SockJS(serverUrl);
 
