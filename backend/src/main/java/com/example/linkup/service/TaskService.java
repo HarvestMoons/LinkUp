@@ -1,6 +1,6 @@
 package com.example.linkup.service;
 
-import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.Task;
 import com.example.linkup.repository.GroupMemberRepository;
 import com.example.linkup.repository.TaskRepository;
@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,13 +28,10 @@ public class TaskService {
     }
 
     // 更新任务
-    public Task updateTask(Long id, Task task) throws ElementNotExistException {
-        Optional<Task> existingTask = taskRepository.findById(id);
-        if (existingTask.isPresent()) {
-            task.setId(id);
-            return taskRepository.save(task);
-        }
-        throw new ElementNotExistException("Task not found");
+    public Task updateTask(Long id, Task newTask) throws UnexpectedNullElementException {
+        Task existedTask = this.findById(id);
+        newTask.setId(existedTask.getId());
+        return taskRepository.save(newTask);
     }
 
     // 获取所有任务
@@ -92,7 +88,7 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
-    public Task findById(Long id) {
-        return taskRepository.findById(id).orElse(null);
+    public Task findById(Long id) throws UnexpectedNullElementException {
+        return taskRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
     }
 }

@@ -19,7 +19,7 @@ public class Task {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="creator_id",referencedColumnName = "id",nullable = false)
+    @JoinColumn(name = "creator_id", referencedColumnName = "id", nullable = false)
     private User creator;
 
     @ManyToOne

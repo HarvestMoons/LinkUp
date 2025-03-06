@@ -106,7 +106,7 @@
 </template>
 
 <script>
-// TODO: 群组信息编辑组件
+// TODO: 任务显示、群组信息编辑组件
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import SockJS from "sockjs-client"; // 新增

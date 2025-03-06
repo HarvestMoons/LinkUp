@@ -1,5 +1,6 @@
 package com.example.linkup.controller;
 
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
 import com.example.linkup.service.GroupMemberService;
@@ -53,5 +54,31 @@ public class UserController {
     public ResponseEntity<List<GroupMember>> getGroupsForUser(@PathVariable long userId) {
         List<GroupMember> groups = groupMemberService.getGroupsForUser(userId);
         return ResponseEntity.ok(groups);
+    }
+
+    /**
+     * 更新用户名
+     *
+     * @param userId      用户ID
+     * @param newUsername 新用户名
+     * @return 更新后的用户信息
+     */
+    @PutMapping("/update-username/{userId}")
+    public ResponseEntity<User> updateUsername(@PathVariable Long userId, @RequestParam String newUsername) throws UnexpectedNullElementException {
+        User updatedUser = userService.updateUsername(userId, newUsername);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+     * 更新密码
+     *
+     * @param userId      用户ID
+     * @param newPassword 新密码
+     * @return 更新成功消息
+     */
+    @PutMapping("/update-password/{userId}")
+    public ResponseEntity<String> updatePassword(@PathVariable Long userId, @RequestParam String newPassword) throws UnexpectedNullElementException {
+        userService.updatePassword(userId, newPassword);
+        return ResponseEntity.ok("密码更新成功");
     }
 }

@@ -14,7 +14,8 @@ public class GroupMemberId implements Serializable {
     private Long user;      // 用户ID
 
     // 默认构造函数
-    public GroupMemberId() {}
+    public GroupMemberId() {
+    }
 
     // 带参数构造函数
     public GroupMemberId(Long taskGroup, Long user) {

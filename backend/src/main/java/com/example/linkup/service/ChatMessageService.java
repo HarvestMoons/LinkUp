@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.ChatMessage;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.model.User;
@@ -29,9 +30,10 @@ public class ChatMessageService {
 
     /**
      * 发送消息
-     * @param groupId 群组ID
+     *
+     * @param groupId  群组ID
      * @param senderId 发送者ID
-     * @param content 消息内容
+     * @param content  消息内容
      * @return ChatMessage
      */
     public ChatMessage sendMessage(Long groupId, Long senderId, String content) throws ElementNotExistException {
@@ -52,6 +54,7 @@ public class ChatMessageService {
 
     /**
      * 获取某个群组的聊天记录
+     *
      * @param groupId 群组ID
      * @return List<ChatMessage>
      */
@@ -65,14 +68,12 @@ public class ChatMessageService {
 
     /**
      * 获取某个用户发送的所有消息
+     *
      * @param senderId 发送者ID
      * @return List<ChatMessage>
      */
-    public List<ChatMessage> getMessagesBySender(Long senderId) throws ElementNotExistException {
-        Optional<User> sender = userRepository.findById(senderId);
-        if (sender.isEmpty()) {
-            throw new ElementNotExistException("用户不存在");
-        }
-        return chatMessageRepository.findBySender(sender.get());
+    public List<ChatMessage> getMessagesBySender(Long senderId) throws UnexpectedNullElementException {
+        User sender = userRepository.findById(senderId).orElseThrow(UnexpectedNullElementException::new);
+        return chatMessageRepository.findBySender(sender);
     }
 }

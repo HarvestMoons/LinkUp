@@ -3,12 +3,12 @@
     <nav>
       <div class="userContainer" v-if="isAuthPage">
         <img
-          :src="user.avatar || require('@/assets/images/icon.png')"
-          alt="头像"
-          class="friendAvatar"
+            :src="user.avatar || require('@/assets/images/icon.png')"
+            alt="头像"
+            class="friendAvatar"
         />
         <span class="friendNickname"
-          >{{ user.username }} (#{{ user.id }})
+        >{{ user.username }} (#{{ user.id }})
         </span>
       </div>
       <router-link to="/">Home</router-link>
@@ -23,10 +23,11 @@
       </button>
     </nav>
   </div>
-  <router-view />
+  <router-view/>
 </template>
 <script>
-import { fetchFriends } from "@/utils/friendService";
+import {fetchFriends} from "@/utils/friendService";
+
 export default {
   data() {
     return {

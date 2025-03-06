@@ -23,5 +23,5 @@ export const showToast = (toast, message, type = 'success', timeout = 3000) => {
         theme: "colored",
         closeButton: true,
         icon: icons[type] || icons.success  // Fallback to success icon if type is invalid
-    }) : toast(message, { timeout });
+    }) : toast(message, {timeout});
 };

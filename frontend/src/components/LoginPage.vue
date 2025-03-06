@@ -6,16 +6,16 @@
       <div class="form-group">
         <label for="username">Username:</label>
         <input
-          type="text"
-          id="usernameInput"
-          v-model="username"
-          @input="validateUsernameInput"
-          required
+            type="text"
+            id="usernameInput"
+            v-model="username"
+            @input="validateUsernameInput"
+            required
         />
       </div>
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="passwordInput" v-model="password" required />
+        <input type="password" id="passwordInput" v-model="password" required/>
       </div>
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
 
 export default {
   name: "LoginPage",
@@ -45,7 +45,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   methods: {
     // 用户名合法性校验（仅允许字母、数字和下划线）
@@ -66,11 +66,11 @@ export default {
       try {
         // 发送 POST 请求到后端进行用户登录
         const response = await this.$axios.post(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
-          {
-            username: this.username,
-            password: this.password,
-          }
+            `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
+            {
+              username: this.username,
+              password: this.password,
+            }
         );
 
         // 存储 JWT 和登录状态

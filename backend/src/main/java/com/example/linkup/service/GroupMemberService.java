@@ -56,8 +56,8 @@ public class GroupMemberService {
     }
 
     // 更新群组成员角色
-    public GroupMember updateMemberRole(long taskGroupId,long userId, Role newRole) throws ElementNotExistException {
-        GroupMember groupMember = groupMemberRepository.findByTaskGroupIdAndUserId(taskGroupId,userId);
+    public GroupMember updateMemberRole(long taskGroupId, long userId, Role newRole) throws ElementNotExistException {
+        GroupMember groupMember = groupMemberRepository.findByTaskGroupIdAndUserId(taskGroupId, userId);
         if (groupMember == null) {
             throw new ElementNotExistException("指定的用户不存在！");
         }
@@ -67,8 +67,9 @@ public class GroupMemberService {
 
     /**
      * 判断某个用户是否在某个群组中
+     *
      * @param groupId 群组ID
-     * @param userId 用户ID
+     * @param userId  用户ID
      * @return true/false
      */
     public boolean isUserInGroup(Long groupId, Long userId) throws ElementNotExistException {
@@ -83,7 +84,7 @@ public class GroupMemberService {
     }
 
     // 删除群组成员
-    public void removeMember(long taskGroupId,long userId){
-        groupMemberRepository.deleteByGroupIdAndUserId(taskGroupId,userId);
+    public void removeMember(long taskGroupId, long userId) {
+        groupMemberRepository.deleteByGroupIdAndUserId(taskGroupId, userId);
     }
 }

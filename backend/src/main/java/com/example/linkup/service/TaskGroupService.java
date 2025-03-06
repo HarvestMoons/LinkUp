@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.repository.TaskGroupRepository;
 import jakarta.transaction.Transactional;
@@ -24,8 +25,8 @@ public class TaskGroupService {
     }
 
     // 获取一个群组
-    public TaskGroup getTaskGroupById(Long id) {
-        return taskGroupRepository.findById(id).orElse(null);
+    public TaskGroup getTaskGroupById(Long id) throws UnexpectedNullElementException {
+        return taskGroupRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
     }
 
     // 创建新群组
@@ -48,7 +49,7 @@ public class TaskGroupService {
         taskGroupRepository.deleteById(id);
     }
 
-    public TaskGroup findById(Long id) {
-        return taskGroupRepository.findById(id).orElse(null);
+    public TaskGroup findById(Long id) throws UnexpectedNullElementException {
+        return taskGroupRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
     }
 }

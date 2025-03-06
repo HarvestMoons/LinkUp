@@ -12,18 +12,18 @@
             <div class="form-group">
               <label for="newGroupName">群组名称:</label>
               <input
-                type="text"
-                id="newGroupName"
-                v-model="newGroup.name"
-                placeholder="请输入群组名称"
+                  type="text"
+                  id="newGroupName"
+                  v-model="newGroup.name"
+                  placeholder="请输入群组名称"
               />
             </div>
             <div class="form-group">
               <label for="newGroupDescription">群组描述:</label>
               <textarea
-                id="newGroupDescription"
-                v-model="newGroup.description"
-                placeholder="请输入群组描述"
+                  id="newGroupDescription"
+                  v-model="newGroup.description"
+                  placeholder="请输入群组描述"
               ></textarea>
             </div>
 
@@ -38,26 +38,26 @@
                 <div v-else>
                   <ul class="friendsList">
                     <li
-                      v-for="friend in friends"
-                      :key="friend.id"
-                      class="friendItem"
-                      @click="toggleSelection(friend)"
-                      :class="{ selected: selectedFriends.includes(friend) }"
+                        v-for="friend in friends"
+                        :key="friend.id"
+                        class="friendItem"
+                        @click="toggleSelection(friend)"
+                        :class="{ selected: selectedFriends.includes(friend) }"
                     >
                       <img
-                        :src="
+                          :src="
                           friend.avatar || require('@/assets/images/icon.png')
                         "
-                        alt="头像"
-                        class="friendAvatar"
+                          alt="头像"
+                          class="friendAvatar"
                       />
                       <span class="friendNickname"
-                        >{{ friend.nickname }} (#{{ friend.id }})</span
+                      >{{ friend.nickname }} (#{{ friend.id }})</span
                       >
                       <span
-                        v-if="selectedFriends.includes(friend)"
-                        class="checkmark"
-                        >✔</span
+                          v-if="selectedFriends.includes(friend)"
+                          class="checkmark"
+                      >✔</span
                       >
                     </li>
                   </ul>
@@ -81,9 +81,9 @@
       <!-- 默认的按钮 -->
       <transition name="createGroupButton">
         <button
-          v-if="!isCreating"
-          @click="startCreateGroup"
-          class="createGroupButton"
+            v-if="!isCreating"
+            @click="startCreateGroup"
+            class="createGroupButton"
         >
           创建群组
         </button>
@@ -96,15 +96,15 @@
       <div v-else>
         <ul class="groupsList">
           <li
-            v-for="group in groups"
-            :key="group.id"
-            class="groupItem"
-            @click="goToGroup(group.id)"
+              v-for="group in groups"
+              :key="group.id"
+              class="groupItem"
+              @click="goToGroup(group.id)"
           >
             <img
-              :src="group.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="groupAvatar"
+                :src="group.avatar || require('@/assets/images/icon.png')"
+                alt="头像"
+                class="groupAvatar"
             />
             <span class="groupName">{{ group.name }} (#{{ group.id }})</span>
           </li>
@@ -115,10 +115,10 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
-import { Role } from "@/config/constants";
-import { getFriendList } from "@/utils/friendService";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {Role} from "@/config/constants";
+import {getFriendList} from "@/utils/friendService";
 
 export default {
   name: "GroupListPage",
@@ -135,7 +135,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   mounted() {
     this.userId = localStorage.getItem("userId"); // 读取 userId
@@ -174,20 +174,20 @@ export default {
           return;
         }
         const responseNewGroup = await this.$axios.post(
-          `/task-group/create`,
-          // TODO:修改这个补丁
-          {
-            name: this.newGroup.name,
-            description: this.newGroup.description,
-          }
+            `/task-group/create`,
+            // TODO:修改这个补丁
+            {
+              name: this.newGroup.name,
+              description: this.newGroup.description,
+            }
         );
         console.log(responseNewGroup.data);
         await this.$axios.post(
-          `/groups/${responseNewGroup.data.id}/members/add/${this.userId}?role=${Role.Owner}`
+            `/groups/${responseNewGroup.data.id}/members/add/${this.userId}?role=${Role.Owner}`
         );
         for (const friend of this.selectedFriends) {
           await this.$axios.post(
-            `/groups/${responseNewGroup.data.id}/members/add/${friend.id}?role=${Role.Admin}`
+              `/groups/${responseNewGroup.data.id}/members/add/${friend.id}?role=${Role.Admin}`
           );
         }
         showToast(this.toast, "群组创建成功", "success");
