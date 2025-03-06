@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     isGroupOwner() {
-      this.userRole === "owner";
+      return this.userRole === "owner";
     },
     startEditing(field) {
       if (this.userRole === "owner" || this.userRole === "admin") {
