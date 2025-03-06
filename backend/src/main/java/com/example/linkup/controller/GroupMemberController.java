@@ -1,6 +1,7 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.GroupMember.Role;
 import com.example.linkup.model.TaskGroup;
@@ -23,7 +24,7 @@ public class GroupMemberController {
     private final UserService userService;
 
     public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
-            UserService userService) {
+                                 UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;
@@ -48,7 +49,7 @@ public class GroupMemberController {
     public ResponseEntity<GroupMember> addMemberToGroup(
             @PathVariable long taskGroupId,
             @PathVariable @Valid long userId,
-            @RequestParam(required = false) Role role) {
+            @RequestParam(required = false) Role role) throws UnexpectedNullElementException {
 
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(taskGroupId);
         User user = userService.findById(userId);
@@ -76,9 +77,10 @@ public class GroupMemberController {
     }
 
     // TODO: 需要自定义异常类，用来区分并抛出因为群组不存在导致的异常
+
     /**
      * 判断指定用户是否在指定群组中
-     * 
+     *
      * @param userId 指定的用户ID
      * @return true/false
      */

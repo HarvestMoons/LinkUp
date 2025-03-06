@@ -5,10 +5,10 @@
       <h2>{{ title }}</h2>
       <button class="closeBtn" @click="$emit('close')">✖ 关闭</button>
       <TaskList
-        :tasks="tasks"
-        :taskListLoading="taskListLoading"
-        :groupId="groupId"
-        :fetchTasks="fetchTasks"
+          :tasks="tasks"
+          :taskListLoading="taskListLoading"
+          :groupId="groupId"
+          :fetchTasks="fetchTasks"
       />
     </div>
   </transition>
@@ -17,8 +17,9 @@
 <script>
 //todo:点击侧边栏之外的地方时缩起侧边栏
 import TaskList from "@/components/TaskList.vue";
+
 export default {
-  components: { TaskList },
+  components: {TaskList},
   props: {
     title: String,
     isVisible: Boolean, // 控制侧边栏是否显示
@@ -45,14 +46,17 @@ export default {
   padding: 20px;
   overflow-y: auto;
 }
+
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;
 }
+
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
 }
+
 .closeBtn {
   background: red;
   padding: 10px 20px;

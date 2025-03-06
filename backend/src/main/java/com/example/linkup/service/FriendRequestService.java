@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementExistedException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.FriendRequest;
 import com.example.linkup.model.User;
 import com.example.linkup.repository.FriendRequestRepository;
@@ -62,7 +63,8 @@ public class FriendRequestService {
         return friendRequestRepository.save(friendRequest);
     }
 
-    public FriendRequest findById(Long id) {
-        return friendRequestRepository.findById(id).orElse(null);
+    public FriendRequest findById(Long id) throws UnexpectedNullElementException {
+        return friendRequestRepository.findById(id)
+                .orElseThrow(UnexpectedNullElementException::new);
     }
 }

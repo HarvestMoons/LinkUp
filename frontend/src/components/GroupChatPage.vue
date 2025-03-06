@@ -15,27 +15,27 @@
         <div v-else>
           <ul class="messageList">
             <li
-              v-for="message in messageList"
-              :key="message.id"
-              class="messageItem"
-              :class="{
+                v-for="message in messageList"
+                :key="message.id"
+                class="messageItem"
+                :class="{
                 'align-right': isSentByCurrentUser(message),
                 'align-left': !isSentByCurrentUser(message),
               }"
             >
               <img
-                v-if="!isSentByCurrentUser(message)"
-                :src="
+                  v-if="!isSentByCurrentUser(message)"
+                  :src="
                   message.sender.avatar || require('@/assets/images/icon.png')
                 "
-                alt="头像"
-                class="messageAvatar leftAvatar"
+                  alt="头像"
+                  class="messageAvatar leftAvatar"
               />
               <div>
                 <div>{{ message.sender.username }}</div>
                 <div
-                  class="messageContent"
-                  :class="{
+                    class="messageContent"
+                    :class="{
                     rightContent: isSentByCurrentUser(message),
                     leftContent: !isSentByCurrentUser(message),
                   }"
@@ -44,12 +44,12 @@
                 </div>
               </div>
               <img
-                v-if="isSentByCurrentUser(message)"
-                :src="
+                  v-if="isSentByCurrentUser(message)"
+                  :src="
                   message.sender.avatar || require('@/assets/images/icon.png')
                 "
-                alt="头像"
-                class="messageAvatar rightAvatar"
+                  alt="头像"
+                  class="messageAvatar rightAvatar"
               />
             </li>
           </ul>
@@ -59,10 +59,10 @@
       <!-- 底部输入框 -->
       <footer class="chatInputArea">
         <input
-          type="text"
-          v-model="newMessage"
-          placeholder="输入消息..."
-          class="chatInput"
+            type="text"
+            v-model="newMessage"
+            placeholder="输入消息..."
+            class="chatInput"
         />
         <button @click="sendMessage" class="sendButton">发送</button>
       </footer>
@@ -70,27 +70,27 @@
 
     <!-- 右侧任务侧边栏 -->
     <TaskSideBar
-      title="群组任务"
-      :isVisible="showTaskSidebar"
-      :tasks="groupTasks"
-      :taskListLoading="taskListLoading"
-      :groupId="groupId"
-      :fetchTasks="fetchGroupTasks"
-      @close="toggleTaskSidebar"
+        title="群组任务"
+        :isVisible="showTaskSidebar"
+        :tasks="groupTasks"
+        :taskListLoading="taskListLoading"
+        :groupId="groupId"
+        :fetchTasks="fetchGroupTasks"
+        @close="toggleTaskSidebar"
     />
   </div>
 </template>
 
 <script>
-// TODO: 群组信息编辑组件
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+// TODO: 任务显示、群组信息编辑组件
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
 import SockJS from "sockjs-client"; // 新增
-import { Client } from "@stomp/stompjs"; // 新增
+import {Client} from "@stomp/stompjs"; // 新增
 import TaskSideBar from "@/components/TaskSideBar.vue";
 
 export default {
-  components: { TaskSideBar },
+  components: {TaskSideBar},
   name: "GroupChatPage",
   data() {
     return {
@@ -99,7 +99,7 @@ export default {
         id: 1,
         name: "群组名称加载中",
         description: "群组描述加载中",
-        members: [{ id: 111 }, { id: 12 }],
+        members: [{id: 111}, {id: 12}],
       },
       isMember: false,
       messageLoading: true,
@@ -112,7 +112,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   async mounted() {
     this.user = JSON.parse(localStorage.getItem("user"));
@@ -141,7 +141,7 @@ export default {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/is-member/${this.userId}`
+            `/groups/${this.groupId}/members/is-member/${this.userId}`
         );
         this.isMember = response.data;
         if (!this.isMember) {
@@ -169,7 +169,7 @@ export default {
     async fetchMessages() {
       try {
         const response = await this.$axios.get(
-          `/chat-message/group/${this.groupId}`
+            `/chat-message/group/${this.groupId}`
         );
         this.messageList = response.data;
       } catch (error) {
@@ -197,7 +197,7 @@ export default {
           // 订阅群组主题（匹配后端@SendTo配置）
           // 保存subscription以便取消订阅
           this.subscription = this.stompClient.subscribe(
-            `/topic/group/${this.groupId}`
+              `/topic/group/${this.groupId}`
           );
         },
         onStompError: (frame) => {
@@ -221,7 +221,7 @@ export default {
       const message = {
         content: this.newMessage,
         sender: this.user,
-        taskGroup: { id: this.groupId }, // 关键字段，用于后端路由
+        taskGroup: {id: this.groupId}, // 关键字段，用于后端路由
       };
 
       if (this.stompClient && this.stompClient.connected) {

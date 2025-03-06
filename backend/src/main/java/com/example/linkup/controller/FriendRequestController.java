@@ -22,7 +22,7 @@ public class FriendRequestController {
     private final FriendshipsService friendshipsService;
 
     public FriendRequestController(FriendRequestService friendRequestService, UserService userService,
-            FriendshipsService friendshipsService) {
+                                   FriendshipsService friendshipsService) {
         this.friendRequestService = friendRequestService;
         this.userService = userService;
         this.friendshipsService = friendshipsService;
@@ -34,23 +34,19 @@ public class FriendRequestController {
             throws ElementNotExistException, UnexpectedNullElementException {
         // 获取发送者和接收者
         User sender = userService.findById(requestDto.getSenderId());
-        User receiver = userService.findById(requestDto.getReceiverId());
-
-        if (sender == null) {
-            throw new UnexpectedNullElementException();
-        }
-        if (receiver == null) {
+        try {
+            User receiver = userService.findById(requestDto.getReceiverId());
+            FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
+            return ResponseEntity.ok(friendRequest);
+        } catch (UnexpectedNullElementException e) {
             throw new ElementNotExistException("id #" + requestDto.getReceiverId() + " 对应的用户不存在！");
         }
-
-        FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
-        return ResponseEntity.ok(friendRequest);
     }
 
     @GetMapping("/receiver/{receiverId}/status/{status}")
     public ResponseEntity<List<FriendRequest>> getFriendRequestsByReceiverAndStatus(
             @PathVariable("receiverId") Long receiverId,
-            @PathVariable("status") String status) {
+            @PathVariable("status") String status) throws UnexpectedNullElementException {
 
         // 将状态转换为 RequestStatus 枚举值
         FriendRequest.RequestStatus requestStatus = FriendRequest.RequestStatus.valueOf(status.toUpperCase());
@@ -71,10 +67,6 @@ public class FriendRequestController {
         // 查找特定的好友请求
         FriendRequest friendRequest = friendRequestService.findById(id);
 
-        if (friendRequest == null) {
-            throw new UnexpectedNullElementException();
-        }
-
         // 判断请求是否为待处理状态
         if (friendRequest.getStatus() != FriendRequest.RequestStatus.PENDING) {
             return ResponseEntity.badRequest().build(); // 如果不是待处理状态，返回错误响应
@@ -93,7 +85,7 @@ public class FriendRequestController {
 
     // 拒绝好友请求
     @PostMapping("/reject/{id}")
-    public ResponseEntity<FriendRequest> rejectFriendRequest(@PathVariable("id") Long id) {
+    public ResponseEntity<FriendRequest> rejectFriendRequest(@PathVariable("id") Long id) throws UnexpectedNullElementException {
         // 查找特定的好友请求
         FriendRequest friendRequest = friendRequestService.findById(id);
 

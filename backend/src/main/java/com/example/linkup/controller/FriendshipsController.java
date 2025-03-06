@@ -2,6 +2,7 @@ package com.example.linkup.controller;
 
 import com.example.linkup.dto.FriendshipsDto;
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.Friendships;
 import com.example.linkup.model.User;
 import com.example.linkup.service.FriendshipsService;
@@ -36,7 +37,7 @@ public class FriendshipsController {
 
     // 获取某用户的所有好友
     @GetMapping("/find/{userId}")
-    public ResponseEntity<List<Friendships>> getFriends(@PathVariable Long userId) {
+    public ResponseEntity<List<Friendships>> getFriends(@PathVariable Long userId) throws UnexpectedNullElementException {
         User user = userService.findById(userId);
         List<Friendships> friends = friendshipsService.getFriends(user);
         return ResponseEntity.ok(friends);

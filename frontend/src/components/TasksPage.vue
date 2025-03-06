@@ -4,21 +4,21 @@
     <h1>Welcome to the Tasks Page</h1>
 
     <TaskList
-      :tasks="tasks"
-      :taskListLoading="taskListLoading"
-      :groupId="null"
-      :fetchTasks="fetchTasks"
+        :tasks="tasks"
+        :taskListLoading="taskListLoading"
+        :groupId="null"
+        :fetchTasks="fetchTasks"
     />
   </div>
 </template>
 
 <script>
 import TaskList from "@/components/TaskList.vue";
-import { useToast } from "vue-toastification";
+import {useToast} from "vue-toastification";
 
 export default {
   name: "TasksPage",
-  components: { TaskList },
+  components: {TaskList},
   data() {
     return {
       taskListLoading: false,
@@ -27,7 +27,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   mounted() {
     this.userId = localStorage.getItem("userId"); // 读取 userId
@@ -43,10 +43,10 @@ export default {
         this.taskListLoading = true;
         this.tasks = [];
         const responsePersonalTasks = await this.$axios.get(
-          `/tasks/user/${this.userId}/personal-tasks`
+            `/tasks/user/${this.userId}/personal-tasks`
         );
         const responseGroupTasks = await this.$axios.get(
-          `/tasks/user/${this.userId}/group-tasks`
+            `/tasks/user/${this.userId}/group-tasks`
         );
         this.tasks = responsePersonalTasks.data.concat(responseGroupTasks.data);
       } catch (error) {

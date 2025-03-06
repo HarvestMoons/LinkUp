@@ -2,6 +2,7 @@ package com.example.linkup.controller;
 
 import com.example.linkup.dto.TaskGroupDto;
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskGroupService;
 import org.modelmapper.ModelMapper;
@@ -30,11 +31,8 @@ public class TaskGroupController {
 
     // 获取一个任务群组
     @GetMapping("/{id}")
-    public ResponseEntity<TaskGroup> getTaskGroupById(@PathVariable("id") Long id) throws ElementNotExistException {
+    public ResponseEntity<TaskGroup> getTaskGroupById(@PathVariable("id") Long id) throws UnexpectedNullElementException {
         TaskGroup taskGroup = taskGroupService.getTaskGroupById(id);
-        if (taskGroup == null) {
-            throw new ElementNotExistException("此ID对应的任务群组不存在！");
-        }
         return ResponseEntity.ok(taskGroup);
     }
 

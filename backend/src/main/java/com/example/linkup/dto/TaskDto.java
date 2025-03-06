@@ -1,10 +1,11 @@
 package com.example.linkup.dto;
 
-import java.time.LocalDateTime;
 import com.example.linkup.model.Task;
 import com.example.linkup.model.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 @Data
 public class TaskDto {

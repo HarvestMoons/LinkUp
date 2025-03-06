@@ -2,7 +2,6 @@ package com.example.linkup.repository;
 
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.GroupMemberId;
-
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;

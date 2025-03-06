@@ -1,11 +1,11 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import './assets/styles/global.css'
 import axios from 'axios'
 import Toast from "vue-toastification"
 import "vue-toastification/dist/index.css"
-import { API_BASE_URL, PUBLIC_AUTH_API } from './config/constants'
+import {API_BASE_URL, PUBLIC_AUTH_API} from './config/constants'
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL, // 设置基本的 API URL
@@ -34,7 +34,7 @@ axios.defaults.baseURL = API_BASE_URL
 // 配置 Toast
 app.config.globalProperties.$toast = Toast
 
-app.config.globalProperties.$CONSTANT = { API_BASE_URL, PUBLIC_AUTH_API };
+app.config.globalProperties.$CONSTANT = {API_BASE_URL, PUBLIC_AUTH_API};
 
 // 在挂载前注册所有插件
 app

@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementExistedException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.User;
 import com.example.linkup.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UserService{
+public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -35,11 +36,25 @@ public class UserService{
         return userRepository.findByUsername(username);
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public User findById(Long id) throws UnexpectedNullElementException {
+        return userRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
     }
 
     public void removeUser(long userId) {
         userRepository.deleteById(userId);
+    }
+
+    public User updateUsername(Long userId, String newUsername) throws UnexpectedNullElementException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UnexpectedNullElementException::new);
+        user.setUsername(newUsername);
+        return userRepository.save(user);
+    }
+
+    public void updatePassword(Long userId, String newPassword) throws UnexpectedNullElementException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UnexpectedNullElementException::new);
+        user.setUsername(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

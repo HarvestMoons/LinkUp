@@ -5,10 +5,10 @@
     <!-- 添加好友输入框和按钮 -->
     <div class="addFriendContainer">
       <input
-        v-model="friendId"
-        type="text"
-        placeholder="输入用户Id"
-        class="addFriendInput"
+          v-model="friendId"
+          type="text"
+          placeholder="输入用户Id"
+          class="addFriendInput"
       />
       <button @click="sendFriendRequest" class="addFriendButton">
         添加好友
@@ -20,30 +20,30 @@
       <div v-else>
         <ul class="friendRequestList">
           <li
-            v-for="request in pendingRequests"
-            :key="request.id"
-            class="friendRequestItem"
+              v-for="request in pendingRequests"
+              :key="request.id"
+              class="friendRequestItem"
           >
             <img
-              :src="
+                :src="
                 request.sender.avatar || require('@/assets/images/icon.png')
               "
-              alt="头像"
-              class="friendAvatar"
+                alt="头像"
+                class="friendAvatar"
             />
             <span class="friendNickname">
               {{ request.sender.username }} (#{{ request.sender.id }})
               想加你为好友
             </span>
             <button
-              class="acceptFriendButton"
-              @click="acceptRequest(request.id)"
+                class="acceptFriendButton"
+                @click="acceptRequest(request.id)"
             >
               接收
             </button>
             <button
-              class="rejectFriendButton"
-              @click="rejectRequest(request.id)"
+                class="rejectFriendButton"
+                @click="rejectRequest(request.id)"
             >
               拒绝
             </button>
@@ -59,16 +59,16 @@
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
             <img
-              :src="friend.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="friendAvatar"
+                :src="friend.avatar || require('@/assets/images/icon.png')"
+                alt="头像"
+                class="friendAvatar"
             />
             <span class="friendNickname"
-              >{{ friend.nickname }} (#{{ friend.id }})</span
+            >{{ friend.nickname }} (#{{ friend.id }})</span
             >
             <button
-              class="deleteFriendButton"
-              @click="deleteFriend(friend.friend)"
+                class="deleteFriendButton"
+                @click="deleteFriend(friend.friend)"
             >
               删除好友
             </button>
@@ -80,9 +80,10 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
-import { fetchFriends, getFriendList } from "@/utils/friendService";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {fetchFriends, getFriendList} from "@/utils/friendService";
+
 export default {
   name: "FriendsPage",
   data() {
@@ -96,7 +97,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast};
   },
   async mounted() {
     this.userId = localStorage.getItem("userId"); // 读取 userId
@@ -117,7 +118,7 @@ export default {
       try {
         this.friendRequestLoading = true;
         const response = await this.$axios.get(
-          `/friend-requests/receiver/${this.userId}/status/pending`
+            `/friend-requests/receiver/${this.userId}/status/pending`
         );
         this.pendingRequests = response.data; // 获取待处理的好友申请
       } catch (error) {
@@ -136,11 +137,11 @@ export default {
 
       try {
         await this.$axios.post(
-          "/friend-requests/send", // 后端的接口
-          {
-            senderId: Number(this.userId), // 将字符串转换为数字
-            receiverId: Number(this.friendId), // 将字符串转换为数字
-          }
+            "/friend-requests/send", // 后端的接口
+            {
+              senderId: Number(this.userId), // 将字符串转换为数字
+              receiverId: Number(this.friendId), // 将字符串转换为数字
+            }
         );
 
         // 处理成功的响应
