@@ -1,5 +1,22 @@
 <template>
-  <div class="groupEditorContainer">
+  <!-- 自定义右键菜单 -->
+  <div
+    v-if="isMenuVisible"
+    :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+    class="context-menu"
+  >
+    <ul>
+      <li @click="deleteMember(clickOnMember)">删除该成员</li>
+      <li
+        v-if="friends != null && !isFriend(clickOnMember)"
+        @click="addMemberAsFriend(clickOnMember)"
+      >
+        添加好友
+      </li>
+    </ul>
+  </div>
+
+  <div class="groupEditorContainer" ref="groupEditorContainer">
     <div class="groupMembers">
       <h2>群成员</h2>
       <ul class="membersList">
@@ -9,6 +26,7 @@
           v-for="member in groupMembers"
           :key="member.id"
           class="memberItem"
+          @contextmenu="showMenu($event, member)"
         >
           <img
             :src="member.avatar || require('@/assets/images/icon.png')"
@@ -93,6 +111,7 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import FriendSelection from "@/components/FriendSelection.vue";
 import { Role } from "@/config/constants";
+import { getFriendList } from "@/utils/friendService";
 
 export default {
   name: "GroupEditor",
@@ -104,9 +123,13 @@ export default {
     groupMembers: Array,
     userRole: Role,
     userId: Number,
+    containerRef: Object,
   },
   data() {
     return {
+      isMenuVisible: false,
+      menuPosition: { top: 0, left: 0 },
+      clickOnMember: null,
       isEditingName: false,
       isEditingDescription: false,
       editableGroupName: this.groupName,
@@ -114,16 +137,52 @@ export default {
       isSelectingFriend: false,
       selectedFriends: [],
       shoedGroupMembers: this.groupMembers,
+      friends: null,
     };
   },
   setup() {
     const toast = useToast();
     return { toast };
   },
+  async mounted() {
+    this.friends = await getFriendList(this.userId);
+    window.addEventListener("click", this.closeMenu);
+  },
   methods: {
     isGroupOwner() {
       return this.userRolGroupOwnere === Role.Owner;
     },
+
+    showMenu(event, member) {
+      event.preventDefault(); // 阻止浏览器默认的右键菜单
+      this.isMenuVisible = true; // 显示自定义菜单
+
+      // 计算相对于组件容器的坐标
+      const containerRect = this.containerRef.getBoundingClientRect();
+      const top = event.clientY - containerRect.top;
+      const left = event.clientX - containerRect.left;
+
+      // 设置右键菜单的位置
+      this.menuPosition = { top, left };
+      this.clickOnMember = member;
+    },
+    closeMenu() {
+      this.isMenuVisible = false;
+    },
+    deleteMember(member) {
+      // TODO: 删除群成员
+      console.log("delete", member);
+      this.closeMenu();
+    },
+    addMemberAsFriend(member) {
+      // TODO: 添加群成员
+      console.log("add friend with", member);
+      this.closeMenu();
+    },
+    isFriend(member) {
+      return this.friends.some((friend) => friend.id === member.id);
+    },
+    // TODO: 设置成员为管理员
     startEditing(field) {
       if (this.userRole === Role.Owner || this.userRole === Role.Admin) {
         if (field === "name") {
@@ -151,6 +210,7 @@ export default {
       // TODO: 调用后端保存
       this.isEditingDescription = false;
     },
+
     async disbandGroup() {
       try {
         await this.$axios.delete(`/task-group/${this.groupId}`);
@@ -177,6 +237,7 @@ export default {
         showToast(this.toast, "退出群组失败，请稍后重试", "error");
       }
     },
+
     startAddingGroupMember() {
       this.isSelectingFriend = true;
       console.log("shoed members", this.shoedGroupMembers);
@@ -219,10 +280,38 @@ export default {
       return groupMembers.map((item) => item.id);
     },
   },
+  beforeUumount() {
+    window.removeEventListener("click", this.closeMenu);
+  },
 };
 </script>
 
 <style scoped>
+.context-menu {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1001;
+  cursor: pointer;
+}
+
+.context-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.context-menu li {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.context-menu li:hover {
+  background-color: #f0f0f0;
+}
+
 .groupEditorContainer {
   text-align: center;
 }

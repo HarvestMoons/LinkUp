@@ -6,10 +6,16 @@
   </transition>
 
   <transition name="slide">
-    <div v-if="isVisible" class="sidebar">
+    <div v-show="isVisible" class="sidebar" ref="sidebar">
       <h2>{{ title }}</h2>
       <button class="closeBtn" @click="$emit('close')">✖ 关闭</button>
-      <component :is="contentComponent" v-bind="contentProps"></component>
+      <component
+        :is="contentComponent"
+        v-bind="{
+          ...contentProps,
+          containerRef: $refs.sidebar, // 这里添加 sidebar 的 ref
+        }"
+      ></component>
     </div>
   </transition>
 </template>
@@ -18,7 +24,7 @@
 export default {
   props: {
     title: String,
-    isVisible: Boolean, // 控制侧边栏是否显示
+    isVisible: Boolean,
     contentComponent: {
       type: Object, // 这里传递的是 Vue 组件对象
       required: true,
@@ -43,7 +49,7 @@ export default {
 }
 
 .sidebar {
-  width: 600px;
+  width: 640px;
   height: 100%;
   position: fixed;
   top: 0;
@@ -53,6 +59,7 @@ export default {
   padding: 20px;
   overflow-y: auto;
   z-index: 1000;
+  box-sizing: border-box;
 }
 
 .slide-enter-active,
