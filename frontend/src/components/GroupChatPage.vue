@@ -27,6 +27,7 @@
               v-for="message in messageList"
               :key="message.id"
               class="messageItem"
+              ref="messageItemRef"
               :class="{
                 'align-right': isSentByCurrentUser(message),
                 'align-left': !isSentByCurrentUser(message),
@@ -232,7 +233,6 @@ export default {
       return this.userId === message.sender.id;
     },
     connectWebSocket() {
-      //todo:接收到新消息时，滚轮自动划到最下面
       const serverUrl = `http://localhost:8099/chatroom`;
       const socket = new SockJS(serverUrl);
 
@@ -287,6 +287,17 @@ export default {
       }
     },
 
+    scrollToBottom() {
+      const container = this.$refs.messageItemRef;
+      if (container) {
+        if (container.length > 0) {
+          container[container.length - 1].scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      }
+    },
+
     toggleTaskSidebar() {
       this.showTaskSidebar = !this.showTaskSidebar;
       this.showGroupSidebar = false;
@@ -310,6 +321,17 @@ export default {
     toggleGroupSidebar() {
       this.showGroupSidebar = !this.showGroupSidebar;
       this.showTaskSidebar = false;
+    },
+  },
+
+  watch: {
+    messageList: {
+      handler() {
+        this.$nextTick(() => {
+          this.scrollToBottom();
+        });
+      },
+      deep: true, // 深度监听，确保数组更新时触发
     },
   },
 };
