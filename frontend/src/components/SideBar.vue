@@ -1,5 +1,10 @@
 <!-- SideBar.vue -->
 <template>
+  <transition name="cover">
+    <!-- 遮罩层 -->
+    <div v-if="isVisible" class="overlay" @click="$emit('close')"></div>
+  </transition>
+
   <transition name="slide">
     <div v-if="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
@@ -28,6 +33,16 @@ export default {
 </script>
 
 <style scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明灰色 */
+  z-index: 999; /* 确保遮罩层在侧边栏之下 */
+}
+
 .sidebar {
   width: 600px;
   height: 100%;
@@ -38,15 +53,29 @@ export default {
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
   overflow-y: auto;
+  z-index: 1000;
 }
+
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;
 }
+
 .slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
 }
+
+.cover-enter-active,
+.cover-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.cover-enter-from,
+.cover-leave-to {
+  opacity: 0;
+}
+
 .closeBtn {
   background: red;
   padding: 10px 20px;
