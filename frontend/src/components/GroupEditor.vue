@@ -19,8 +19,27 @@
             >{{ member.username }} (#{{ member.id }})
           </span>
         </li>
-        <div class="memberItem" @click="addGroupMember">+</div>
+        <div
+          class="memberItem"
+          @click="startAddingGroupMember"
+          v-if="!isSelectingFriend"
+        >
+          +
+        </div>
       </ul>
+      <div v-if="isSelectingFriend" class="addGroupMemberContainer">
+        <FriendSelection v-model="selectedFriends" :userId="userId" />
+
+        <div class="buttonContainer">
+          <!-- 取消按钮 -->
+          <button @click="cancelAddingGroupMember" class="cancelButton">
+            取消
+          </button>
+
+          <!-- 提交按钮 -->
+          <button @click="addGroupMember" class="submitButton">邀请</button>
+        </div>
+      </div>
     </div>
 
     <div class="groupInfo">
@@ -68,8 +87,12 @@
 // TODO: 新增群成员，右键踢出群聊或添加好友
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import FriendSelection from "@/components/FriendSelection.vue";
+import { Role } from "@/config/constants";
+
 export default {
   name: "GroupEditor",
+  components: { FriendSelection },
   props: {
     groupId: Number,
     groupName: String,
@@ -84,6 +107,8 @@ export default {
       isEditingDescription: false,
       editableGroupName: this.groupName,
       editableGroupDescription: this.groupDescription,
+      isSelectingFriend: false,
+      selectedFriends: [],
     };
   },
   setup() {
@@ -147,8 +172,23 @@ export default {
         showToast(this.toast, "退出群组失败，请稍后重试", "error");
       }
     },
-    addGroupMember() {
-      console.log("add");
+    startAddingGroupMember() {
+      this.isSelectingFriend = true;
+    },
+    cancelAddingGroupMember() {
+      this.isSelectingFriend = false;
+    },
+    async addGroupMember() {
+      if (this.selectedFriends.length === 0) {
+        showToast(this.toast, "至少需要选择一个好友", "error");
+        return;
+      }
+      // TODO: 已在群聊中的人员不可选
+      for (const friend of this.selectedFriends) {
+        await this.$axios.post(
+          `/groups/${this.groupId}/members/${friend.id}?role=${Role.Admin}`
+        );
+      }
     },
   },
 };
@@ -199,6 +239,39 @@ export default {
 .memberName {
   font-size: 16px;
   font-weight: bold;
+}
+
+.addGroupMemberContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 15px;
+  gap: 5px;
+}
+
+.submitButton,
+.cancelButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  width: 100px;
+}
+
+.submitButton {
+  background-color: #007bff;
+  margin-left: 10px;
+}
+
+.cancelButton {
+  background-color: #dc3545;
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
 }
 
 .groupField {

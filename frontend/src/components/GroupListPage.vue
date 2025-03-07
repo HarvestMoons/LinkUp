@@ -278,14 +278,13 @@ export default {
   border-radius: 5px;
   border: none;
   cursor: pointer;
-
-  margin-left: 10px;
   color: white;
   width: 100px;
 }
 
 .submitButton {
   background-color: #007bff;
+  margin-left: 10px;
 }
 
 .cancelButton {

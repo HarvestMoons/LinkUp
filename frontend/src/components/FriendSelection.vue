@@ -32,6 +32,7 @@
 <script>
 import { getFriendList } from "@/utils/friendService";
 export default {
+  name: "FriendSelection",
   props: {
     userId: Number,
   },
@@ -67,6 +68,7 @@ export default {
 .friendsDropdown {
   max-height: 120px;
   overflow-y: auto;
+  width: 90%;
 }
 
 .friendsList {
