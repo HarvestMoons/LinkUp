@@ -102,10 +102,11 @@
         groupName: groupData.name,
         groupDescription: groupData.description,
         groupMembers: groupMembers,
-        userRole: 'admin',
+        userRole: userRole,
         userId: userId,
       }"
       @close="toggleGroupSidebar"
+      @fetchMembers="fetchMembers"
     />
   </div>
 </template>
@@ -119,6 +120,7 @@ import { Client } from "@stomp/stompjs"; // 新增
 import SideBar from "@/components/SideBar.vue";
 import TaskList from "@/components/TaskList.vue";
 import GroupEditor from "@/components/GroupEditor.vue";
+import { Role } from "@/config/constants";
 
 export default {
   components: { SideBar },
@@ -140,6 +142,7 @@ export default {
       showGroupSidebar: false,
       groupTasks: [],
       stompClient: null, // 修改为STOMP客户端
+      userRole: Role.Admin,
       TaskList,
       GroupEditor,
     };
@@ -212,7 +215,7 @@ export default {
             ...item.user,
           };
         });
-        console.log(this.groupMembers);
+        console.log("members", this.groupMembers);
       } catch (error) {
         console.error("加载群组成员失败", error);
       }

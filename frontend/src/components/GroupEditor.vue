@@ -102,7 +102,7 @@ export default {
     groupName: String,
     groupDescription: String,
     groupMembers: Array,
-    userRole: String, // 'owner', 'admin', 'member'
+    userRole: Role,
     userId: Number,
   },
   data() {
@@ -113,6 +113,7 @@ export default {
       editableGroupDescription: this.groupDescription,
       isSelectingFriend: false,
       selectedFriends: [],
+      shoedGroupMembers: this.groupMembers,
     };
   },
   setup() {
@@ -121,10 +122,10 @@ export default {
   },
   methods: {
     isGroupOwner() {
-      return this.userRolGroupOwnere === "owner";
+      return this.userRolGroupOwnere === Role.Owner;
     },
     startEditing(field) {
-      if (this.userRole === "owner" || this.userRole === "admin") {
+      if (this.userRole === Role.Owner || this.userRole === Role.Admin) {
         if (field === "name") {
           this.editableGroupName = this.groupName;
           this.isEditingName = true;
@@ -178,6 +179,7 @@ export default {
     },
     startAddingGroupMember() {
       this.isSelectingFriend = true;
+      console.log("shoed members", this.shoedGroupMembers);
     },
     cancelAddingGroupMember() {
       this.isSelectingFriend = false;
@@ -188,11 +190,25 @@ export default {
           showToast(this.toast, "至少需要选择一个好友", "error");
           return;
         }
+        const promises = [];
+
+        // 收集所有的异步请求
         for (const friend of this.selectedFriends) {
-          await this.$axios.post(
-            `/groups/${this.groupId}/members/${friend.id}?role=${Role.Admin}`
-          );
+          const promise = this.$axios
+            .post(
+              `/groups/${this.groupId}/members/${friend.id}?role=${Role.Member}`
+            )
+            .then(() => {
+              this.shoedGroupMembers.push({ role: Role.Member, ...friend });
+            });
+
+          // 不使用 await，这样不会阻塞循环
+          promises.push(promise);
         }
+        // 等待所有请求完成
+        await Promise.all(promises);
+        console.log("shoed members", this.shoedGroupMembers);
+        this.isSelectingFriend = false;
         showToast(this.toast, "好友加入群组成功", "success");
       } catch (error) {
         console.error("邀请好友加入群组失败", error);

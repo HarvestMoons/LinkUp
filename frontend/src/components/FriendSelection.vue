@@ -21,7 +21,7 @@
             class="friendAvatar"
           />
           <span class="friendNickname"
-            >{{ friend.nickname }} (#{{ friend.id }})</span
+            >{{ friend.username }} (#{{ friend.id }})</span
           >
           <span v-if="selectedFriends.includes(friend)" class="checkmark"
             >✔</span

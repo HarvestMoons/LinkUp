@@ -4,7 +4,7 @@ export const MAX_STRING_LENGTH = 25;
 // 模拟枚举的常量对象
 export const Role = {
     Admin: 'ADMIN',
-    User: 'USER',
+    Member: 'MEMBER',
     Owner: 'OWNER'
 };
 
