@@ -19,6 +19,7 @@
             >{{ member.username }} (#{{ member.id }})
           </span>
         </li>
+        <div class="memberItem" @click="addGroupMember">+</div>
       </ul>
     </div>
 
@@ -48,7 +49,9 @@
       </div>
       <div class="groupField" @click="startEditing('description')" v-else>
         <span>群组描述: </span>
-        <span class="editableText">{{ groupDescription }}</span>
+        <span class="editableText">{{
+          groupDescription ? groupDescription : "无"
+        }}</span>
       </div>
     </div>
 
@@ -143,6 +146,9 @@ export default {
         console.error("退出群组失败", error);
         showToast(this.toast, "退出群组失败，请稍后重试", "error");
       }
+    },
+    addGroupMember() {
+      console.log("add");
     },
   },
 };
