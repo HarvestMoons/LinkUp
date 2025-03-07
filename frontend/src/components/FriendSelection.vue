@@ -10,7 +10,10 @@
           :key="friend.id"
           class="friendItem"
           @click="toggleSelection(friend)"
-          :class="{ selected: selectedFriends.includes(friend) }"
+          :class="{
+            selected: selectedFriends.includes(friend),
+            unavailable: isUnavailable(friend),
+          }"
         >
           <img
             :src="friend.avatar || require('@/assets/images/icon.png')"
@@ -35,12 +38,19 @@ export default {
   name: "FriendSelection",
   props: {
     userId: Number,
+    unavailableFriendIds: Array,
   },
   data() {
     return { friendListLoading: false, friends: [], selectedFriends: [] };
   },
   mounted() {
     this.fetchFriends();
+  },
+  computed: {
+    // 计算属性：判断某个好友是否不可选
+    isUnavailable() {
+      return (friend) => this.unavailableFriendIds.includes(friend.id);
+    },
   },
   methods: {
     async fetchFriends() {
@@ -50,6 +60,9 @@ export default {
     },
     // 选择或取消选择好友
     toggleSelection(friend) {
+      if (this.isUnavailable(friend)) {
+        return;
+      }
       const index = this.selectedFriends.indexOf(friend);
       if (index === -1) {
         // 如果好友未被选中，添加到选中列表
@@ -80,6 +93,11 @@ export default {
   display: flex;
   align-items: center; /* 使头像和昵称垂直居中 */
   margin-bottom: 15px; /* 每个列表项之间的间距 */
+}
+
+.unavailable {
+  opacity: 0.5;
+  pointer-events: none; /* 禁用点击 */
 }
 
 .friendAvatar {

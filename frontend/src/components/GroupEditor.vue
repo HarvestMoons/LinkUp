@@ -28,7 +28,11 @@
         </div>
       </ul>
       <div v-if="isSelectingFriend" class="addGroupMemberContainer">
-        <FriendSelection v-model="selectedFriends" :userId="userId" />
+        <FriendSelection
+          v-model="selectedFriends"
+          :userId="userId"
+          :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
+        />
 
         <div class="buttonContainer">
           <!-- 取消按钮 -->
@@ -84,7 +88,7 @@
 </template>
 
 <script>
-// TODO: 新增群成员，右键踢出群聊或添加好友
+// TODO: 右键踢出群聊或添加好友
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import FriendSelection from "@/components/FriendSelection.vue";
@@ -179,16 +183,24 @@ export default {
       this.isSelectingFriend = false;
     },
     async addGroupMember() {
-      if (this.selectedFriends.length === 0) {
-        showToast(this.toast, "至少需要选择一个好友", "error");
-        return;
+      try {
+        if (this.selectedFriends.length === 0) {
+          showToast(this.toast, "至少需要选择一个好友", "error");
+          return;
+        }
+        for (const friend of this.selectedFriends) {
+          await this.$axios.post(
+            `/groups/${this.groupId}/members/${friend.id}?role=${Role.Admin}`
+          );
+        }
+        showToast(this.toast, "好友加入群组成功", "success");
+      } catch (error) {
+        console.error("邀请好友加入群组失败", error);
+        showToast(this.toast, "邀请好友加入群组失败，请重试", "error");
       }
-      // TODO: 已在群聊中的人员不可选
-      for (const friend of this.selectedFriends) {
-        await this.$axios.post(
-          `/groups/${this.groupId}/members/${friend.id}?role=${Role.Admin}`
-        );
-      }
+    },
+    getGroupMemberIdArray(groupMembers) {
+      return groupMembers.map((item) => item.id);
     },
   },
 };

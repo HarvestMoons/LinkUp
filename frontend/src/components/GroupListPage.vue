@@ -30,7 +30,11 @@
             <!-- 好友选择部分 -->
             <div class="form-group">
               <label for="selectFriends">选择好友:</label>
-              <FriendSelection v-model="selectedFriends" :userId="userId" />
+              <FriendSelection
+                v-model="selectedFriends"
+                :userId="userId"
+                :unavailableFriendIds="[]"
+              />
             </div>
           </div>
 
