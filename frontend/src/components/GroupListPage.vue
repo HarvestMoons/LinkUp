@@ -148,6 +148,7 @@ export default {
   },
   methods: {
     async fetchGroups() {
+      // TODO: 按最新消息更新时间显示
       try {
         this.groupListLoading = true;
         this.groups = [];
@@ -190,8 +191,9 @@ export default {
             `/groups/${responseNewGroup.data.id}/members/${friend.id}?role=${Role.Admin}`
           );
         }
+        this.fetchGroups();
+        this.cancelCreateGroup();
         showToast(this.toast, "群组创建成功", "success");
-        // TODO: 群组创建完没有直接更新，得刷新
       } catch (error) {
         console.error("创建群组失败:", error);
         showToast(this.toast, "创建群组失败", "error");
