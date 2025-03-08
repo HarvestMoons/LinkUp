@@ -160,7 +160,7 @@ export default {
         );
         for (const friend of this.selectedFriends) {
           await this.$axios.post(
-            `/groups/${responseNewGroup.data.id}/members/${friend.id}?role=${Role.Admin}`
+            `/groups/${responseNewGroup.data.id}/members/${friend.id}?role=${Role.Member}`
           );
         }
         this.fetchGroups();

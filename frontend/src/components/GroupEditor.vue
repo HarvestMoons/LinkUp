@@ -3,12 +3,42 @@
   <div
     v-if="isMenuVisible"
     :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
-    class="context-menu"
+    class="contextMenu"
   >
     <ul>
-      <li @click="deleteMember(clickOnMember)">删除该成员</li>
       <li
-        v-if="friends != null && !isFriend(clickOnMember)"
+        v-if="
+          (isUserGroupAdmin() || isUserGroupOwner()) &&
+          !isMemberGroupOwner(clickOnMember)
+        "
+        @click="deleteMember(clickOnMember)"
+      >
+        删除该成员
+      </li>
+      <li
+        v-if="
+          isUserGroupOwner() &&
+          !(
+            isMemberGroupAdmin(clickOnMember) ||
+            isMemberGroupOwner(clickOnMember)
+          )
+        "
+        @click="setMemberAdmin(clickOnMember)"
+      >
+        设置该成员为管理员
+      </li>
+      <li
+        v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
+        @click="setMemberNotAdmin(clickOnMember)"
+      >
+        设置该成员为非管理员
+      </li>
+      <li
+        v-if="
+          clickOnMember.id != userId &&
+          friends != null &&
+          !isFriend(clickOnMember)
+        "
         @click="addMemberAsFriend(clickOnMember)"
       >
         添加好友
@@ -96,10 +126,14 @@
       </div>
     </div>
 
-    <button class="disbandButton" @click="disbandGroup" v-if="isGroupOwner()">
+    <button
+      class="disbandButton"
+      @click="disbandGroup"
+      v-if="isUserGroupOwner()"
+    >
       解散群聊
     </button>
-    <button class="leaveButton" @click="leaveGroup" v-if="!isGroupOwner()">
+    <button class="leaveButton" @click="leaveGroup" v-if="!isUserGroupOwner()">
       退出群聊
     </button>
   </div>
@@ -123,7 +157,6 @@ export default {
     groupMembers: Array,
     userRole: Role,
     userId: Number,
-    containerRef: Object,
   },
   data() {
     return {
@@ -149,8 +182,17 @@ export default {
     window.addEventListener("click", this.closeMenu);
   },
   methods: {
-    isGroupOwner() {
-      return this.userRolGroupOwnere === Role.Owner;
+    isUserGroupOwner() {
+      return this.userRole === Role.Owner;
+    },
+    isUserGroupAdmin() {
+      return this.userRole === Role.Admin;
+    },
+    isMemberGroupOwner(member) {
+      return member.role === Role.Owner;
+    },
+    isMemberGroupAdmin(member) {
+      return member.role === Role.Admin;
     },
 
     showMenu(event, member) {
@@ -158,9 +200,8 @@ export default {
       this.isMenuVisible = true; // 显示自定义菜单
 
       // 计算相对于组件容器的坐标
-      const containerRect = this.containerRef.getBoundingClientRect();
-      const top = event.clientY - containerRect.top;
-      const left = event.clientX - containerRect.left;
+      const top = event.clientY;
+      const left = event.clientX;
 
       // 设置右键菜单的位置
       this.menuPosition = { top, left };
@@ -169,22 +210,82 @@ export default {
     closeMenu() {
       this.isMenuVisible = false;
     },
-    deleteMember(member) {
-      // TODO: 删除群成员
+
+    async deleteMember(member) {
       console.log("delete", member);
-      this.closeMenu();
+      // TODO: 提示如果两人时删除成员则直接解散
+      try {
+        if (this.shoedGroupMembers.length == 2) {
+          this.disbandGroup();
+          return;
+        } else {
+          this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
+          this.closeMenu();
+          this.shoedGroupMembers.splice(member, 1);
+          showToast(
+            this.toast,
+            `已将用户 ${member.username}(#${member.id}) 踢出群组`,
+            "success"
+          );
+        }
+      } catch (error) {
+        console.error("删除群成员失败", error);
+        showToast("删除群成员失败", "error");
+      }
+    },
+    async setMemberAdmin(member) {
+      console.log("set admin", member);
+      try {
+        await this.$axios.put(
+          `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
+          { newRole: Role.Admin }
+        );
+        this.closeMenu();
+        member.role = Role.Admin;
+        showToast(
+          this.toast,
+          `已设置用户 ${member.username}(#${member.id}) 为管理员`,
+          "success"
+        );
+      } catch (error) {
+        console.error("设置管理员失败", error);
+        showToast("设置管理员失败", "error");
+      }
+    },
+    async setMemberNotAdmin(member) {
+      console.log("set not admin", this.groupId, member.id);
+      try {
+        await this.$axios.put(
+          `/groups/${this.groupId}/members/${member.id}/update-role`,
+          { newRole: Role.Member }
+        );
+        this.closeMenu();
+        member.role = Role.Member;
+        showToast(
+          this.toast,
+          `已设置用户 ${member.username}(#${member.id}) 为非管理员`,
+          "success"
+        );
+      } catch (error) {
+        console.error("设置非管理员失败", error);
+        showToast(this.toast, "设置非管理员失败", "error");
+      }
     },
     addMemberAsFriend(member) {
       // TODO: 添加群成员
       console.log("add friend with", member);
-      this.closeMenu();
+      try {
+        this.closeMenu();
+      } catch (error) {
+        console.error("添加好友失败", error);
+        showToast(this.toast, "添加好友失败", "error");
+      }
     },
     isFriend(member) {
       return this.friends.some((friend) => friend.id === member.id);
     },
-    // TODO: 设置成员为管理员
     startEditing(field) {
-      if (this.userRole === Role.Owner || this.userRole === Role.Admin) {
+      if (this.isGroupOwner() || this.isGroupAdmin()) {
         if (field === "name") {
           this.editableGroupName = this.groupName;
           this.isEditingName = true;
@@ -202,6 +303,7 @@ export default {
         showToast(this.toast, "你不是该群组的管理员，无权修改！", "error");
       }
     },
+
     saveGroupName() {
       // TODO: 调用后端保存
       this.isEditingName = false;
@@ -287,28 +389,27 @@ export default {
 </script>
 
 <style scoped>
-.context-menu {
-  position: absolute;
+.contextMenu {
+  position: fixed;
   background-color: white;
   border: 1px solid #ccc;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px;
   z-index: 1001;
   cursor: pointer;
 }
 
-.context-menu ul {
+.contextMenu ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-.context-menu li {
-  padding: 8px 12px;
+.contextMenu li {
+  padding: 10px 15px;
   border-bottom: 1px solid #eee;
 }
 
-.context-menu li:hover {
+.contextMenu li:hover {
   background-color: #f0f0f0;
 }
 

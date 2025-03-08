@@ -6,16 +6,10 @@
   </transition>
 
   <transition name="slide">
-    <div v-show="isVisible" class="sidebar" ref="sidebar">
+    <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <button class="closeBtn" @click="$emit('close')">✖ 关闭</button>
-      <component
-        :is="contentComponent"
-        v-bind="{
-          ...contentProps,
-          containerRef: $refs.sidebar, // 这里添加 sidebar 的 ref
-        }"
-      ></component>
+      <component :is="contentComponent" v-bind="contentProps"></component>
     </div>
   </transition>
 </template>

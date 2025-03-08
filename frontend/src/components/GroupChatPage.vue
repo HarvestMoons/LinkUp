@@ -142,7 +142,7 @@ export default {
       showGroupSidebar: false,
       groupTasks: [],
       stompClient: null, // 修改为STOMP客户端
-      userRole: Role.Admin,
+      userRole: Role.Owner,
       TaskList,
       GroupEditor,
     };
