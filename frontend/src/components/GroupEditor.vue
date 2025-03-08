@@ -229,8 +229,6 @@ export default {
 
     async deleteMember(member) {
       console.log("delete", member);
-      // TODO: 提示如果两人时删除成员则直接解散
-      // TODO: 更新外部群聊界面显示的member人数
       try {
         if (this.shoedGroupMembers.length == 2) {
           this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
