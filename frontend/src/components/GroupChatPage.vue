@@ -112,7 +112,6 @@
 </template>
 
 <script>
-// TODO: 任务显示、群组信息编辑组件
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import SockJS from "sockjs-client"; // 新增
@@ -142,7 +141,7 @@ export default {
       showGroupSidebar: false,
       groupTasks: [],
       stompClient: null, // 修改为STOMP客户端
-      userRole: Role.Owner,
+      userRole: Role.Member,
       TaskList,
       GroupEditor,
     };
@@ -165,6 +164,7 @@ export default {
     this.checkMembership().then(() => {
       if (this.isMember) {
         this.fetchGroup();
+        this.fetchUserRole();
         this.fetchMembers();
         this.fetchMessages();
       }
@@ -202,6 +202,17 @@ export default {
         this.groupData = response.data;
       } catch (error) {
         console.error("加载群组失败", error);
+      }
+    },
+    async fetchUserRole() {
+      try {
+        const response = await this.$axios.get(
+          `/groups/${this.groupId}/members/${this.userId}/role`
+        );
+        this.userRole = response.data;
+        console.log("role", this.userRole);
+      } catch (error) {
+        console.error("加载群组身份失败", error);
       }
     },
     async fetchMembers() {

@@ -140,7 +140,6 @@
 </template>
 
 <script>
-// TODO: 右键踢出群聊或添加好友
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import FriendSelection from "@/components/FriendSelection.vue";
@@ -214,6 +213,7 @@ export default {
     async deleteMember(member) {
       console.log("delete", member);
       // TODO: 提示如果两人时删除成员则直接解散
+      // TODO: 更新外部群聊界面显示的member人数
       try {
         if (this.shoedGroupMembers.length == 2) {
           this.disbandGroup();
@@ -271,10 +271,19 @@ export default {
         showToast(this.toast, "设置非管理员失败", "error");
       }
     },
-    addMemberAsFriend(member) {
-      // TODO: 添加群成员
+    async addMemberAsFriend(member) {
       console.log("add friend with", member);
       try {
+        await this.$axios.post(
+          "/friend-requests/send", // 后端的接口
+          {
+            senderId: Number(this.userId), // 将字符串转换为数字
+            receiverId: Number(member.id), // 将字符串转换为数字
+          }
+        );
+
+        // 处理成功的响应
+        showToast(this.toast, "好友请求已发送！", "success");
         this.closeMenu();
       } catch (error) {
         console.error("添加好友失败", error);

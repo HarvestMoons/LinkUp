@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     async fetchGroups() {
-      // TODO: 按最新消息更新时间显示
+      // TODO: 按最新消息更新时间顺序显示
       try {
         this.groupListLoading = true;
         this.groups = [];
@@ -146,14 +146,10 @@ export default {
           showToast(this.toast, "至少需要选择一个好友", "error");
           return;
         }
-        const responseNewGroup = await this.$axios.post(
-          `/task-group/create`,
-          // TODO:修改这个补丁
-          {
-            name: this.newGroup.name,
-            description: this.newGroup.description,
-          }
-        );
+        const responseNewGroup = await this.$axios.post(`/task-group/create`, {
+          name: this.newGroup.name,
+          description: this.newGroup.description,
+        });
         console.log(responseNewGroup.data);
         await this.$axios.post(
           `/groups/${responseNewGroup.data.id}/members/${this.userId}?role=${Role.Owner}`
