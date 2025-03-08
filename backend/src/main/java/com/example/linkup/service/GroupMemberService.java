@@ -1,6 +1,7 @@
 package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementNotExistException;
+import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.GroupMember.Role;
 import com.example.linkup.model.TaskGroup;
@@ -86,5 +87,17 @@ public class GroupMemberService {
     // 删除群组成员
     public void removeMember(long taskGroupId, long userId) {
         groupMemberRepository.deleteByGroupIdAndUserId(taskGroupId, userId);
+    }
+
+    public GroupMember findByTaskGroupIdAndUserId(Long taskGroupId, Long userId) throws UnexpectedNullElementException {
+        GroupMember groupMember = groupMemberRepository.findByTaskGroupIdAndUserId(taskGroupId, userId);
+        if (groupMember == null) {
+            throw new UnexpectedNullElementException("未找到群组成员");
+        }
+        return groupMemberRepository.findByTaskGroupIdAndUserId(taskGroupId, userId);
+    }
+
+    public Role getUserRole(long taskGroupId, long userId) throws UnexpectedNullElementException {
+        return findByTaskGroupIdAndUserId(taskGroupId,userId).getRole();
     }
 }

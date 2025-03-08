@@ -25,7 +25,7 @@ public class GroupMemberController {
     private final UserService userService;
 
     public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
-            UserService userService) {
+                                 UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;
@@ -94,5 +94,19 @@ public class GroupMemberController {
         return ResponseEntity.ok(isMember);
     }
 
-    // TODO: 获取某一用户的role
+    /**
+     * 获取用户在指定群组中的角色
+     *
+     * @param taskGroupId 群组ID
+     * @param userId      用户ID
+     * @return 用户的角色
+     * @throws UnexpectedNullElementException 当指定的用户不存在
+     */
+    @GetMapping("/{userId}/role")
+    public ResponseEntity<Role> getUserRoleInGroup(
+            @PathVariable long taskGroupId, @PathVariable long userId) throws UnexpectedNullElementException {
+        Role role = groupMemberService.getUserRole(taskGroupId, userId);
+        return ResponseEntity.ok(role);
+    }
+
 }
