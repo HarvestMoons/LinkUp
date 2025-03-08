@@ -179,6 +179,7 @@ export default {
   async mounted() {
     this.friends = await getFriendList(this.userId);
     window.addEventListener("click", this.closeMenu);
+    window.addEventListener("wheel", this.closeMenu);
   },
   methods: {
     isUserGroupOwner() {
@@ -393,6 +394,7 @@ export default {
   },
   beforeUumount() {
     window.removeEventListener("click", this.closeMenu);
+    window.removeEventListener("wheel", this.closeMenu);
   },
 };
 </script>
