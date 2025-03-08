@@ -34,4 +34,5 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, GroupM
 
     // 检查某用户是否在某群组中
     boolean existsByTaskGroupAndUser(TaskGroup taskGroup, User user);
+
 }
