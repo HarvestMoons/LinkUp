@@ -46,14 +46,23 @@
     </ul>
   </div>
 
+  <!-- 引入自定义确认框组件 -->
+  <ConfirmDialog
+    v-model:isVisible="isConfirmDialogVisible"
+    :message="confirmMessage"
+    @confirm="handleConfirm"
+  />
+
   <div class="groupEditorContainer" ref="groupEditorContainer">
     <div class="groupMembers">
       <h2>群成员</h2>
       <ul class="membersList">
-        <div v-if="groupMembers.length === 0" class="loading">加载中...</div>
+        <div v-if="shoedGroupMembers.length === 0" class="loading">
+          加载中...
+        </div>
         <li
           v-else
-          v-for="member in groupMembers"
+          v-for="member in shoedGroupMembers"
           :key="member.id"
           class="memberItem"
           @contextmenu="showMenu($event, member)"
@@ -143,12 +152,13 @@
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import FriendSelection from "@/components/FriendSelection.vue";
+import ConfirmDialog from "./ConfirmDialog.vue";
 import { Role } from "@/config/constants";
 import { getFriendList } from "@/utils/friendService";
 
 export default {
   name: "GroupEditor",
-  components: { FriendSelection },
+  components: { FriendSelection, ConfirmDialog },
   props: {
     groupId: Number,
     groupName: String,
@@ -162,13 +172,15 @@ export default {
       isMenuVisible: false,
       menuPosition: { top: 0, left: 0 },
       clickOnMember: null,
+      isConfirmDialogVisible: false, // 控制确认框的显示和隐藏
+      confirmMessage: "", // 确认框显示的提示信息
       isEditingName: false,
       isEditingDescription: false,
       editableGroupName: this.groupName,
       editableGroupDescription: this.groupDescription,
       isSelectingFriend: false,
       selectedFriends: [],
-      shoedGroupMembers: this.groupMembers,
+      shoedGroupMembers: [],
       friends: null,
     };
   },
@@ -211,14 +223,18 @@ export default {
       this.isMenuVisible = false;
     },
 
+    handleConfirm() {
+      this.disbandGroup(); // 用户确认解散群聊
+    },
+
     async deleteMember(member) {
       console.log("delete", member);
       // TODO: 提示如果两人时删除成员则直接解散
       // TODO: 更新外部群聊界面显示的member人数
       try {
         if (this.shoedGroupMembers.length == 2) {
-          this.disbandGroup();
-          return;
+          this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
+          this.isConfirmDialogVisible = true; // 显示确认框
         } else {
           this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
           this.closeMenu();
@@ -352,7 +368,7 @@ export default {
 
     startAddingGroupMember() {
       this.isSelectingFriend = true;
-      console.log("shoed members", this.shoedGroupMembers);
+      console.log("shoed members", this.groupMembers, this.shoedGroupMembers);
     },
     cancelAddingGroupMember() {
       this.isSelectingFriend = false;
@@ -395,6 +411,16 @@ export default {
   beforeUumount() {
     window.removeEventListener("click", this.closeMenu);
     window.removeEventListener("wheel", this.closeMenu);
+  },
+  watch: {
+    groupMembers: {
+      handler() {
+        this.$nextTick(() => {
+          this.shoedGroupMembers = this.groupMembers;
+        });
+      },
+      deep: true, // 深度监听，确保数组更新时触发
+    },
   },
 };
 </script>
