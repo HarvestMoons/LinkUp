@@ -34,6 +34,7 @@
 
 <script>
 import { getFriendList } from "@/utils/friendService";
+
 export default {
   name: "FriendSelection",
   props: {

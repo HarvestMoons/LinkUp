@@ -80,9 +80,10 @@
 </template>
 
 <script>
+import { fetchFriends, getFriendList } from "@/utils/friendService";
+
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import { fetchFriends, getFriendList } from "@/utils/friendService";
 
 export default {
   name: "FriendsPage",

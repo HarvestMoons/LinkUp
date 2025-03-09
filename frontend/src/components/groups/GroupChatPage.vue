@@ -106,20 +106,22 @@
         userId: userId,
       }"
       @close="toggleGroupSidebar"
-      @fetchMembers="fetchMembers"
     />
   </div>
 </template>
 
 <script>
+import SideBar from "@/components/common/SideBar.vue";
+import TaskList from "@/components/tasks/TaskList.vue";
+import GroupEditor from "@/components/groups/GroupEditor.vue";
+
+import { Role } from "@/config/constants";
+
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import SockJS from "sockjs-client"; // 新增
-import { Client } from "@stomp/stompjs"; // 新增
-import SideBar from "@/components/SideBar.vue";
-import TaskList from "@/components/TaskList.vue";
-import GroupEditor from "@/components/GroupEditor.vue";
-import { Role } from "@/config/constants";
+
+import SockJS from "sockjs-client";
+import { Client } from "@stomp/stompjs";
 
 export default {
   components: { SideBar },

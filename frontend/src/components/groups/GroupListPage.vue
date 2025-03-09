@@ -87,10 +87,12 @@
 </template>
 
 <script>
+import FriendSelection from "@/components/friends/FriendSelection.vue";
+
+import { Role } from "@/config/constants";
+
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import { Role } from "@/config/constants";
-import FriendSelection from "@/components/FriendSelection.vue";
 
 export default {
   name: "GroupListPage",
@@ -192,7 +194,6 @@ export default {
   },
 };
 // TODO: 整理css
-// TODO: 抽取复用好友列表
 </script>
 
 <style scoped>

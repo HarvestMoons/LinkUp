@@ -6,26 +6,26 @@
       <div class="form-group">
         <label for="username">Username:</label>
         <input
-            type="text"
-            id="usernameInput"
-            v-model="username"
-            @input="validateUsernameInput"
-            required
+          type="text"
+          id="usernameInput"
+          v-model="username"
+          @input="validateUsernameInput"
+          required
         />
       </div>
 
       <div class="form-group">
         <label for="password">Password:</label>
-        <input type="password" id="passwordInput" v-model="password" required/>
+        <input type="password" id="passwordInput" v-model="password" required />
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Confirm Password:</label>
         <input
-            type="password"
-            id="confirmPasswordInput"
-            v-model="confirmPassword"
-            required
+          type="password"
+          id="confirmPasswordInput"
+          v-model="confirmPassword"
+          required
         />
       </div>
 
@@ -44,9 +44,10 @@
 </template>
 
 <script>
-import {showToast} from "@/utils/toast";
-import {useToast} from "vue-toastification";
-import {MAX_STRING_LENGTH} from "@/config/constants";
+import { MAX_STRING_LENGTH } from "@/config/constants";
+
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "RegisterPage",
@@ -60,7 +61,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return {toast};
+    return { toast };
   },
   methods: {
     // 密码强度校验（至少6位，包含字母和数字）
@@ -96,7 +97,10 @@ export default {
         this.errorMessage = "用户名只能包含字母、数字和下划线！";
         return;
       }
-      if (this.username.length > MAX_STRING_LENGTH || this.password > MAX_STRING_LENGTH) {
+      if (
+        this.username.length > MAX_STRING_LENGTH ||
+        this.password > MAX_STRING_LENGTH
+      ) {
         this.errorMessage = "用户名或密码过长！";
         return;
       }
@@ -123,7 +127,7 @@ export default {
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
           this.errorMessage =
-              error.response.data.message || "服务器异常，请稍后再试。";
+            error.response.data.message || "服务器异常，请稍后再试。";
         } else if (error.request) {
           // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
           this.errorMessage = "无法连接到服务器，请检查网络。";

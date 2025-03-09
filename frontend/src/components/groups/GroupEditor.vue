@@ -149,12 +149,15 @@
 </template>
 
 <script>
+import FriendSelection from "@/components/friends/FriendSelection.vue";
+import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
+
+import { Role } from "@/config/constants";
+
+import { getFriendList } from "@/utils/friendService";
+
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import FriendSelection from "@/components/FriendSelection.vue";
-import ConfirmDialog from "./ConfirmDialog.vue";
-import { Role } from "@/config/constants";
-import { getFriendList } from "@/utils/friendService";
 
 export default {
   name: "GroupEditor",
