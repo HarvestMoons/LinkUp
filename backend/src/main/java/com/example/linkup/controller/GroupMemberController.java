@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/groups/{taskGroupId}/members") // URL 路径中的群组ID
@@ -24,7 +25,7 @@ public class GroupMemberController {
     private final UserService userService;
 
     public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
-                                 UserService userService) {
+            UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;
@@ -62,7 +63,8 @@ public class GroupMemberController {
     public ResponseEntity<GroupMember> updateMemberRole(
             @PathVariable long taskGroupId,
             @PathVariable long userId,
-            @RequestBody Role newRole) throws ElementNotExistException {
+            @RequestBody Map<String, String> requestBody) throws ElementNotExistException {
+        Role newRole = Role.valueOf(requestBody.get("newRole"));
         GroupMember updatedMember = groupMemberService.updateMemberRole(taskGroupId, userId, newRole);
         return ResponseEntity.ok(updatedMember);
     }
@@ -75,6 +77,7 @@ public class GroupMemberController {
         groupMemberService.removeMember(taskGroupId, userId);
         return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
     }
+
     /**
      * 判断指定用户是否在指定群组中
      *

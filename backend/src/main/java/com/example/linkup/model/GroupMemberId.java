@@ -11,7 +11,11 @@ import java.util.Objects;
 public class GroupMemberId implements Serializable {
 
     private Long taskGroup; // 群组ID
-    private Long user;      // 用户ID
+    private Long user; // 用户ID
+
+    // 默认构造函数
+    public GroupMemberId() {
+    }
 
     // 带参数构造函数
     public GroupMemberId(Long taskGroup, Long user) {

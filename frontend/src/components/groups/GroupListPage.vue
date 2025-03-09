@@ -155,11 +155,19 @@ export default {
         });
         console.log(responseNewGroup.data);
         await this.$axios.post(
-          `/groups/${responseNewGroup.data.id}/members/${this.userId}?role=${Role.Owner}`
+          `/groups/${responseNewGroup.data.id}/members/${this.userId}`,
+          null,
+          {
+            params: { role: Role.Owner },
+          }
         );
         for (const friend of this.selectedFriends) {
           await this.$axios.post(
-            `/groups/${responseNewGroup.data.id}/members/${friend.id}?role=${Role.Member}`
+            `/groups/${responseNewGroup.data.id}/members/${friend.id}`,
+            null,
+            {
+              params: { role: Role.Member },
+            }
           );
         }
         this.fetchGroups();

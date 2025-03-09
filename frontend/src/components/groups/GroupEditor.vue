@@ -118,7 +118,7 @@
       </div>
       <div class="groupField" @click="startEditing('name')" v-else>
         <span>群组名称: </span>
-        <span class="editableText">{{ groupName }}</span>
+        <span class="editableText">{{ showedGroupName }}</span>
       </div>
 
       <div class="groupField" v-if="isEditingDescription">
@@ -132,7 +132,7 @@
       <div class="groupField" @click="startEditing('description')" v-else>
         <span>群组描述: </span>
         <span class="editableText">{{
-          groupDescription ? groupDescription : "无"
+          showedGroupDescription ? showedGroupDescription : "无"
         }}</span>
       </div>
     </div>
@@ -187,6 +187,8 @@ export default {
       isEditingDescription: false,
       editableGroupName: this.groupName,
       editableGroupDescription: this.groupDescription,
+      showedGroupName: this.groupName,
+      showedGroupDescription: this.groupDescription,
       isSelectingFriend: false,
       selectedFriends: [],
       showedGroupMembers: [],
@@ -258,7 +260,7 @@ export default {
         }
       } catch (error) {
         console.error("删除群成员失败", error);
-        showToast("删除群成员失败", "error");
+        showToast(this.toast, "删除群成员失败", "error");
       }
     },
     async setMemberAdmin(member) {
@@ -277,7 +279,7 @@ export default {
         );
       } catch (error) {
         console.error("设置管理员失败", error);
-        showToast("设置管理员失败", "error");
+        showToast(this.toast, "设置管理员失败", "error");
       }
     },
     async setMemberNotAdmin(member) {
@@ -324,13 +326,13 @@ export default {
     startEditing(field) {
       if (this.isUserGroupOwner() || this.isUserGroupAdmin()) {
         if (field === "name") {
-          this.editableGroupName = this.groupName;
+          this.editableGroupName = this.showedGroupName;
           this.isEditingName = true;
           setTimeout(() => {
             this.$refs.groupNameInput.focus();
           }, 0);
         } else if (field === "description") {
-          this.editableGroupDescription = this.groupDescription;
+          this.editableGroupDescription = this.showedGroupDescription;
           this.isEditingDescription = true;
           setTimeout(() => {
             this.$refs.groupDescriptionInput.focus();
@@ -341,13 +343,40 @@ export default {
       }
     },
 
-    saveGroupName() {
-      // TODO: 调用后端保存
+    async saveGroupName() {
       this.isEditingName = false;
+      try {
+        if (this.editableGroupName === "") {
+          this.editableGroupName = this.showedGroupName;
+          showToast(this.toast, "群组名称不能为空", "error");
+        }
+        this.showedGroupName = this.editableGroupName;
+        await this.$axios.put(`/task-group/${this.groupId}/update-name`, null, {
+          params: { name: this.editableGroupName },
+        });
+        showToast(this.toast, `群组名称更改成功`, "success");
+      } catch (error) {
+        console.error("更改群组名称失败", error);
+        showToast(this.toast, "更改群组名称失败", "error");
+      }
     },
-    saveGroupDescription() {
-      // TODO: 调用后端保存
+    async saveGroupDescription() {
+      // TODO: 改变后实时改变外部群聊顶部名字与描述
       this.isEditingDescription = false;
+      try {
+        this.showedGroupDescription = this.editableGroupDescription;
+        await this.$axios.put(
+          `/task-group/${this.groupId}/update-description`,
+          null,
+          {
+            params: { description: this.editableGroupDescription },
+          }
+        );
+        showToast(this.toast, `群组描述更改成功`, "success");
+      } catch (error) {
+        console.error("更改群组描述失败", error);
+        showToast(this.toast, "更改群组描述失败", "error");
+      }
     },
 
     async disbandGroup() {
@@ -395,9 +424,9 @@ export default {
         // 收集所有的异步请求
         for (const friend of this.selectedFriends) {
           const promise = this.$axios
-            .post(
-              `/groups/${this.groupId}/members/${friend.id}?role=${Role.Member}`
-            )
+            .post(`/groups/${this.groupId}/members/${friend.id}`, null, {
+              params: { role: Role.Member },
+            })
             .then(() => {
               this.showedGroupMembers.push({ role: Role.Member, ...friend });
             });
@@ -431,6 +460,20 @@ export default {
         });
       },
       deep: true, // 深度监听，确保数组更新时触发
+    },
+    groupName: {
+      handler() {
+        this.$nextTick(() => {
+          this.showedGroupName = this.groupName;
+        });
+      },
+    },
+    groupDescription: {
+      handler() {
+        this.$nextTick(() => {
+          this.showedGroupDescription = this.groupDescription;
+        });
+      },
     },
   },
 };

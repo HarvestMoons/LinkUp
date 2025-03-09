@@ -245,6 +245,7 @@ export default {
         this.messageLoading = false;
       }
     },
+
     isSentByCurrentUser(message) {
       return this.userId === message.sender.id;
     },
@@ -302,7 +303,6 @@ export default {
         showToast(this.toast, "连接尚未建立，请稍后重试", "error");
       }
     },
-
     scrollToBottom() {
       const container = this.$refs.messageItemRef;
       if (container) {
@@ -321,7 +321,6 @@ export default {
         this.fetchGroupTasks();
       }
     },
-
     async fetchGroupTasks() {
       this.taskListLoading = true;
       try {
