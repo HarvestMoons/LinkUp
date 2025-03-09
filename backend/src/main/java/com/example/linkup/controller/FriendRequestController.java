@@ -1,7 +1,6 @@
 package com.example.linkup.controller;
 
 import com.example.linkup.dto.FriendRequestRequestDto;
-import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.FriendRequest;
 import com.example.linkup.model.User;
@@ -31,16 +30,11 @@ public class FriendRequestController {
     // 发送好友请求
     @PostMapping("/send")
     public ResponseEntity<FriendRequest> sendFriendRequest(@RequestBody FriendRequestRequestDto requestDto)
-            throws ElementNotExistException, UnexpectedNullElementException {
-        // 获取发送者和接收者
+            throws UnexpectedNullElementException {
         User sender = userService.findById(requestDto.getSenderId());
-        try {
-            User receiver = userService.findById(requestDto.getReceiverId());
-            FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
-            return ResponseEntity.ok(friendRequest);
-        } catch (UnexpectedNullElementException e) {
-            throw new ElementNotExistException("id #" + requestDto.getReceiverId() + " 对应的用户不存在！");
-        }
+        User receiver = userService.findById(requestDto.getReceiverId());
+        FriendRequest friendRequest = friendRequestService.sendFriendRequest(sender, receiver);
+        return ResponseEntity.ok(friendRequest);
     }
 
     @GetMapping("/receiver/{receiverId}/status/{status}")
@@ -51,10 +45,8 @@ public class FriendRequestController {
         // 将状态转换为 RequestStatus 枚举值
         FriendRequest.RequestStatus requestStatus = FriendRequest.RequestStatus.valueOf(status.toUpperCase());
 
-        // 获取接收者的 User 对象（可以通过 UserService 查询）
-        User receiver = userService.findById(receiverId); // 假设 UserService 中有 findById 方法
+        User receiver = userService.findById(receiverId);
 
-        // 调用 Service 层来获取接收者和状态的好友请求
         List<FriendRequest> friendRequests = friendRequestService.getFriendRequestsByReceiverAndStatus(receiver,
                 requestStatus);
 

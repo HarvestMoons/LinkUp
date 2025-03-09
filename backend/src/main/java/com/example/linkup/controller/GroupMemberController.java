@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/groups/{taskGroupId}/members") // URL 路径中的群组ID
@@ -63,8 +62,7 @@ public class GroupMemberController {
     public ResponseEntity<GroupMember> updateMemberRole(
             @PathVariable long taskGroupId,
             @PathVariable long userId,
-            @RequestBody Map<String, String> requestBody) throws ElementNotExistException {
-        Role newRole = Role.valueOf(requestBody.get("newRole"));
+            @RequestBody Role newRole) throws ElementNotExistException {
         GroupMember updatedMember = groupMemberService.updateMemberRole(taskGroupId, userId, newRole);
         return ResponseEntity.ok(updatedMember);
     }
@@ -77,9 +75,6 @@ public class GroupMemberController {
         groupMemberService.removeMember(taskGroupId, userId);
         return ResponseEntity.noContent().build(); // No Content 状态表示删除成功
     }
-
-    // TODO: 需要自定义异常类，用来区分并抛出因为群组不存在导致的异常 (好像好了？)
-
     /**
      * 判断指定用户是否在指定群组中
      *

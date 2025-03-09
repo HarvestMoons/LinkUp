@@ -7,6 +7,7 @@ import com.example.linkup.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 @Service
 @Transactional
@@ -37,7 +38,7 @@ public class UserService {
     }
 
     public User findById(Long id) throws UnexpectedNullElementException {
-        return userRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
+        return userRepository.findById(id).orElseThrow(()->new UnexpectedNullElementException("id #" + id + " 对应的用户不存在！"));
     }
 
     public void removeUser(long userId) {
@@ -45,15 +46,13 @@ public class UserService {
     }
 
     public User updateUsername(Long userId, String newUsername) throws UnexpectedNullElementException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(UnexpectedNullElementException::new);
+        User user=findById(userId);
         user.setUsername(newUsername);
         return userRepository.save(user);
     }
 
     public void updatePassword(Long userId, String newPassword) throws UnexpectedNullElementException {
-        User user = userRepository.findById(userId)
-                .orElseThrow(UnexpectedNullElementException::new);
+        User user=findById(userId);
         user.setUsername(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }

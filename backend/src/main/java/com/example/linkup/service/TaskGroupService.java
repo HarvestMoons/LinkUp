@@ -52,4 +52,18 @@ public class TaskGroupService {
     public TaskGroup findById(Long id) throws UnexpectedNullElementException {
         return taskGroupRepository.findById(id).orElseThrow(UnexpectedNullElementException::new);
     }
+
+    public TaskGroup updateTaskGroupName(Long id, String name) throws UnexpectedNullElementException {
+        TaskGroup taskGroup = findById(id);
+        taskGroup.setName(name);
+        return taskGroupRepository.save(taskGroup);
+    }
+
+    public TaskGroup updateTaskGroupDescription(Long id, String description)
+            throws UnexpectedNullElementException {
+        TaskGroup taskGroup = findById(id);
+        taskGroup.setDescription(description);
+        return taskGroupRepository.save(taskGroup);
+    }
+
 }

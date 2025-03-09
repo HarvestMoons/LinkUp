@@ -27,10 +27,8 @@ public class FriendshipsController {
     // 添加好友
     @PostMapping("/add")
     public ResponseEntity<Friendships> addFriend(@RequestBody FriendshipsDto requestDto) {
-        User user = requestDto.getUser(); // 获取请求体中的当前用户
-        User friend = requestDto.getFriend(); // 获取请求体中的目标好友
-
-        // 调用 service 层方法添加好友关系
+        User user = requestDto.getUser();
+        User friend = requestDto.getFriend();
         Friendships friendship = friendshipsService.addFriend(user, friend);
         return ResponseEntity.ok(friendship);
     }
@@ -48,7 +46,6 @@ public class FriendshipsController {
     public ResponseEntity<Void> removeFriend(@RequestBody FriendshipsDto request) throws ElementNotExistException {
         User user = request.getUser();
         User friend = request.getFriend();
-
         friendshipsService.removeFriend(user, friend);
         return ResponseEntity.noContent().build();
     }

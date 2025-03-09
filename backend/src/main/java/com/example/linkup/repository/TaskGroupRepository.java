@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TaskGroupRepository extends JpaRepository<TaskGroup, Long> {
-    // 你可以在这里添加更多的查询方法
 }
