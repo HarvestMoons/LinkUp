@@ -8,11 +8,11 @@
           {{ groupData.name }} (#{{ groupId }}) ({{ groupMembers.length }})
         </h1>
         <p>{{ groupData.description }}</p>
-        <div class="sideBarButtonContainer">
-          <button @click="toggleTaskSidebar" class="sideBarButton">
+        <div class="doubleButtonContainer">
+          <button @click="toggleTaskSidebar" class="button sideBarButton">
             📋 任务
           </button>
-          <button @click="toggleGroupSidebar" class="sideBarButton">
+          <button @click="toggleGroupSidebar" class="button sideBarButton">
             群组信息
           </button>
         </div>
@@ -74,7 +74,7 @@
           placeholder="输入消息..."
           class="chatInput"
         />
-        <button @click="sendMessage" class="sendButton">发送</button>
+        <button @click="sendMessage" class="button normalButton">发送</button>
       </footer>
     </div>
 
@@ -354,10 +354,6 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  margin-top: 30px;
-}
-
 .chatContainer {
   display: flex;
   flex-direction: column;
@@ -376,23 +372,6 @@ export default {
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.sideBarButtonContainer {
-  display: flex;
-  gap: 10px;
-
-  justify-content: center;
-  align-items: center;
-}
-
-.sideBarButton {
-  background: lightgreen;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  width: 100px;
-}
-
 /* 聊天区域 */
 .chatArea {
   flex-grow: 1;
@@ -404,8 +383,6 @@ export default {
   display: flex;
   flex-direction: column; /* 纵向排列 */
   gap: 10px; /* 每个消息之间的间距 */
-  list-style: none;
-  padding: 0;
 }
 
 .messageItem {
@@ -443,6 +420,7 @@ export default {
 .chatInputArea {
   display: flex;
   align-items: center;
+  gap: 10px;
   padding: 10px;
   background-color: rgba(128, 128, 128, 0.1);
   border-radius: 10px;
@@ -457,17 +435,6 @@ export default {
   border-radius: 5px;
   font-size: 16px;
   outline: none;
-}
-
-.sendButton {
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  margin-left: 10px;
-  color: white;
-  width: 100px;
-  background-color: #007bff;
 }
 
 .messageAvatar {

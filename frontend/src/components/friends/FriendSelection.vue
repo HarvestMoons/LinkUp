@@ -18,11 +18,9 @@
           <img
             :src="friend.avatar || require('@/assets/images/icon.png')"
             alt="头像"
-            class="friendAvatar"
+            class="avatar"
           />
-          <span class="friendNickname"
-            >{{ friend.username }} (#{{ friend.id }})</span
-          >
+          <span class="nickname">{{ friend.username }} (#{{ friend.id }})</span>
           <span v-if="selectedFriends.includes(friend)" class="checkmark"
             >✔</span
           >
@@ -82,36 +80,13 @@ export default {
 .friendsDropdown {
   max-height: 120px;
   overflow-y: auto;
+  padding-left: 5%;
+  padding-right: 5%;
   width: 90%;
-}
-
-.friendsList {
-  padding: 0;
-}
-
-.friendItem {
-  list-style: none;
-  display: flex;
-  align-items: center; /* 使头像和昵称垂直居中 */
-  margin-bottom: 15px; /* 每个列表项之间的间距 */
 }
 
 .unavailable {
   opacity: 0.5;
   pointer-events: none; /* 禁用点击 */
-}
-
-.friendAvatar {
-  width: 5%;
-  height: 5%;
-  border-radius: 50%;
-  margin-right: 1.25%; /* 头像和昵称之间的间距 */
-}
-
-.friendNickname {
-  font-size: clamp(1rem, 2vw, 5rem);
-  font-weight: bold;
-  text-align: left; /* 确保昵称居中对齐 */
-  flex-grow: 1; /* 如果有更多的空间，昵称会自动占用 */
 }
 </style>

@@ -3,9 +3,9 @@
   <div v-if="isVisible" class="confirm-dialog-overlay" @click.self="close">
     <div class="confirm-dialog">
       <h3>{{ message }}</h3>
-      <div class="buttonContainer">
-        <button @click="onConfirm" class="confirm">确认</button>
-        <button @click="onCancel" class="cancel">取消</button>
+      <div class="doubleButtonContainer">
+        <button @click="onConfirm" class="button warningButton">确认</button>
+        <button @click="onCancel" class="button normalButton">取消</button>
       </div>
     </div>
   </div>
@@ -65,31 +65,8 @@ export default {
   width: 300px;
   gap: 20px;
 }
+
 .confirm-dialog h3 {
   margin: 0px;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.confirm,
-.cancel {
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  color: white;
-  width: 100px;
-}
-
-.confirm {
-  background-color: #dc3545;
-}
-.cancel {
-  background-color: #007bff;
-  margin-left: 10px;
 }
 </style>

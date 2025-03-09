@@ -6,7 +6,7 @@
     <img src="@/assets/images/icon.png" style="padding: 10px" alt="" />
 
     <div>
-      <button @click="logout" class="logoutButton">Logout</button>
+      <button @click="logout" class="longButton normalButton">Logout</button>
     </div>
   </div>
 </template>
@@ -27,18 +27,7 @@ export default {
 </script>
 
 <style scoped>
-.container {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.logoutButton {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 30%;
+.longButton {
+  width: 50%;
 }
 </style>

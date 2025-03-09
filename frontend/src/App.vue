@@ -3,13 +3,11 @@
     <nav>
       <div class="userContainer" v-if="isAuthPage">
         <img
-            :src="user.avatar || require('@/assets/images/icon.png')"
-            alt="头像"
-            class="friendAvatar"
+          :src="user.avatar || require('@/assets/images/icon.png')"
+          alt="头像"
+          class="userAvatar"
         />
-        <span class="friendNickname"
-        >{{ user.username }} (#{{ user.id }})
-        </span>
+        <span class="userNickname">{{ user.username }} (#{{ user.id }}) </span>
       </div>
       <router-link to="/">Home</router-link>
       |
@@ -23,10 +21,10 @@
       </button>
     </nav>
   </div>
-  <router-view/>
+  <router-view />
 </template>
 <script>
-import {fetchFriends} from "@/utils/friendService";
+import { fetchFriends } from "@/utils/friendService";
 
 export default {
   data() {
@@ -117,7 +115,7 @@ nav a.router-link-exact-active {
   width: 80px;
 }
 
-.friendAvatar {
+.userAvatar {
   height: 50px;
   border-radius: 50%;
   margin-right: 1.25%; /* 头像和昵称之间的间距 */

@@ -8,7 +8,9 @@
   <transition name="slide">
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
-      <button class="closeBtn" @click="$emit('close')">✖ 关闭</button>
+      <button class="button warningButton" @click="$emit('close')">
+        ✖ 关闭
+      </button>
       <component :is="contentComponent" v-bind="contentProps"></component>
     </div>
   </transition>
@@ -74,15 +76,5 @@ export default {
 .cover-enter-from,
 .cover-leave-to {
   opacity: 0;
-}
-
-.closeBtn {
-  background: red;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  color: white;
-  width: 100px;
 }
 </style>

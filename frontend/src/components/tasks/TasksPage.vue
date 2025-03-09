@@ -60,9 +60,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.container {
-  text-align: center;
-  margin-top: 30px;
-}
-</style>

@@ -1,13 +1,13 @@
 <!-- TaskList.Vue -->
 <template>
   <div class="taskCreateAndShowContainer">
-    <div class="taskCreator">
+    <div class="blockContainer">
       <transition name="taskFormTransition">
         <!-- 控制是否显示输入框 -->
-        <div class="taskForm" v-if="isCreating">
+        <div class="createTaskContainer" v-if="isCreating">
           <!-- 输入框区域 -->
-          <div class="newTaskInputFields">
-            <div class="form-group">
+          <div class="allInputFields">
+            <div class="formWithLabelAndInput">
               <label for="newTaskTitle">任务标题:</label>
               <input
                 type="text"
@@ -16,7 +16,7 @@
                 placeholder="请输入任务标题"
               />
             </div>
-            <div class="form-group">
+            <div class="formWithLabelAndInput">
               <label for="newTaskDescription">任务描述:</label>
               <textarea
                 id="newTaskDescription"
@@ -24,7 +24,7 @@
                 placeholder="请输入任务描述"
               ></textarea>
             </div>
-            <div class="form-group">
+            <div class="formWithLabelAndInput">
               <label for="newTaskPriority">任务优先级:</label>
               <select v-model="newTask.priority" id="newTaskPriority">
                 <option value="LOW">低</option>
@@ -32,7 +32,7 @@
                 <option value="HIGH">高</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="formWithLabelAndInput">
               <label for="newTaskStatus">任务状态:</label>
               <select v-model="newTask.status" id="newTaskStatus">
                 <option value="TODO">待办</option>
@@ -41,7 +41,7 @@
                 <option value="ARCHIVED">已存档</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="formWithLabelAndInput">
               <label for="newTaskDueDate">截止日期:</label>
               <input
                 type="datetime-local"
@@ -50,12 +50,16 @@
               />
             </div>
           </div>
-          <div class="buttonContainer">
+          <div class="doubleButtonContainer">
             <!-- 取消按钮 -->
-            <button @click="cancelCreateTask" class="cancelButton">取消</button>
+            <button @click="cancelCreateTask" class="button warningButton">
+              取消
+            </button>
 
             <!-- 提交按钮 -->
-            <button @click="submitTask" class="submitButton">提交任务</button>
+            <button @click="submitTask" class="button normalButton">
+              提交任务
+            </button>
           </div>
         </div>
       </transition>
@@ -65,7 +69,7 @@
         <button
           v-if="!isCreating"
           @click="startCreateTask"
-          class="createButton"
+          class="button extendButton"
         >
           创建任务
         </button>
@@ -73,17 +77,19 @@
     </div>
 
     <div class="tasksContainer">
-      <div v-if="taskListLoading" class="loading">加载中...</div>
-      <div v-else-if="tasks.length === 0" class="loading">无任务</div>
+      <div v-if="taskListLoading" class="blockContainer loading">加载中...</div>
+      <div v-else-if="tasks.length === 0" class="blockContainer loading">
+        无任务
+      </div>
       <!-- 显示任务列表 -->
       <div v-else>
-        <div v-if="highTasks.length !== 0" class="highTaskContainer">
+        <div v-if="highTasks.length !== 0" class="blockContainer">
           <ul class="tasksList">
             <h2>HIGH PRIORITY</h2>
             <li
               v-for="task in highTasks"
               :key="task.id"
-              class="taskItem"
+              class="taskItem blockContainer"
               @mouseover="hoverTask = task.id"
               @mouseleave="hoverTask = null"
             >
@@ -126,13 +132,13 @@
           </ul>
         </div>
 
-        <div v-if="midTasks.length !== 0" class="midTaskContainer">
+        <div v-if="midTasks.length !== 0" class="blockContainer">
           <ul class="tasksList">
             <h2>MEDIUM PRIORITY</h2>
             <li
               v-for="task in midTasks"
               :key="task.id"
-              class="taskItem"
+              class="taskItem blockContainer"
               @mouseover="hoverTask = task.id"
               @mouseleave="hoverTask = null"
             >
@@ -175,13 +181,13 @@
           </ul>
         </div>
 
-        <div v-if="lowTasks.length !== 0" class="lowTaskContainer">
+        <div v-if="lowTasks.length !== 0" class="blockContainer">
           <ul class="tasksList">
             <h2>LOW PRIORITY</h2>
             <li
               v-for="task in lowTasks"
               :key="task.id"
-              class="taskItem"
+              class="taskItem blockContainer"
               @mouseover="hoverTask = task.id"
               @mouseleave="hoverTask = null"
             >
@@ -280,7 +286,6 @@ export default {
   },
   methods: {
     // TODO: 用户自定义排序（按优先级、按ddl）
-    // TODO: 改为查询用户自己的任务（当前是全局查询）
     // TODO: 任务编辑功能
     formatDate(date) {
       if (date == null) {
@@ -319,7 +324,6 @@ export default {
     async submitTask() {
       try {
         // TODO: 更多输入限制（如日期范围）
-        // TODO: 按照任务优先级排序
         // 调用后端API创建任务
         this.newTask.creator = JSON.parse(localStorage.getItem("user"));
         this.newTask.taskGroupId = this.groupId;
@@ -371,10 +375,6 @@ export default {
 </script>
 
 <style scoped>
-.taskCreateAndShowContainer {
-  text-align: center;
-}
-
 .tasksContainer {
   width: 100%;
 }
@@ -384,30 +384,10 @@ export default {
   flex-direction: column; /* 让 .taskItem 垂直排列 */
   align-items: center; /* 让 .taskItem 水平居中 */
   width: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.loading,
-.highTaskContainer,
-.midTaskContainer,
-.lowTaskContainer {
-  margin: 25px;
-  padding: 25px;
-  background-color: rgba(128, 128, 128, 0.1);
-  border-radius: 10px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .taskItem {
   width: min(80%, 600px);
-  margin: 25px;
-  padding: 25px;
-  background-color: rgba(128, 128, 128, 0.1);
-  border-radius: 10px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
-  overflow-x: hidden;
 }
 
 .taskContent {
@@ -494,69 +474,13 @@ export default {
   font-style: italic;
 }
 
-.taskCreator {
-  margin: 25px;
-  padding: 25px;
-  background-color: rgba(128, 128, 128, 0.1); /* 灰色，10%透明度 */
-  border-radius: 10px; /* 圆角 */
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2); /* 阴影效果 */
-}
-
-.taskForm {
+.createTaskContainer {
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
   overflow: hidden;
   justify-content: center;
-  align-items: center;
-}
-
-.newTaskInputFields {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 70%;
-}
-
-.newTaskInputFields input,
-.newTaskInputFields textarea,
-.newTaskInputFields select {
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.submitButton,
-.cancelButton,
-.createButton {
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-
-  color: white;
-  width: 100px;
-}
-
-.submitButton {
-  margin-left: 10px;
-  background-color: #007bff;
-}
-
-.cancelButton {
-  background-color: #dc3545;
-}
-
-.createButton {
-  background-color: #28a745;
-}
-
-.buttonContainer {
-  display: flex;
   align-items: center;
 }
 

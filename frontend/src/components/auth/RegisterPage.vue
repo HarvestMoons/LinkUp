@@ -33,7 +33,7 @@
         {{ errorMessage }}
       </div>
 
-      <button type="submit" class="submitButton">Register</button>
+      <button type="submit" class="longButton normalButton">Register</button>
     </form>
 
     <p>

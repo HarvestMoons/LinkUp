@@ -53,16 +53,16 @@
     @confirm="handleConfirm"
   />
 
-  <div class="groupEditorContainer" ref="groupEditorContainer">
-    <div class="groupMembers">
+  <div>
+    <div class="blockContainer">
       <h2>群成员</h2>
       <ul class="membersList">
-        <div v-if="shoedGroupMembers.length === 0" class="loading">
+        <div v-if="showedGroupMembers.length === 0" class="loading">
           加载中...
         </div>
         <li
           v-else
-          v-for="member in shoedGroupMembers"
+          v-for="member in showedGroupMembers"
           :key="member.id"
           class="memberItem"
           @contextmenu="showMenu($event, member)"
@@ -91,19 +91,21 @@
           :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
         />
 
-        <div class="buttonContainer">
+        <div class="doubleButtonContainer">
           <!-- 取消按钮 -->
-          <button @click="cancelAddingGroupMember" class="cancelButton">
+          <button @click="cancelAddingGroupMember" class="button warningButton">
             取消
           </button>
 
           <!-- 提交按钮 -->
-          <button @click="addGroupMember" class="submitButton">邀请</button>
+          <button @click="addGroupMember" class="button normalButton">
+            邀请
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="groupInfo">
+    <div class="blockContainer">
       <h2>群组信息</h2>
       <div class="groupField" v-if="isEditingName">
         <input
@@ -136,13 +138,17 @@
     </div>
 
     <button
-      class="disbandButton"
+      class="button warningButton"
       @click="disbandGroup"
       v-if="isUserGroupOwner()"
     >
       解散群聊
     </button>
-    <button class="leaveButton" @click="leaveGroup" v-if="!isUserGroupOwner()">
+    <button
+      class="button warningButton"
+      @click="leaveGroup"
+      v-if="!isUserGroupOwner()"
+    >
       退出群聊
     </button>
   </div>
@@ -183,7 +189,7 @@ export default {
       editableGroupDescription: this.groupDescription,
       isSelectingFriend: false,
       selectedFriends: [],
-      shoedGroupMembers: [],
+      showedGroupMembers: [],
       friends: null,
     };
   },
@@ -192,6 +198,7 @@ export default {
     return { toast };
   },
   async mounted() {
+    this.showedGroupMembers = this.groupMembers;
     this.friends = await getFriendList(this.userId);
     window.addEventListener("click", this.closeMenu);
     window.addEventListener("wheel", this.closeMenu);
@@ -233,13 +240,16 @@ export default {
     async deleteMember(member) {
       console.log("delete", member);
       try {
-        if (this.shoedGroupMembers.length == 2) {
+        if (this.showedGroupMembers.length == 2) {
           this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
           this.isConfirmDialogVisible = true; // 显示确认框
         } else {
           this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
           this.closeMenu();
-          this.shoedGroupMembers.splice(member, 1);
+          const index = this.groupMembers.findIndex(
+            (tempMember) => tempMember.id === member.id
+          );
+          this.showedGroupMembers.splice(index, 1);
           showToast(
             this.toast,
             `已将用户 ${member.username}(#${member.id}) 踢出群组`,
@@ -312,7 +322,7 @@ export default {
       return this.friends.some((friend) => friend.id === member.id);
     },
     startEditing(field) {
-      if (this.isGroupOwner() || this.isGroupAdmin()) {
+      if (this.isUserGroupOwner() || this.isUserGroupAdmin()) {
         if (field === "name") {
           this.editableGroupName = this.groupName;
           this.isEditingName = true;
@@ -369,7 +379,7 @@ export default {
 
     startAddingGroupMember() {
       this.isSelectingFriend = true;
-      console.log("shoed members", this.groupMembers, this.shoedGroupMembers);
+      console.log("shoed members", this.groupMembers, this.showedGroupMembers);
     },
     cancelAddingGroupMember() {
       this.isSelectingFriend = false;
@@ -389,7 +399,7 @@ export default {
               `/groups/${this.groupId}/members/${friend.id}?role=${Role.Member}`
             )
             .then(() => {
-              this.shoedGroupMembers.push({ role: Role.Member, ...friend });
+              this.showedGroupMembers.push({ role: Role.Member, ...friend });
             });
 
           // 不使用 await，这样不会阻塞循环
@@ -397,7 +407,7 @@ export default {
         }
         // 等待所有请求完成
         await Promise.all(promises);
-        console.log("shoed members", this.shoedGroupMembers);
+        console.log("shoed members", this.showedGroupMembers);
         this.isSelectingFriend = false;
         showToast(this.toast, "好友加入群组成功", "success");
       } catch (error) {
@@ -417,7 +427,7 @@ export default {
     groupMembers: {
       handler() {
         this.$nextTick(() => {
-          this.shoedGroupMembers = this.groupMembers;
+          this.showedGroupMembers = this.groupMembers;
         });
       },
       deep: true, // 深度监听，确保数组更新时触发
@@ -436,12 +446,6 @@ export default {
   cursor: pointer;
 }
 
-.contextMenu ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-}
-
 .contextMenu li {
   padding: 10px 15px;
   border-bottom: 1px solid #eee;
@@ -451,27 +455,21 @@ export default {
   background-color: #f0f0f0;
 }
 
-.groupEditorContainer {
-  text-align: center;
-}
-
-.groupMembers,
-.groupInfo {
+.blockContainer {
   display: flex;
   flex-direction: column;
-  margin: 25px;
-  padding: 25px;
-  background-color: rgba(128, 128, 128, 0.1);
-  border-radius: 10px;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  gap: 30px;
+}
+
+.blockContainer h2 {
+  margin: 0;
 }
 
 .membersList {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  list-style: none;
-  padding: 0;
+  align-items: center;
 }
 
 .memberItem {
@@ -503,31 +501,7 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 15px;
-  gap: 5px;
-}
-
-.submitButton,
-.cancelButton {
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  color: white;
-  width: 100px;
-}
-
-.submitButton {
-  background-color: #007bff;
-  margin-left: 10px;
-}
-
-.cancelButton {
-  background-color: #dc3545;
-}
-
-.buttonContainer {
-  display: flex;
-  align-items: center;
+  gap: 15px;
 }
 
 .groupField {
@@ -536,7 +510,6 @@ export default {
   align-items: center;
   gap: 5px;
   min-height: 35px;
-  margin: 15px;
   padding: 10px;
   background-color: rgba(128, 128, 128, 0.1);
   border-radius: 10px;
@@ -556,16 +529,5 @@ export default {
   border-radius: 10px;
   width: 100%;
   box-sizing: border-box;
-}
-
-.disbandButton,
-.leaveButton {
-  background: red;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  color: white;
-  width: 100px;
 }
 </style>
