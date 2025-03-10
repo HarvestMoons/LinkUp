@@ -76,6 +76,14 @@
       </transition>
     </div>
 
+    <div class="blockContainer">
+      <div class="orderSelection">
+        <h3 @click="changeOrderToStatus">按任务状态排序</h3>
+        <span class="separator">|</span>
+        <h3 @click="changeOrderToPriority">按任务优先级排序</h3>
+      </div>
+    </div>
+
     <div class="tasksContainer">
       <div v-if="taskListLoading" class="blockContainer loading">加载中...</div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
@@ -231,6 +239,7 @@ import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 
 export default {
+  // TODO: 点击折叠列表
   components: { TaskBlock },
   name: "TaskList",
   props: {
@@ -312,6 +321,13 @@ export default {
       });
     },
 
+    changeOrderToPriority() {
+      this.taskOrder = TaskOrder.Priority;
+    },
+    changeOrderToStatus() {
+      this.taskOrder = TaskOrder.Status;
+    },
+
     // 切换到创建任务模式
     startCreateTask() {
       this.isCreating = true;
@@ -374,6 +390,24 @@ export default {
 <style scoped>
 .tasksContainer {
   width: 100%;
+}
+
+.orderSelection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orderSelection h3 {
+  margin: 0;
+  flex: 1; /* 让 h3 平均占据左右空间 */
+  text-align: center; /* 让 h3 内部文字居中 */
+  cursor: pointer;
+}
+
+.separator {
+  font-size: 1.2rem; /* 可以调整大小 */
+  font-weight: bold;
 }
 
 .tasksList {
