@@ -67,6 +67,6 @@ export default {
 }
 
 .confirm-dialog h3 {
-  margin: 0px;
+  margin: 0;
 }
 </style>

@@ -106,6 +106,7 @@ export default {
       isCreating: false,
       newGroup: [],
       selectedFriends: [],
+      userId: null,
     };
   },
   setup() {
@@ -140,7 +141,7 @@ export default {
     async createGroup() {
       try {
         console.log(this.newGroup);
-        // TODO: 创建群组和拉人分两步会不会不好回滚
+        // TODO: 创建群组和拉人分两步会不会不好回滚(目前可以考虑使用定时清理数据库的方法解决)
         if (this.newGroup.name === "") {
           showToast(this.toast, "群组名不能为空", "error");
           return;
@@ -170,7 +171,7 @@ export default {
             }
           );
         }
-        this.fetchGroups();
+        await this.fetchGroups();
         this.cancelCreateGroup();
         showToast(this.toast, "群组创建成功", "success");
       } catch (error) {

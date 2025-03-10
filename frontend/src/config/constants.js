@@ -7,5 +7,3 @@ export const Role = {
     Member: 'MEMBER',
     Owner: 'OWNER'
 };
-
-// TODO:引入ts环境

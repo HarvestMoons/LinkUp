@@ -35,7 +35,7 @@
       </li>
       <li
         v-if="
-          clickOnMember.id != userId &&
+          clickOnMember.id !== userId &&
           friends != null &&
           !isFriend(clickOnMember)
         "
@@ -243,11 +243,11 @@ export default {
     async deleteMember(member) {
       console.log("delete", member);
       try {
-        if (this.showedGroupMembers.length == 2) {
+        if (this.showedGroupMembers.length === 2) {
           this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
           this.isConfirmDialogVisible = true; // 显示确认框
         } else {
-          this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
+          await this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
           this.closeMenu();
           const index = this.groupMembers.findIndex(
             (tempMember) => tempMember.id === member.id
@@ -370,7 +370,6 @@ export default {
       }
     },
     async saveGroupDescription() {
-      // TODO: 改变后实时改变外部群聊顶部名字与描述
       this.isEditingDescription = false;
       try {
         this.showedGroupDescription = this.editableGroupDescription;
@@ -458,7 +457,7 @@ export default {
       return groupMembers.map((item) => item.id);
     },
   },
-  beforeUumount() {
+  beforeUnmount() {
     window.removeEventListener("click", this.closeMenu);
     window.removeEventListener("wheel", this.closeMenu);
   },
