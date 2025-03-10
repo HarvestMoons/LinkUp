@@ -278,6 +278,7 @@ export default {
     tasks: {
       handler(newTasks) {
         if (newTasks.length > 0) {
+          newTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
           this.divideTasksByPriority();
           this.divideTasksByStatus();
         }
@@ -287,7 +288,6 @@ export default {
     },
   },
   methods: {
-    // TODO: 用户自定义排序（按优先级、按ddl）
     // TODO: 任务编辑功能
     divideTasksByPriority() {
       this.highTasks = [];
