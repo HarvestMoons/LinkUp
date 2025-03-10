@@ -253,7 +253,6 @@ import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 
 export default {
-  // TODO: 点击折叠列表
   components: { TaskBlock },
   name: "TaskList",
   props: {

@@ -9,7 +9,8 @@
       <li
         v-if="
           (isUserGroupAdmin() || isUserGroupOwner()) &&
-          !isMemberGroupOwner(clickOnMember)
+          !isMemberGroupOwner(clickOnMember) &&
+          !isUser(clickOnMember)
         "
         @click="deleteMember(clickOnMember)"
       >
@@ -35,9 +36,7 @@
       </li>
       <li
         v-if="
-          clickOnMember.id !== userId &&
-          friends != null &&
-          !isFriend(clickOnMember)
+          !isUser(clickOnMember) && friends != null && !isFriend(clickOnMember)
         "
         @click="addMemberAsFriend(clickOnMember)"
       >
@@ -219,6 +218,9 @@ export default {
     isMemberGroupAdmin(member) {
       return member.role === Role.Admin;
     },
+    isUser(member) {
+      return member.id === this.userId;
+    },
 
     showMenu(event, member) {
       event.preventDefault(); // 阻止浏览器默认的右键菜单
@@ -247,7 +249,9 @@ export default {
           this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
           this.isConfirmDialogVisible = true; // 显示确认框
         } else {
-          await this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
+          await this.$axios.delete(
+            `/groups/${this.groupId}/members/${member.id}`
+          );
           this.closeMenu();
           const index = this.groupMembers.findIndex(
             (tempMember) => tempMember.id === member.id
