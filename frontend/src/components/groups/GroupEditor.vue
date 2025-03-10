@@ -175,6 +175,7 @@ export default {
     groupMembers: Array,
     userRole: Role,
     userId: Number,
+    refreshGroupData: Function,
   },
   data() {
     return {
@@ -343,6 +344,13 @@ export default {
       }
     },
 
+    updateHeader() {
+      try {
+        this.refreshGroupData();
+      } catch (error) {
+        console.error("更新群组抬头信息失败", error);
+      }
+    },
     async saveGroupName() {
       this.isEditingName = false;
       try {
@@ -355,6 +363,7 @@ export default {
           params: { name: this.editableGroupName },
         });
         showToast(this.toast, `群组名称更改成功`, "success");
+        this.updateHeader();
       } catch (error) {
         console.error("更改群组名称失败", error);
         showToast(this.toast, "更改群组名称失败", "error");
@@ -373,6 +382,7 @@ export default {
           }
         );
         showToast(this.toast, `群组描述更改成功`, "success");
+        this.updateHeader();
       } catch (error) {
         console.error("更改群组描述失败", error);
         showToast(this.toast, "更改群组描述失败", "error");

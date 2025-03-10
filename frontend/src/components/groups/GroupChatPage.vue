@@ -104,6 +104,7 @@
         groupMembers: groupMembers,
         userRole: userRole,
         userId: userId,
+        refreshGroupData: fetchGroup,
       }"
       @close="toggleGroupSidebar"
     />
