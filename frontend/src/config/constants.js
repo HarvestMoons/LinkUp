@@ -7,3 +7,18 @@ export const Role = {
     Member: 'MEMBER',
     Owner: 'OWNER'
 };
+export const TaskOrder = {
+    Priority: 0,
+    Status: 1
+};
+export const TaskStatus = {
+    Todo: 'TODO',
+    InProgress: 'IN_PROGRESS',
+    Completed: 'COMPLETED',
+    Archived: 'ARCHIVED'
+};
+export const TaskPriority = {
+    High: 'HIGH',
+    Medium: 'MEDIUM',
+    Low: 'LOW'
+};

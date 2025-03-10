@@ -83,157 +83,141 @@
       </div>
       <!-- 显示任务列表 -->
       <div v-else>
-        <div v-if="highTasks.length !== 0" class="blockContainer">
-          <ul class="tasksList">
-            <h2>HIGH PRIORITY</h2>
-            <li
-              v-for="task in highTasks"
-              :key="task.id"
-              class="taskItem blockContainer"
-              @mouseover="hoverTask = task.id"
-              @mouseleave="hoverTask = null"
-            >
-              <!-- 任务块 -->
-              <div class="taskContent">
-                <div class="taskOverview">
-                  <span class="taskTitle">{{ task.title }}</span>
-                  <span
-                    class="taskStatus"
-                    :class="{
-                      todo: task.status === 'TODO',
-                      inProgress: task.status === 'IN_PROGRESS',
-                      completed: task.status === 'COMPLETED',
-                      archived: task.status === 'ARCHIVED',
-                      overdue: isOverdue(task), // 判断是否逾期
-                    }"
-                  >
-                    {{
-                      task.status === "TODO"
-                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "IN_PROGRESS"
-                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "COMPLETED"
-                        ? "Completed"
-                        : task.status === "ARCHIVED"
-                        ? "Archived"
-                        : "Unknown"
-                    }}
-                  </span>
-                  <span class="taskDueDate">{{
-                    formatDate(task.dueDate)
-                  }}</span>
-                </div>
-                <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
-                <div class="taskDetails">
-                  <p class="taskDescription">{{ task.description }}</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <div v-if="taskOrder === TaskOrder.Priority">
+          <div v-if="highTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>HIGH PRIORITY</h2>
+              <li
+                v-for="task in highTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <!-- 任务块 -->
+                <TaskBlock
+                  :task="task"
+                  :showPriority="false"
+                  :showStatus="true"
+                />
+              </li>
+            </ul>
+          </div>
 
-        <div v-if="midTasks.length !== 0" class="blockContainer">
-          <ul class="tasksList">
-            <h2>MEDIUM PRIORITY</h2>
-            <li
-              v-for="task in midTasks"
-              :key="task.id"
-              class="taskItem blockContainer"
-              @mouseover="hoverTask = task.id"
-              @mouseleave="hoverTask = null"
-            >
-              <!-- 任务块 -->
-              <div class="taskContent">
-                <div class="taskOverview">
-                  <span class="taskTitle">{{ task.title }}</span>
-                  <span
-                    class="taskStatus"
-                    :class="{
-                      todo: task.status === 'TODO',
-                      inProgress: task.status === 'IN_PROGRESS',
-                      completed: task.status === 'COMPLETED',
-                      archived: task.status === 'ARCHIVED',
-                      overdue: isOverdue(task), // 判断是否逾期
-                    }"
-                  >
-                    {{
-                      task.status === "TODO"
-                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "IN_PROGRESS"
-                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "COMPLETED"
-                        ? "Completed"
-                        : task.status === "ARCHIVED"
-                        ? "Archived"
-                        : "Unknown"
-                    }}
-                  </span>
-                  <span class="taskDueDate">{{
-                    formatDate(task.dueDate)
-                  }}</span>
-                </div>
-                <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
-                <div class="taskDetails">
-                  <p class="taskDescription">{{ task.description }}</p>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+          <div v-if="midTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>MEDIUM PRIORITY</h2>
+              <li
+                v-for="task in midTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="false"
+                  :showStatus="true"
+                />
+              </li>
+            </ul>
+          </div>
 
-        <div v-if="lowTasks.length !== 0" class="blockContainer">
-          <ul class="tasksList">
-            <h2>LOW PRIORITY</h2>
-            <li
-              v-for="task in lowTasks"
-              :key="task.id"
-              class="taskItem blockContainer"
-              @mouseover="hoverTask = task.id"
-              @mouseleave="hoverTask = null"
-            >
-              <!-- 任务块 -->
-              <div class="taskContent">
-                <div class="taskOverview">
-                  <span class="taskTitle">{{ task.title }}</span>
-                  <span
-                    class="taskStatus"
-                    :class="{
-                      todo: task.status === 'TODO',
-                      inProgress: task.status === 'IN_PROGRESS',
-                      completed: task.status === 'COMPLETED',
-                      archived: task.status === 'ARCHIVED',
-                      overdue: isOverdue(task), // 判断是否逾期
-                    }"
-                  >
-                    {{
-                      task.status === "TODO"
-                        ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "IN_PROGRESS"
-                        ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-                        : task.status === "COMPLETED"
-                        ? "Completed"
-                        : task.status === "ARCHIVED"
-                        ? "Archived"
-                        : "Unknown"
-                    }}
-                  </span>
-                  <span class="taskDueDate">{{
-                    formatDate(task.dueDate)
-                  }}</span>
-                </div>
-                <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
-                <div class="taskDetails">
-                  <p class="taskDescription">
-                    {{
-                      task.description === ""
-                        ? "No Task Description"
-                        : task.description
-                    }}
-                  </p>
-                </div>
-              </div>
-            </li>
-          </ul>
+          <div v-if="lowTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>LOW PRIORITY</h2>
+              <li
+                v-for="task in lowTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="false"
+                  :showStatus="true"
+                />
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div v-else-if="taskOrder === TaskOrder.Status">
+          <div v-if="todoTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>TODO</h2>
+              <li
+                v-for="task in todoTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="true"
+                  :showStatus="false"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="inProgressTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>IN PROGRESS</h2>
+              <li
+                v-for="task in inProgressTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="true"
+                  :showStatus="false"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="completedTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>COMPLETED</h2>
+              <li
+                v-for="task in completedTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="true"
+                  :showStatus="false"
+                />
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="archivedTasks.length !== 0" class="blockContainer">
+            <ul class="tasksList">
+              <h2>ARCHIVED</h2>
+              <li
+                v-for="task in archivedTasks"
+                :key="task.id"
+                class="taskItem blockContainer"
+                @mouseover="hoverTask = task.id"
+                @mouseleave="hoverTask = null"
+              >
+                <TaskBlock
+                  :task="task"
+                  :showPriority="true"
+                  :showStatus="false"
+                />
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -243,8 +227,11 @@
 <script>
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
+import TaskBlock from "@/components/tasks/TaskBlock.vue";
 
 export default {
+  components: { TaskBlock },
   name: "TaskList",
   props: {
     tasks: Array, // 任务数据
@@ -258,11 +245,16 @@ export default {
   data() {
     return {
       hoverTask: null, // 记录当前悬浮的任务ID
+      isCreating: false,
       highTasks: [],
       midTasks: [],
       lowTasks: [],
-      isCreating: false,
+      todoTasks: [],
+      inProgressTasks: [],
+      completedTasks: [],
+      archivedTasks: [],
       newTask: [],
+      taskOrder: TaskOrder.Status,
     };
   },
   setup() {
@@ -278,6 +270,7 @@ export default {
       handler(newTasks) {
         if (newTasks.length > 0) {
           this.divideTasksByPriority();
+          this.divideTasksByStatus();
         }
       },
       deep: true, // 确保监听数组内部变化
@@ -287,24 +280,34 @@ export default {
   methods: {
     // TODO: 用户自定义排序（按优先级、按ddl）
     // TODO: 任务编辑功能
-    formatDate(date) {
-      if (date == null) {
-        return;
-      }
-      return date.replace("T", " ").slice(0, 16);
-    },
-
     divideTasksByPriority() {
       this.highTasks = [];
       this.midTasks = [];
       this.lowTasks = [];
       this.tasks.forEach((task) => {
-        if (task.priority === "HIGH") {
+        if (task.status === TaskPriority.High) {
           this.highTasks.push(task);
-        } else if (task.priority === "MEDIUM") {
+        } else if (task.priority === TaskPriority.Medium) {
           this.midTasks.push(task);
-        } else if (task.priority === "LOW") {
+        } else if (task.priority === TaskPriority.Low) {
           this.lowTasks.push(task);
+        }
+      });
+    },
+    divideTasksByStatus() {
+      this.todoTasks = [];
+      this.inProgressTasks = [];
+      this.completedTasks = [];
+      this.archivedTasks = [];
+      this.tasks.forEach((task) => {
+        if (task.status === TaskStatus.Todo) {
+          this.todoTasks.push(task);
+        } else if (task.status === TaskStatus.InProgress) {
+          this.inProgressTasks.push(task);
+        } else if (task.status === TaskStatus.Completed) {
+          this.completedTasks.push(task);
+        } else if (task.status === TaskStatus.Archived) {
+          this.archivedTasks.push(task);
         }
       });
     },
@@ -359,16 +362,10 @@ export default {
         dueDate: "",
       };
     },
-
-    isOverdue(task) {
-      const now = new Date();
-      const dueDate = new Date(task.dueDate);
-      // 判断任务是否逾期且未完成或未归档
-      return (
-        dueDate < now &&
-        task.status !== "COMPLETED" &&
-        task.status !== "ARCHIVED"
-      );
+  },
+  computed: {
+    TaskOrder() {
+      return TaskOrder; // 让模板能访问 TaskOrder
     },
   },
 };
@@ -388,90 +385,6 @@ export default {
 
 .taskItem {
   width: min(80%, 600px);
-}
-
-.taskContent {
-  height: 150px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5%;
-  gap: 10%;
-  transition: all 0.3s ease;
-  transform: translateX(25%);
-}
-
-.taskOverview {
-  width: 100%;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-}
-
-.taskTitle {
-  font-size: 20px;
-}
-
-.taskStatus {
-  font-weight: bold;
-  color: black;
-}
-
-.taskStatus.todo {
-  color: blue;
-}
-
-.taskStatus.inProgress {
-  color: orange;
-}
-
-.taskStatus.completed {
-  color: green;
-}
-
-.taskStatus.archived {
-  color: gray;
-}
-
-.taskStatus.overdue {
-  color: red;
-}
-
-.taskDueDate {
-  font-size: 14px;
-  color: #999;
-}
-
-.taskDetails {
-  width: 100%;
-  padding: 15px;
-  background-color: #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  opacity: 0; /* 默认隐藏 */
-  transition: all 0.3s ease; /* 过渡效果 */
-}
-
-.taskItem:hover .taskContent {
-  transform: translateX(0); /* 向左滑动 */
-}
-
-.taskItem:hover .taskDetails {
-  transform: translateX(0); /* 任务详情显示出来 */
-  opacity: 1; /* 显示详情 */
-}
-
-.taskDescription,
-.taskPriority {
-  margin: 10px 0;
-  font-size: 14px;
-  color: #333;
-}
-
-.taskDescription {
-  font-style: italic;
 }
 
 .createTaskContainer {
