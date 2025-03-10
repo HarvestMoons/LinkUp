@@ -93,8 +93,10 @@
       <div v-else>
         <div v-if="taskOrder === TaskOrder.Priority">
           <div v-if="highTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('high')">
               <h2>HIGH PRIORITY</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.high">
               <li
                 v-for="task in highTasks"
                 :key="task.id"
@@ -113,8 +115,10 @@
           </div>
 
           <div v-if="midTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('medium')">
               <h2>MEDIUM PRIORITY</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.medium">
               <li
                 v-for="task in midTasks"
                 :key="task.id"
@@ -132,8 +136,10 @@
           </div>
 
           <div v-if="lowTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('low')">
               <h2>LOW PRIORITY</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.low">
               <li
                 v-for="task in lowTasks"
                 :key="task.id"
@@ -152,8 +158,10 @@
         </div>
         <div v-else-if="taskOrder === TaskOrder.Status">
           <div v-if="todoTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('todo')">
               <h2>TODO</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.todo">
               <li
                 v-for="task in todoTasks"
                 :key="task.id"
@@ -171,8 +179,10 @@
           </div>
 
           <div v-if="inProgressTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('inProgress')">
               <h2>IN PROGRESS</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.inProgress">
               <li
                 v-for="task in inProgressTasks"
                 :key="task.id"
@@ -190,8 +200,10 @@
           </div>
 
           <div v-if="completedTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('completed')">
               <h2>COMPLETED</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.completed">
               <li
                 v-for="task in completedTasks"
                 :key="task.id"
@@ -209,8 +221,10 @@
           </div>
 
           <div v-if="archivedTasks.length !== 0" class="blockContainer">
-            <ul class="tasksList">
+            <div class="previewBar" @click="toggleSection('archived')">
               <h2>ARCHIVED</h2>
+            </div>
+            <ul class="tasksList" v-if="expandedSections.archived">
               <li
                 v-for="task in archivedTasks"
                 :key="task.id"
@@ -264,6 +278,15 @@ export default {
       archivedTasks: [],
       newTask: [],
       taskOrder: TaskOrder.Status,
+      expandedSections: {
+        high: true,
+        medium: true,
+        low: true,
+        todo: true,
+        inProgress: true,
+        completed: true,
+        archived: true,
+      },
     };
   },
   setup() {
@@ -332,13 +355,11 @@ export default {
     startCreateTask() {
       this.isCreating = true;
     },
-
     // 取消创建任务
     cancelCreateTask() {
       this.isCreating = false;
       this.resetForm(); // 重置表单
     },
-
     // 提交任务到后端
     async submitTask() {
       try {
@@ -367,7 +388,6 @@ export default {
         showToast(this.toast, "创建任务失败", "error");
       }
     },
-
     // 重置任务表单
     resetForm() {
       this.newTask = {
@@ -377,6 +397,10 @@ export default {
         status: "TODO",
         dueDate: "",
       };
+    },
+
+    toggleSection(section) {
+      this.expandedSections[section] = !this.expandedSections[section];
     },
   },
   computed: {
@@ -408,6 +432,10 @@ export default {
 .separator {
   font-size: 1.2rem; /* 可以调整大小 */
   font-weight: bold;
+}
+
+.previewBar {
+  cursor: pointer;
 }
 
 .tasksList {
