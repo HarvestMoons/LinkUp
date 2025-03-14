@@ -110,6 +110,20 @@
                   :showPriority="false"
                   :showStatus="true"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -131,6 +145,20 @@
                   :showPriority="false"
                   :showStatus="true"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -152,6 +180,20 @@
                   :showPriority="false"
                   :showStatus="true"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -174,6 +216,20 @@
                   :showPriority="true"
                   :showStatus="false"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -195,6 +251,20 @@
                   :showPriority="true"
                   :showStatus="false"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -216,6 +286,20 @@
                   :showPriority="true"
                   :showStatus="false"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -237,6 +321,20 @@
                   :showPriority="true"
                   :showStatus="false"
                 />
+
+                <!-- 右上角的 "三个点" -->
+                <div class="task-options">
+                  <button @click.stop="toggleDropdown(task)">⋮</button>
+                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                    <div
+                      v-if="task.taskGroup && !isInGroupPage"
+                      @click="enterGroupChat(task.taskGroup.id)"
+                    >
+                      💬 进入群聊
+                    </div>
+                  </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -263,6 +361,7 @@ export default {
       type: Function,
       required: true, // 确保调用 TaskList 时必须提供
     },
+    isInGroupPage: Boolean,
   },
   data() {
     return {
@@ -286,6 +385,7 @@ export default {
         completed: true,
         archived: true,
       },
+      activeDropdown: null,
     };
   },
   setup() {
@@ -401,6 +501,19 @@ export default {
     toggleSection(section) {
       this.expandedSections[section] = !this.expandedSections[section];
     },
+
+    toggleDropdown(task) {
+      console.log(this.tasks);
+      this.activeDropdown = this.activeDropdown === task.id ? null : task.id;
+    },
+    editTask(task) {
+      console.log("编辑任务", task);
+      // 这里调用编辑任务的方法，例如打开一个弹窗
+    },
+    enterGroupChat(groupId) {
+      console.log("进入群聊", groupId);
+      this.$router.push(`/group/${groupId}`);
+    },
   },
   computed: {
     TaskOrder() {
@@ -445,6 +558,7 @@ export default {
 }
 
 .taskItem {
+  position: relative;
   width: min(80%, 600px);
 }
 
@@ -485,5 +599,39 @@ export default {
   opacity: 1;
   max-height: 700px;
   padding: 20px;
+}
+
+.task-options {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.task-options button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  width: 120px;
+  z-index: 100;
+}
+
+.dropdown-menu div {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.dropdown-menu div:hover {
+  background: #f5f5f5;
 }
 </style>

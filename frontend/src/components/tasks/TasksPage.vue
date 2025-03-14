@@ -8,6 +8,7 @@
       :taskListLoading="taskListLoading"
       :groupId="null"
       :fetchTasks="fetchTasks"
+      :isInGroupPage="false"
     />
   </div>
 </template>
