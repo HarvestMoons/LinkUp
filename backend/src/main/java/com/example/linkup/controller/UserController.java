@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,10 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final GroupMemberService groupMemberService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, GroupMemberService groupMemberService) {
+    public UserController(UserService userService, GroupMemberService groupMemberService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.groupMemberService = groupMemberService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // TODO: 尽量只给前端拿到以及使用userid
@@ -80,11 +83,17 @@ public class UserController {
      */
     @PutMapping("/update-password/{userId}")
     public ResponseEntity<String> updatePassword(@PathVariable Long userId,
-            @RequestParam String oldPassword,
-            @RequestParam String newPassword)
+                                                 @RequestParam String oldPassword,
+                                                 @RequestParam String newPassword)
             throws UnexpectedNullElementException {
         // TODO: 完成验证旧密码逻辑，若旧密码不正确则不允许修改密码
-        userService.updatePassword(userId, newPassword);
+
+        try {
+            userService.updatePassword(userId, oldPassword, newPassword);
+        } catch (IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         return ResponseEntity.ok("密码更新成功");
     }
 }

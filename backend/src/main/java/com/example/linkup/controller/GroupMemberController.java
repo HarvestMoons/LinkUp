@@ -25,7 +25,7 @@ public class GroupMemberController {
     private final UserService userService;
 
     public GroupMemberController(GroupMemberService groupMemberService, TaskGroupService taskGroupService,
-            UserService userService) {
+                                 UserService userService) {
         this.groupMemberService = groupMemberService;
         this.taskGroupService = taskGroupService;
         this.userService = userService;

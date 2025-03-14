@@ -156,15 +156,15 @@ export default {
       this.newPassword = "";
     },
     async saveChanges() {
+      const updatedData = {
+        oldPassword: this.oldPassword,
+        newPassword: this.newPassword,
+      };
       try {
         // TODO: 修改密码逻辑
-        const updatedData = {
-          oldPassword: this.oldPassword,
-          newPassword: this.newPassword,
-        };
         await this.$axios.put(
-          `/user/update-password/${this.user.id}`,
-          updatedData
+          `/user/update-password/${this.user.id}`,null,{params:
+          updatedData}
         );
         showToast(this.toast, "密码修改成功", "success");
       } catch (error) {

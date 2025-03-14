@@ -98,6 +98,6 @@ public class GroupMemberService {
     }
 
     public Role getUserRole(long taskGroupId, long userId) throws UnexpectedNullElementException {
-        return findByTaskGroupIdAndUserId(taskGroupId,userId).getRole();
+        return findByTaskGroupIdAndUserId(taskGroupId, userId).getRole();
     }
 }

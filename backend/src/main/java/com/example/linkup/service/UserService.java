@@ -51,9 +51,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void updatePassword(Long userId, String newPassword) throws UnexpectedNullElementException {
+    public void updatePassword(Long userId, String oldPassword, String newPassword) throws UnexpectedNullElementException {
         User user = findById(userId);
-        user.setUsername(passwordEncoder.encode(newPassword));
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("旧密码错误，无法更新");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
 }
