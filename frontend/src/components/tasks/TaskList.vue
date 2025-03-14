@@ -4,64 +4,12 @@
     <div class="blockContainer">
       <transition name="taskFormTransition">
         <!-- 控制是否显示输入框 -->
-        <div class="createTaskContainer" v-if="isCreating">
-          <!-- 输入框区域 -->
-          <div class="allInputFields">
-            <div class="formWithLabelAndInput">
-              <label for="newTaskTitle">任务标题:</label>
-              <input
-                type="text"
-                id="newTaskTitle"
-                v-model="newTask.title"
-                placeholder="请输入任务标题"
-              />
-            </div>
-            <div class="formWithLabelAndInput">
-              <label for="newTaskDescription">任务描述:</label>
-              <textarea
-                id="newTaskDescription"
-                v-model="newTask.description"
-                placeholder="请输入任务描述"
-              ></textarea>
-            </div>
-            <div class="formWithLabelAndInput">
-              <label for="newTaskPriority">任务优先级:</label>
-              <select v-model="newTask.priority" id="newTaskPriority">
-                <option value="LOW">低</option>
-                <option value="MEDIUM">中</option>
-                <option value="HIGH">高</option>
-              </select>
-            </div>
-            <div class="formWithLabelAndInput">
-              <label for="newTaskStatus">任务状态:</label>
-              <select v-model="newTask.status" id="newTaskStatus">
-                <option value="TODO">待办</option>
-                <option value="IN_PROGRESS">进行中</option>
-                <option value="COMPLETED">已完成</option>
-                <option value="ARCHIVED">已存档</option>
-              </select>
-            </div>
-            <div class="formWithLabelAndInput">
-              <label for="newTaskDueDate">截止日期:</label>
-              <input
-                type="datetime-local"
-                v-model="newTask.dueDate"
-                id="newTaskDueDate"
-              />
-            </div>
-          </div>
-          <div class="doubleButtonContainer">
-            <!-- 取消按钮 -->
-            <button @click="cancelCreateTask" class="button warningButton">
-              取消
-            </button>
-
-            <!-- 提交按钮 -->
-            <button @click="submitTask" class="button normalButton">
-              提交任务
-            </button>
-          </div>
-        </div>
+        <TaskForm
+          v-if="isCreating"
+          :task="newTask"
+          @cancel="cancelCreateTask"
+          @submit="submitTask"
+        />
       </transition>
 
       <!-- 默认的按钮 -->
@@ -104,23 +52,34 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <!-- 任务块 -->
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="false"
-                  :showStatus="true"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <!-- 任务块 -->
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="false"
+                    :showStatus="true"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -140,22 +99,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="false"
-                  :showStatus="true"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="false"
+                    :showStatus="true"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -175,22 +145,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="false"
-                  :showStatus="true"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="false"
+                    :showStatus="true"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -211,22 +192,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="true"
-                  :showStatus="false"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="true"
+                    :showStatus="false"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -246,22 +238,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="true"
-                  :showStatus="false"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="true"
+                    :showStatus="false"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -281,22 +284,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="true"
-                  :showStatus="false"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="true"
+                    :showStatus="false"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -316,22 +330,33 @@
                 @mouseover="hoverTask = task.id"
                 @mouseleave="hoverTask = null"
               >
-                <TaskBlock
+                <TaskForm
+                  v-if="editingTasks[task.id]"
                   :task="task"
-                  :showPriority="true"
-                  :showStatus="false"
+                  @cancel="cancelEditTask(task.id)"
+                  @submit="updateTask(task.id, $event)"
                 />
+                <div v-else>
+                  <TaskBlock
+                    :task="task"
+                    :showPriority="true"
+                    :showStatus="false"
+                  />
 
-                <!-- 右上角的 "三个点" -->
-                <div class="task-options">
-                  <button @click.stop="toggleDropdown(task)">⋮</button>
-                  <div v-if="activeDropdown === task.id" class="dropdown-menu">
-                    <div @click="editTask(task)">✏️ 编辑任务</div>
+                  <!-- 右上角的 "三个点" -->
+                  <div class="task-options">
+                    <button @click.stop="toggleDropdown(task.id)">⋮</button>
                     <div
-                      v-if="task.taskGroup && !isInGroupPage"
-                      @click="enterGroupChat(task.taskGroup.id)"
+                      v-if="activeDropdown === task.id"
+                      class="dropdown-menu"
                     >
-                      💬 进入群聊
+                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div
+                        v-if="task.taskGroup && !isInGroupPage"
+                        @click="enterGroupChat(task.taskGroup.id)"
+                      >
+                        💬 进入群聊
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -349,9 +374,10 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
+import TaskForm from "@/components/tasks/TaskForm.vue";
 
 export default {
-  components: { TaskBlock },
+  components: { TaskBlock, TaskForm },
   name: "TaskList",
   props: {
     tasks: Array, // 任务数据
@@ -365,6 +391,7 @@ export default {
   },
   data() {
     return {
+      showedTasks: [],
       hoverTask: null, // 记录当前悬浮的任务ID
       isCreating: false,
       highTasks: [],
@@ -386,6 +413,7 @@ export default {
         archived: true,
       },
       activeDropdown: null,
+      editingTasks: {},
     };
   },
   setup() {
@@ -394,15 +422,24 @@ export default {
   },
   mounted() {
     this.resetForm();
+    this.showedTasks = this.tasks;
   },
   watch: {
     // 监听 tasks 的变化，确保数据更新后再处理
     tasks: {
-      handler(newTasks) {
-        if (newTasks.length > 0) {
-          newTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-          this.divideTasksByPriority();
-          this.divideTasksByStatus();
+      handler(tasks) {
+        this.$nextTick(() => {
+          this.showedTasks = tasks;
+        });
+      },
+      deep: true,
+    },
+    showedTasks: {
+      handler(showedTasks) {
+        if (showedTasks.length > 0) {
+          showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+          this.divideTasksByPriority(showedTasks);
+          this.divideTasksByStatus(showedTasks);
         }
       },
       deep: true, // 确保监听数组内部变化
@@ -410,37 +447,43 @@ export default {
     },
   },
   methods: {
-    // TODO: 任务编辑功能
-    divideTasksByPriority() {
-      this.highTasks = [];
-      this.midTasks = [];
-      this.lowTasks = [];
-      this.tasks.forEach((task) => {
-        if (task.status === TaskPriority.High) {
-          this.highTasks.push(task);
+    divideTasksByPriority(tasks) {
+      const newHighTasks = [];
+      const newMidTasks = [];
+      const newLowTasks = [];
+      tasks.forEach((task) => {
+        if (task.priority === TaskPriority.High) {
+          newHighTasks.push(task);
         } else if (task.priority === TaskPriority.Medium) {
-          this.midTasks.push(task);
+          newMidTasks.push(task);
         } else if (task.priority === TaskPriority.Low) {
-          this.lowTasks.push(task);
+          newLowTasks.push(task);
         }
       });
+      this.highTasks = newHighTasks;
+      this.midTasks = newMidTasks;
+      this.lowTasks = newLowTasks;
     },
-    divideTasksByStatus() {
-      this.todoTasks = [];
-      this.inProgressTasks = [];
-      this.completedTasks = [];
-      this.archivedTasks = [];
-      this.tasks.forEach((task) => {
+    divideTasksByStatus(tasks) {
+      const newTodoTasks = [];
+      const newInProgressTasks = [];
+      const newCompletedTasks = [];
+      const newArchivedTasks = [];
+      tasks.forEach((task) => {
         if (task.status === TaskStatus.Todo) {
-          this.todoTasks.push(task);
+          newTodoTasks.push(task);
         } else if (task.status === TaskStatus.InProgress) {
-          this.inProgressTasks.push(task);
+          newInProgressTasks.push(task);
         } else if (task.status === TaskStatus.Completed) {
-          this.completedTasks.push(task);
+          newCompletedTasks.push(task);
         } else if (task.status === TaskStatus.Archived) {
-          this.archivedTasks.push(task);
+          newArchivedTasks.push(task);
         }
       });
+      this.todoTasks = newTodoTasks;
+      this.inProgressTasks = newInProgressTasks;
+      this.completedTasks = newCompletedTasks;
+      this.archivedTasks = newArchivedTasks;
     },
 
     changeOrderToPriority() {
@@ -448,6 +491,18 @@ export default {
     },
     changeOrderToStatus() {
       this.taskOrder = TaskOrder.Status;
+    },
+
+    isTaskLegal(task) {
+      if (task.title === "") {
+        showToast(this.toast, "任务名不能为空", "error");
+        return false;
+      }
+      if (task.dueDate === "") {
+        showToast(this.toast, "任务截止日期不能为空", "error");
+        return false;
+      }
+      return true;
     },
 
     // 切换到创建任务模式
@@ -460,28 +515,24 @@ export default {
       this.resetForm(); // 重置表单
     },
     // 提交任务到后端
-    async submitTask() {
+    async submitTask(newTask) {
       try {
         // TODO: 更多输入限制（如日期范围）
         // 调用后端API创建任务
-        this.newTask.creator = JSON.parse(localStorage.getItem("user"));
-        this.newTask.taskGroupId = this.groupId;
-        if (this.newTask.title === "") {
-          showToast(this.toast, "任务名不能为空", "error");
+        if (!this.isTaskLegal(newTask)) {
           return;
         }
-        if (this.newTask.dueDate === "") {
-          showToast(this.toast, "任务截止日期不能为空", "error");
-          return;
-        }
-        console.log(this.newTask);
-        await this.$axios.post("/tasks/create", this.newTask);
+        newTask.creator = JSON.parse(localStorage.getItem("user"));
+        newTask.taskGroupId = this.groupId;
+        console.log(newTask);
+        await this.$axios.post("/tasks/create", newTask);
         showToast(this.toast, "任务创建成功", "success");
 
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
-        await this.fetchTasks();
+        this.showedTasks.push(newTask);
+        //await this.fetchTasks();
       } catch (error) {
         console.error("创建任务失败:", error);
         showToast(this.toast, "创建任务失败", "error");
@@ -502,14 +553,35 @@ export default {
       this.expandedSections[section] = !this.expandedSections[section];
     },
 
-    toggleDropdown(task) {
-      console.log(this.tasks);
-      this.activeDropdown = this.activeDropdown === task.id ? null : task.id;
+    toggleDropdown(taskId) {
+      this.activeDropdown = this.activeDropdown === taskId ? null : taskId;
     },
-    editTask(task) {
-      console.log("编辑任务", task);
-      // 这里调用编辑任务的方法，例如打开一个弹窗
+    cancelEditTask(taskId) {
+      this.editingTasks[taskId] = false;
     },
+    editTask(taskId) {
+      this.editingTasks[taskId] = true;
+    },
+    async updateTask(taskId, updatedTask) {
+      try {
+        if (!this.isTaskLegal(updatedTask)) {
+          return;
+        }
+        const taskIndex = this.showedTasks.findIndex(
+          (task) => task.id === taskId
+        );
+        if (taskIndex !== -1) {
+          this.showedTasks[taskIndex] = updatedTask;
+        }
+        await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
+        this.editingTasks[taskId] = false;
+        showToast(this.toast, "更新任务成功", "success");
+      } catch (error) {
+        console.error("更新任务失败", error);
+        showToast(this.toast, "更新任务失败", "error");
+      }
+    },
+
     enterGroupChat(groupId) {
       console.log("进入群聊", groupId);
       this.$router.push(`/group/${groupId}`);
@@ -560,16 +632,6 @@ export default {
 .taskItem {
   position: relative;
   width: min(80%, 600px);
-}
-
-.createTaskContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
 }
 
 .createButtonTransition-enter-active,

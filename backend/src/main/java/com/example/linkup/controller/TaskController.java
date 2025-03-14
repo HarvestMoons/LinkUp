@@ -31,15 +31,16 @@ public class TaskController {
      *
      * @param taskDto 任务的数据传输对象
      * @return 创建的任务
+     * @throws UnexpectedNullElementException
      */
     @PostMapping("/create")
-    public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto) throws UnexpectedNullElementException {
         Task task = taskService.createTask(modelMapper.map(taskDto, Task.class));
-        //这里，taskGroup可以为空（表示单人任务）
-        try{
-            TaskGroup taskGroup = taskGroupService.findById(taskDto.getTaskGroupId());
+        // 这里，taskGroup可以为空（表示单人任务）
+        Long groupId = taskDto.getTaskGroupId();
+        if (groupId != null) {
+            TaskGroup taskGroup = taskGroupService.findById(groupId);
             task.setTaskGroup(taskGroup);
-        } catch (UnexpectedNullElementException ignored) {
         }
         return ResponseEntity.status(201).body(task); // 返回 201 Created
     }

@@ -1,3 +1,4 @@
+<!-- GroupEditor.vue -->
 <template>
   <!-- 自定义右键菜单 -->
   <div
