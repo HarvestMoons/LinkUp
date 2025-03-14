@@ -6,6 +6,7 @@ import FriendsPage from '@/components/friends/FriendsPage'
 import TasksPage from '@/components/tasks/TasksPage'
 import GroupListPage from '@/components/groups/GroupListPage'
 import GroupChatPage from '@/components/groups/GroupChatPage'
+import UserPage from '@/components/auth/UserPage'
 import { useToast } from 'vue-toastification';
 
 const routes = [
@@ -56,6 +57,12 @@ const routes = [
         name: 'group',
         component: GroupChatPage,
         meta: { title: '群组', requiresAuth: true } // 需要登录才能访问
+    },
+    {
+        path: '/user',
+        name: 'user',
+        component: UserPage,
+        meta: { title: '个人信息', requiresAuth: true } // 需要登录才能访问
     }
 ]
 

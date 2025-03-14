@@ -64,7 +64,8 @@ public class UserController {
      * @return 更新后的用户信息
      */
     @PutMapping("/update-username/{userId}")
-    public ResponseEntity<User> updateUsername(@PathVariable Long userId, @RequestParam String newUsername) throws UnexpectedNullElementException {
+    public ResponseEntity<User> updateUsername(@PathVariable Long userId, @RequestParam String newUsername)
+            throws UnexpectedNullElementException {
         User updatedUser = userService.updateUsername(userId, newUsername);
         return ResponseEntity.ok(updatedUser);
     }
@@ -73,11 +74,16 @@ public class UserController {
      * 更新密码
      *
      * @param userId      用户ID
+     * @param oldPassword 新密码
      * @param newPassword 新密码
      * @return 更新成功消息
      */
     @PutMapping("/update-password/{userId}")
-    public ResponseEntity<String> updatePassword(@PathVariable Long userId, @RequestParam String newPassword) throws UnexpectedNullElementException {
+    public ResponseEntity<String> updatePassword(@PathVariable Long userId,
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword)
+            throws UnexpectedNullElementException {
+        // TODO: 完成验证旧密码逻辑，若旧密码不正确则不允许修改密码
         userService.updatePassword(userId, newPassword);
         return ResponseEntity.ok("密码更新成功");
     }

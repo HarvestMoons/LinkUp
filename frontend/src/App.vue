@@ -1,14 +1,14 @@
 <template>
   <div class="navContainer">
     <nav>
-      <div class="userContainer" v-if="isAuthPage">
+      <router-link to="/user" class="userContainer" v-if="isAuthPage">
         <img
           :src="user.avatar || require('@/assets/images/icon.png')"
           alt="头像"
           class="userAvatar"
         />
         <span class="userNickname">{{ user.username }} (#{{ user.id }}) </span>
-      </div>
+      </router-link>
       <router-link to="/">Home</router-link>
       |
       <router-link to="/friends">Friends</router-link>
