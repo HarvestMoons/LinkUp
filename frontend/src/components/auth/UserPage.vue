@@ -19,9 +19,21 @@
             @click="$refs.fileInput.click()"
           />
         </div>
-        <div class="nameAndIdContainer">
+        <div
+          class="nameAndIdContainer"
+          @click="startEditingName"
+          v-if="!isEditingName"
+        >
           <span class="nameInfo">{{ user.username }}</span>
           <span class="idInfo">(#{{ user.id }})</span>
+        </div>
+        <div class="userField" v-else>
+          <input
+            ref="userNameInput"
+            v-model="editableUserName"
+            @blur="saveUserName"
+            @keyup.enter="saveUserName"
+          />
         </div>
       </div>
     </div>
@@ -83,11 +95,13 @@ export default {
         avatar: "", // 服务器上的头像 URL
         username: "",
       },
+      editableUserName: "",
+      isEditingName: false,
       oldPassword: "",
       newPassword: "",
+      isEditingPassword: false,
       previewAvatar: "", // 本地预览头像
       defaultAvatar: require("@/assets/images/icon.png"),
-      isEditingPassword: false,
     };
   },
   setup() {
@@ -110,6 +124,33 @@ export default {
       }
       // TODO: 存储头像逻辑
     },
+
+    startEditingName() {
+      this.editableUserName = this.user.username;
+      this.isEditingName = true;
+      setTimeout(() => {
+        this.$refs.userNameInput.focus();
+      }, 0);
+    },
+    async saveUserName() {
+      this.isEditingName = false;
+      try {
+        if (this.editableUserName === "") {
+          this.editableUserName = this.user.username;
+          showToast(this.toast, "用户名称不能为空", "error");
+        }
+        // TODO: 用户名格式验证（如不为中文）
+        this.user.username = this.editableUserName;
+        await this.$axios.put(`/user/update-username/${this.user.id}`, null, {
+          params: { newUsername: this.editableUserName },
+        });
+        showToast(this.toast, `群用户名称更改成功`, "success");
+      } catch (error) {
+        console.error("更改用户名称失败", error);
+        showToast(this.toast, "更改用户名称失败", "error");
+      }
+    },
+
     resetChanges() {
       this.oldPassword = "";
       this.newPassword = "";
@@ -121,7 +162,10 @@ export default {
           oldPassword: this.oldPassword,
           newPassword: this.newPassword,
         };
-        await this.$axios.put("/user/update-password", updatedData);
+        await this.$axios.put(
+          `/user/update-password/${this.user.id}`,
+          updatedData
+        );
         showToast(this.toast, "密码修改成功", "success");
       } catch (error) {
         console.error("密码修改失败", error);
@@ -166,6 +210,7 @@ export default {
   display: flex;
   align-items: baseline;
   gap: 5px;
+  cursor: pointer;
 }
 
 .nameInfo {
@@ -182,5 +227,17 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+
+.userField {
+  cursor: pointer;
+}
+
+.userField input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 </style>
