@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { MAX_STRING_LENGTH } from "@/config/constants";
+import { validateInput, validateUsername } from "@/utils/userService";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
@@ -64,21 +64,9 @@ export default {
     return { toast };
   },
   methods: {
-    // 密码强度校验（至少6位，包含字母和数字）
-    validatePassword(password) {
-      const minLength = 6;
-      const hasLetter = /[a-zA-Z]/.test(password);
-      const hasNumber = /\d/.test(password);
-      return password.length >= minLength && hasLetter && hasNumber;
-    },
-    // 用户名合法性校验（仅允许字母、数字和下划线）
-    validateUsername(username) {
-      const regex = /^\w+$/;
-      return regex.test(username);
-    },
     // 如果输入不合法，恢复输入前的值，避免非法字符输入
     validateUsernameInput() {
-      if (this.validateUsername(this.username) || this.username.length === 0) {
+      if (validateUsername(this.username) || this.username.length === 0) {
         this.errorMessage = "";
       } else {
         this.username = this.username.slice(0, -1);
@@ -88,28 +76,17 @@ export default {
     async register() {
       this.errorMessage = "";
 
-      // 输入校验
-      if (!this.username.trim()) {
-        this.errorMessage = "用户名不能为空！";
-        return;
-      }
-      if (!this.validateUsername(this.username)) {
-        this.errorMessage = "用户名只能包含字母、数字和下划线！";
-        return;
-      }
-      if (
-        this.username.length > MAX_STRING_LENGTH ||
-        this.password > MAX_STRING_LENGTH
-      ) {
-        this.errorMessage = "用户名或密码过长！";
-        return;
-      }
+      // 校验用户名
+      this.errorMessage = validateInput("用户名", this.username);
+      if (this.errorMessage) return;
+
+      // 校验密码
+      this.errorMessage = validateInput("密码", this.password);
+      if (this.errorMessage) return;
+
+      // 确认密码
       if (this.password !== this.confirmPassword) {
         this.errorMessage = "两次输入的密码不一致！";
-        return;
-      }
-      if (!this.validatePassword(this.password)) {
-        this.errorMessage = "密码至少6位，且需包含字母和数字！";
         return;
       }
 

@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { MAX_STRING_LENGTH } from "@/config/constants";
+import { validateInput } from "@/utils/userService";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
@@ -126,19 +126,6 @@ export default {
       // TODO: 存储头像逻辑
     },
 
-    // 密码强度校验（至少6位，包含字母和数字）
-    validatePassword(password) {
-      const minLength = 6;
-      const hasLetter = /[a-zA-Z]/.test(password);
-      const hasNumber = /\d/.test(password);
-      return password.length >= minLength && hasLetter && hasNumber;
-    },
-    // 用户名合法性校验（仅允许字母、数字和下划线）
-    validateUsername(username) {
-      const regex = /^\w+$/;
-      return regex.test(username);
-    },
-
     startEditingName() {
       this.editableUserName = this.user.username;
       this.isEditingName = true;
@@ -148,29 +135,20 @@ export default {
     },
     async saveUserName() {
       // TODO: 修改完名字会出现401错误，需解决
-      var isUserNameLegal = true;
-      if (this.editableUserName === "") {
-        isUserNameLegal = false;
-        showToast(this.toast, "用户名称不能为空!", "error");
-      } else if (this.editableUserName.length > MAX_STRING_LENGTH) {
-        isUserNameLegal = false;
-        showToast(this.toast, "用户名过长！", "error");
-      } else if (!this.validateUsername(this.editableUserName)) {
-        isUserNameLegal = false;
-        showToast(this.toast, "用户名只能包含字母、数字和下划线！", "error");
-      }
-      if (!isUserNameLegal) {
+      this.isEditingName = false;
+      const errorMessage = validateInput("用户名", this.editableUserName);
+      if (errorMessage) {
         this.editableUserName = this.user.username;
-        this.isEditingName = false;
+        showToast(this.toast, errorMessage, "error");
         return;
       }
+
       try {
-        this.isEditingName = false;
         this.user.username = this.editableUserName;
         await this.$axios.put(`/user/update-username/${this.user.id}`, null, {
           params: { newUsername: this.editableUserName },
         });
-        showToast(this.toast, `群用户名称更改成功`, "success");
+        showToast(this.toast, `用户名称更改成功`, "success");
       } catch (error) {
         console.error("更改用户名称失败", error);
         showToast(this.toast, "更改用户名称失败", "error");
@@ -186,16 +164,13 @@ export default {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
       };
-      if (this.newPassword.length > MAX_STRING_LENGTH) {
-        showToast(this.toast, "密码用户名过长！", "error");
+      const errorMessage = validateInput("密码", this.newPassword);
+      if (errorMessage) {
+        showToast(this.toast, errorMessage, "error");
         return;
       }
-      if (!this.validatePassword(this.newPassword)) {
-        showToast(this.toast, "密码至少6位，且需包含字母和数字！", "error");
-        return;
-      }
+
       try {
-        // TODO: 提取密码检查
         await this.$axios.put(`/user/update-password/${this.user.id}`, null, {
           params: updatedData,
         });
