@@ -2,10 +2,12 @@ const {defineConfig} = require('@vue/cli-service');
 
 module.exports = defineConfig({
     devServer: {
+        //todo:修改代理端口，部署时不可以是localhost
+        host: '0.0.0.0',
         port: 3000, // 前端运行在 3000 端口
         proxy: {
             '/api': {
-                target: "http://localhost:8099/", // 代理 API 请求
+                target: "http://localhost:8099",// 代理 API 请求
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''

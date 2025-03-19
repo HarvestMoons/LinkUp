@@ -64,6 +64,9 @@ export default {
     },
     async login() {
       try {
+        localStorage.removeItem("token");
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userId");
         // 发送 POST 请求到后端进行用户登录
         const response = await this.$axios.post(
           `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
@@ -84,6 +87,8 @@ export default {
         }, 3000);
       } catch (error) {
         if (error.response) {
+          alert(error)
+          //todo:详细的错误提示
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
           this.errorMessage = "服务器异常，请稍后再试。";
           localStorage.removeItem("token");
