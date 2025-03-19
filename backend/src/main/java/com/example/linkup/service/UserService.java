@@ -60,4 +60,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    public User updateAvatar(Long userId, Integer avatarId) throws UnexpectedNullElementException {
+        User user=findById(userId);
+        user.setAvatarId(avatarId);
+        return userRepository.save(user);
+    }
+
 }

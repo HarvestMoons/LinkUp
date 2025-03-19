@@ -86,8 +86,6 @@ public class UserController {
                                                  @RequestParam String oldPassword,
                                                  @RequestParam String newPassword)
             throws UnexpectedNullElementException {
-        // TODO: 完成验证旧密码逻辑，若旧密码不正确则不允许修改密码
-
         try {
             userService.updatePassword(userId, oldPassword, newPassword);
         } catch (IllegalArgumentException e) {
@@ -96,4 +94,20 @@ public class UserController {
         }
         return ResponseEntity.ok("密码更新成功");
     }
+
+    /**
+     * 更新用户头像
+     * @param userId 用户ID
+     * @param avatarId 头像ID
+     * @return 更新后的用户信息
+     * @throws UnexpectedNullElementException 如果用户不存在
+     */
+    @PutMapping("/{userId}/update-avatar")
+    public ResponseEntity<User> updateAvatar(
+            @PathVariable Long userId,
+            @RequestParam Integer avatarId) throws UnexpectedNullElementException {
+        User updatedUser = userService.updateAvatar(userId, avatarId);
+        return ResponseEntity.ok(updatedUser);
+    }
+
 }
