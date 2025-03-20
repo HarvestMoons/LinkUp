@@ -119,7 +119,7 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 
 import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
+import {Stomp} from "@stomp/stompjs";
 
 export default {
   components: { SideBar },
@@ -248,33 +248,31 @@ export default {
       return this.userId === message.sender.id;
     },
     connectWebSocket() {
-      const serverUrl = `http://localhost:8099/chatroom`;
-      const socket = new SockJS(serverUrl);
+      const socket = new SockJS('/chatroom');  // 使用相对路径，避免跨域
+      this.stompClient = Stomp.over(socket);  // 使用 Stomp.over 兼容性更好
 
-      this.stompClient = new Client({
-        webSocketFactory: () => socket,
-        reconnectDelay: 5000,
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
-        onConnect: () => {
-          console.log("STOMP连接成功");
+      this.stompClient.connect({}, (frame) => {
+        console.log("STOMP连接成功:", frame);
 
-          // 订阅群组主题（匹配后端@SendTo配置）
-          // 保存subscription以便取消订阅
-          this.subscription = this.stompClient.subscribe(
-            `/topic/group/${this.groupId}`
-          );
-        },
-        onStompError: (frame) => {
-          console.error("STOMP协议错误:", frame.headers.message);
-        },
-        onWebSocketClose: () => {
-          console.log("连接关闭，尝试重连...");
-        },
+        console.log("当前 groupId:", this.groupId);
+        if (!this.groupId) {
+          console.error("groupId 未定义，无法订阅 WebSocket 主题");
+          return;
+        }
+
+        this.subscription = this.stompClient.subscribe(
+            `/topic/group/${this.groupId}`,
+            (message) => {
+              console.log("收到消息:", message.body);
+              const receivedMessage = JSON.parse(message.body);
+              this.messages.push(receivedMessage);
+            }
+        );
+      }, (error) => {
+        console.error("STOMP 连接失败:", error);
       });
-
-      this.stompClient.activate();
-    },
+    }
+,
 
     sendMessage() {
       if (!this.newMessage.trim()) {
