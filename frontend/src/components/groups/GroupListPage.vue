@@ -88,6 +88,7 @@
 </template>
 
 <script>
+// TODO: 群组换头像
 import FriendSelection from "@/components/friends/FriendSelection.vue";
 
 import { Role } from "@/config/constants";

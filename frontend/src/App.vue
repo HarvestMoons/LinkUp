@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/user" class="userContainer" v-if="isAuthPage">
         <img
-          :src="user.avatar || require('@/assets/images/icon.png')"
+          :src="this.$store.getters.getUserAvatar"
           alt="头像"
           class="userAvatar"
         />
@@ -66,6 +66,9 @@ export default {
       }
     },
   },
+  created() {
+    this.$store.dispatch("loadAvatars");
+  },
 };
 </script>
 
@@ -80,7 +83,7 @@ export default {
 
 .navContainer {
   position: relative;
-  z-index: 1500;
+  z-index: 500;
   padding: 30px;
 }
 

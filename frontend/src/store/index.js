@@ -10,6 +10,7 @@ export default createStore({
         userId: sessionStorage.getItem('userId') || null,
         token: Cookies.get('JWT') || null,
         friendList: null,
+        avatarMap: {}, // 存储头像
     },
     mutations: {
         login(state, token) {
@@ -33,7 +34,10 @@ export default createStore({
         setFriendList(state, friendList) {
             state.friendList = friendList;
             sessionStorage.setItem('friendList', JSON.stringify(friendList));
-        }
+        },
+        setAvatarMap(state, avatarMap) {
+            state.avatarMap = avatarMap;
+        },
     },
     actions: {
         logout({ commit }) {
@@ -47,7 +51,16 @@ export default createStore({
         },
         setFriendList({ commit }, friendList) {
             commit('setFriendList', friendList);
-        }
+        },
+        loadAvatars({ commit }) {
+            const avatarMap = {};
+            const images = require.context("@/assets/images/avatars", false, /\.png$/);
+            images.keys().forEach((fileName) => {
+                const id = fileName.match(/(\d+)\.png$/)[1];
+                avatarMap[id] = images(fileName);
+            });
+            commit("setAvatarMap", avatarMap);
+        },
     },
     getters: {
         isAuthenticated: (state) => state.isLoggedIn,
@@ -55,5 +68,13 @@ export default createStore({
         getUserId: (state) => state.userId,
         getToken: (state) => state.token,
         getFriendList: (state) => state.friendList,
+        getAvatarMap: (state) => state.avatarMap,
+        getAvatar: (state) => (avatarId) => {
+            return state.avatarMap[avatarId] || require("@/assets/images/icon.png");
+        },
+        getUserAvatar: (state) => {
+            console.log(state.user)
+            return state.avatarMap[state.user.avatarId] || require("@/assets/images/icon.png");
+        },
     },
 });

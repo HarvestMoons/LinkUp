@@ -68,7 +68,7 @@
           @contextmenu="showMenu($event, member)"
         >
           <img
-            :src="member.avatar || require('@/assets/images/icon.png')"
+            :src="this.$store.getters.getAvatar(member.avatarId)"
             alt="头像"
             class="memberAvatar"
           />

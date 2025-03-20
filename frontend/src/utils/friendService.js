@@ -15,7 +15,7 @@ export async function fetchFriends(userId) {
             return {
                 username: target.username,
                 id: target.id,
-                avatar: target.avatar,
+                avatarId: target.avatarId,
                 friend: target,
             };
         });

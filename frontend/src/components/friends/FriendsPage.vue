@@ -27,9 +27,7 @@
             class="friendRequestItem"
           >
             <img
-              :src="
-                request.sender.avatar || require('@/assets/images/icon.png')
-              "
+              :src="this.$store.getters.getAvatar(request.sender.avatarId)"
               alt="头像"
               class="avatar"
             />
@@ -63,7 +61,7 @@
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
             <img
-              :src="friend.avatar || require('@/assets/images/icon.png')"
+              :src="this.$store.getters.getAvatar(friend.avatarId)"
               alt="头像"
               class="avatar"
             />

@@ -7,7 +7,7 @@
       <div class="basicInfo">
         <div class="profileSection">
           <img
-            :src="previewAvatar || user.avatar || defaultAvatar"
+            :src="previewAvatar || this.$store.getters.getUserAvatar"
             alt="头像"
             class="avatar"
             @click="toggleAvatarDropdown"
@@ -112,10 +112,7 @@ export default {
   name: "UserPage",
   data() {
     return {
-      user: {
-        avatar: "", // 服务器上的头像 URL
-        username: "",
-      },
+      user: {},
       avatarMap: {},
       selectedAvatarId: null, // 选中的头像
       showAvatarDropdown: false, // 控制下拉框显示
@@ -125,7 +122,6 @@ export default {
       newPassword: "",
       isEditingPassword: false,
       previewAvatar: "", // 本地预览头像
-      defaultAvatar: require("@/assets/images/icon.png"),
     };
   },
   setup() {
@@ -134,14 +130,7 @@ export default {
   },
   mounted() {
     this.user = this.$store.getters.getUser;
-
-    // 预加载所有头像
-    this.avatarMap = {};
-    const images = require.context("@/assets/images/avatars", false, /\.png$/);
-    images.keys().forEach((fileName) => {
-      const id = fileName.match(/(\d+)\.png$/)[1]; // 提取头像 ID
-      this.avatarMap[id] = images(fileName);
-    });
+    console.log(this.user.avatarId);
   },
   methods: {
     cancelDropdown() {
@@ -149,7 +138,7 @@ export default {
       this.selectedAvatarId = null;
     },
     getAvatarById(avatarId) {
-      return this.avatarMap[avatarId] || this.defaultAvatar;
+      return this.$store.getters.getAvatar(avatarId);
     },
     toggleAvatarDropdown() {
       this.showAvatarDropdown = !this.showAvatarDropdown;
@@ -170,8 +159,8 @@ export default {
             avatarId: this.selectedAvatarId,
           },
         });
+        this.user.avatarId = this.selectedAvatarId;
 
-        this.user.avatar = this.getAvatarById(this.selectedAvatarId);
         this.$store.dispatch("setUser", this.user);
 
         showToast(this.toast, "头像更新成功", "success");
@@ -251,7 +240,7 @@ export default {
   },
   computed: {
     avatarList() {
-      return Object.keys(this.avatarMap).map(Number); // 获取所有头像 ID
+      return Object.keys(this.$store.getters.getAvatarMap).map(Number); // 获取所有头像 ID
     },
   },
 };

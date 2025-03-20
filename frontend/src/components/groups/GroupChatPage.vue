@@ -35,9 +35,7 @@
             >
               <img
                 v-if="!isSentByCurrentUser(message)"
-                :src="
-                  message.sender.avatar || require('@/assets/images/icon.png')
-                "
+                :src="this.$store.getters.getAvatar(message.sender.avatarId)"
                 alt="头像"
                 class="messageAvatar leftAvatar"
               />
@@ -55,9 +53,7 @@
               </div>
               <img
                 v-if="isSentByCurrentUser(message)"
-                :src="
-                  message.sender.avatar || require('@/assets/images/icon.png')
-                "
+                :src="this.$store.getters.getAvatar(message.sender.avatarId)"
                 alt="头像"
                 class="messageAvatar rightAvatar"
               />

@@ -16,7 +16,7 @@
           }"
         >
           <img
-            :src="friend.avatar || require('@/assets/images/icon.png')"
+            :src="this.$store.getters.getAvatar(friend.avatarId)"
             alt="头像"
             class="avatar"
           />
