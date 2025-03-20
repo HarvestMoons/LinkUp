@@ -83,6 +83,8 @@ export default {
 }
 
 .navContainer {
+  position: relative;
+  z-index: 1500;
   padding: 30px;
 }
 

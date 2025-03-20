@@ -1,5 +1,6 @@
 <!-- UserPage.vue -->
 <template>
+  <div v-if="showAvatarDropdown" class="overlay" @click="cancelDropdown"></div>
   <div class="container">
     <h1>个人信息</h1>
     <div class="blockContainer">
@@ -27,9 +28,14 @@
                 >
               </div>
             </div>
-            <button class="button normalButton" @click="confirmAvatarChange">
-              确认
-            </button>
+            <div class="doubleButtonContainer">
+              <button class="button warningButton" @click="cancelDropdown">
+                取消
+              </button>
+              <button class="button normalButton" @click="confirmAvatarChange">
+                确认
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -138,8 +144,10 @@ export default {
     });
   },
   methods: {
-    // TODO: 点击页面其他位置关闭下拉框
     // TODO: 立刻更新顶部栏头像
+    cancelDropdown() {
+      this.showAvatarDropdown = false;
+    },
     getAvatarById(avatarId) {
       return this.avatarMap[avatarId] || this.defaultAvatar;
     },
@@ -249,6 +257,15 @@ export default {
 </script>
 
 <style scoped>
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* 确保遮罩层在侧边栏之下 */
+}
+
 .editPasswordContainer,
 .basicInfo {
   display: flex;
@@ -259,12 +276,14 @@ export default {
 }
 
 .avatar {
+  position: relative;
   margin: 0;
   width: 100px;
   height: 100px;
   border-radius: 50%;
   cursor: pointer;
   object-fit: cover;
+  z-index: 1;
 }
 
 .avatarDropdown {
