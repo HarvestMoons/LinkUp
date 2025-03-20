@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,10 +58,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDto authRequestDto) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody AuthRequestDto authRequestDto,
+            HttpServletResponse response) {
         String username = authRequestDto.getUsername();
         String password = authRequestDto.getPassword();
-        Map<String, Object> response = new HashMap<>();
+        Map<String, Object> responseBody = new HashMap<>();
         try {
             // 通过 Spring Security 进行身份验证
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
@@ -68,16 +71,38 @@ public class AuthController {
             // 将认证信息保存到 SecurityContext 中
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwtToken = jwtUtils.generateJwtToken(authentication);
-            // 登录成功
-            response.put("token", jwtToken);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+
+            // 设置 HttpOnly Cookie，防止 XSS 访问
+            Cookie cookie = new Cookie("jwt", jwtToken);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(false); // 本地调试时为 false，部署到 HTTPS 服务器时设为 true
+            cookie.setPath("/");
+            cookie.setMaxAge(24 * 60 * 60); // 1 天
+
+            response.addCookie(cookie);
+
+            responseBody.put("token", jwtToken);
+            responseBody.put("message", "登录成功");
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } catch (AuthenticationException e) {
             // 重新抛出异常，让全局异常处理器处理
             throw e;
         } catch (Exception e) {
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(responseBody, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("jwt", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // 立即过期
+        response.addCookie(cookie);
 
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", "登出成功");
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
 }

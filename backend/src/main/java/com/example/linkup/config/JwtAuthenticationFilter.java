@@ -2,6 +2,8 @@ package com.example.linkup.config;
 
 import com.example.linkup.util.JwtUtils;
 import io.jsonwebtoken.ExpiredJwtException;
+
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
+            @NonNull FilterChain filterChain)
             throws ServletException, IOException {
         if (request.getRequestURI().startsWith("/chatroom")) {
             filterChain.doFilter(request, response); // 放行 WebSocket 请求
@@ -40,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // 1. 从请求头中提取 Token
             String jwt = parseJwt(request);
+            System.out.println("解析到的 JWT 令牌: " + jwt);
 
             // 2. 验证 Token 是否有效
             if (jwt != null) {
@@ -47,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (jwtUtils.validateJwtToken(jwt)) {
                         // 3. 从 Token 中提取用户名
                         String username = jwtUtils.getUsernameFromJwtToken(jwt);
+                        System.out.println("JWT 解析出的用户名: " + username);
 
                         // 4. 加载用户信息
                         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -82,6 +86,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String headerAuth = request.getHeader("Authorization");
         if (headerAuth != null && headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
+        }
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue(); // 找到 JWT Cookie 并返回
+                }
+            }
         }
         return null;
     }

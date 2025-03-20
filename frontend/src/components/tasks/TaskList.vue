@@ -522,7 +522,7 @@ export default {
         if (!this.isTaskLegal(newTask)) {
           return;
         }
-        newTask.creator = JSON.parse(localStorage.getItem("user"));
+        newTask.creator = this.$store.getters.getUser;
         newTask.taskGroupId = this.groupId;
         console.log(newTask);
         await this.$axios.post("/tasks/create", newTask);

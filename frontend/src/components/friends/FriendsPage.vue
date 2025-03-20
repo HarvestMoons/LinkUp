@@ -105,7 +105,7 @@ export default {
     return { toast };
   },
   async mounted() {
-    this.userId = localStorage.getItem("userId"); // 读取 userId
+    this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;
@@ -164,7 +164,7 @@ export default {
     async acceptRequest(requestId) {
       try {
         // 接受好友申请
-        console.log(localStorage.getItem("userId"));
+        console.log(sessionStorage.getItem("userId"));
         await this.$axios.post(`/friend-requests/accept/${requestId}`);
 
         // 更新待处理申请和好友列表

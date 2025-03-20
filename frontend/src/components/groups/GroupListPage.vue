@@ -114,7 +114,7 @@ export default {
     return { toast };
   },
   mounted() {
-    this.userId = localStorage.getItem("userId"); // 读取 userId
+    this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;

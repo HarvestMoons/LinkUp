@@ -1,8 +1,9 @@
 import axios from "axios";
+import store from '@/store';  // 导入 Vuex store
 
 export async function fetchFriends(userId) {
     try {
-        const token = localStorage.getItem('token'); // 获取存储的 token
+        const token = store.getters.getToken; // 获取存储的 token
         const response = await axios.get(`/friendships/find/${userId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`, // 在请求头中添加 token
@@ -18,7 +19,7 @@ export async function fetchFriends(userId) {
                 friend: target,
             };
         });
-        localStorage.setItem("friendList", JSON.stringify(friendList))
+        store.dispatch('setFriendList', friendList);
         return friendList
     } catch (error) {
         console.error("获取好友数据失败:", error);
@@ -27,7 +28,7 @@ export async function fetchFriends(userId) {
 }
 
 export async function getFriendList(userId) {
-    return localStorage.getItem("friendList")
-        ? JSON.parse(localStorage.getItem("friendList"))
+    return store.getters.getFriendList
+        ? store.getters.getFriendList
         : await fetchFriends(userId);
 }

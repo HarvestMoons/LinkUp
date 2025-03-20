@@ -155,7 +155,7 @@ export default {
     return { toast };
   },
   async mounted() {
-    this.user = JSON.parse(localStorage.getItem("user"));
+    this.user = this.$store.getters.getUser;
     if (!this.user) {
       console.error("用户不存在，请重新登录");
       return;

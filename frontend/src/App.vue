@@ -42,23 +42,19 @@ export default {
     },
   },
   methods: {
-    logout() {
-      // 清除登录状态
-      localStorage.removeItem("token");
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("user");
+    async logout() {
+      this.$store.dispatch("logout");
       this.$router.push("/login"); // 跳转到登录页面
     },
     async fetchUserData() {
       try {
-        if (localStorage.getItem("userId") && localStorage.getItem("user")) {
-          this.user = JSON.parse(localStorage.getItem("user"));
+        // 检查 sessionStorage 中是否存在用户数据
+        if (this.$store.getters.getUserId && this.$store.getters.getUser) {
+          this.user = this.$store.getters.getUser;
         } else {
-          const responseUser = await this.$axios.get(`user/info`);
+          const responseUser = await this.$axios.get(`/user/info`);
           this.user = responseUser.data;
-          localStorage.setItem("userId", responseUser.data.id);
-          localStorage.setItem("user", JSON.stringify(responseUser.data));
+          this.$store.dispatch("setUser", this.user);
         }
         await fetchFriends(this.user.id);
       } catch (error) {

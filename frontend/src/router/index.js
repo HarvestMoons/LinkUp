@@ -8,6 +8,7 @@ import GroupListPage from '@/components/groups/GroupListPage'
 import GroupChatPage from '@/components/groups/GroupChatPage'
 import UserPage from '@/components/auth/UserPage'
 import { useToast } from 'vue-toastification';
+import store from '@/store';  // 导入 Vuex store
 
 const routes = [
     {
@@ -73,11 +74,7 @@ const router = createRouter({
 
 // 添加路由守卫
 router.beforeEach((to, from, next) => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' // 验证登录状态
-    const hasValidToken = !!localStorage.getItem('token') // 验证 JWT 是否存在
-
-    // 双重验证：本地存储状态 + 实际 token 存在性
-    const isAuthenticated = isLoggedIn && hasValidToken
+    const isAuthenticated = store.getters.isAuthenticated;  // 使用 Vuex 获取登录状态
 
     // 获取toast实例
     const toast = useToast();

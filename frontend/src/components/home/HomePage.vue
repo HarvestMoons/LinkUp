@@ -15,12 +15,8 @@
 export default {
   name: "HomePage",
   methods: {
-    logout() {
-      // 清除登录状态
-      localStorage.removeItem("token");
-      localStorage.removeItem("isLoggedIn");
-      localStorage.removeItem("userId");
-      this.$router.push("/login"); // 跳转到登录页面
+    async logout() {
+      this.$store.dispatch("logout");
     },
   },
 };

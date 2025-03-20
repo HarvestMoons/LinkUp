@@ -133,7 +133,7 @@ export default {
     return { toast };
   },
   mounted() {
-    this.user = JSON.parse(localStorage.getItem("user"));
+    this.user = this.$store.getters.getUser;
 
     // 预加载所有头像
     this.avatarMap = {};
@@ -171,7 +171,7 @@ export default {
         });
 
         this.user.avatar = this.getAvatarById(this.selectedAvatarId);
-        localStorage.setItem("user", JSON.stringify(this.user));
+        this.$store.dispatch("setUser", this.user);
 
         showToast(this.toast, "头像更新成功", "success");
         this.showAvatarDropdown = false;
