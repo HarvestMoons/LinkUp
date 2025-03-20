@@ -22,7 +22,8 @@ public class UserController {
     private final GroupMemberService groupMemberService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, GroupMemberService groupMemberService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, GroupMemberService groupMemberService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.groupMemberService = groupMemberService;
         this.passwordEncoder = passwordEncoder;
@@ -83,8 +84,8 @@ public class UserController {
      */
     @PutMapping("/update-password/{userId}")
     public ResponseEntity<String> updatePassword(@PathVariable Long userId,
-                                                 @RequestParam String oldPassword,
-                                                 @RequestParam String newPassword)
+            @RequestParam String oldPassword,
+            @RequestParam String newPassword)
             throws UnexpectedNullElementException {
         try {
             userService.updatePassword(userId, oldPassword, newPassword);
@@ -97,12 +98,13 @@ public class UserController {
 
     /**
      * 更新用户头像
-     * @param userId 用户ID
+     * 
+     * @param userId   用户ID
      * @param avatarId 头像ID
      * @return 更新后的用户信息
      * @throws UnexpectedNullElementException 如果用户不存在
      */
-    @PutMapping("/{userId}/update-avatar")
+    @PutMapping("/update-avatar/{userId}")
     public ResponseEntity<User> updateAvatar(
             @PathVariable Long userId,
             @RequestParam Integer avatarId) throws UnexpectedNullElementException {

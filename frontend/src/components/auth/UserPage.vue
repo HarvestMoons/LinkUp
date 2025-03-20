@@ -5,19 +5,32 @@
     <div class="blockContainer">
       <div class="basicInfo">
         <div class="profileSection">
-          <input
-            type="file"
-            @change="handleFileUpload"
-            accept="image/*"
-            hidden
-            ref="fileInput"
-          />
           <img
             :src="previewAvatar || user.avatar || defaultAvatar"
             alt="头像"
             class="avatar"
-            @click="$refs.fileInput.click()"
+            @click="toggleAvatarDropdown"
           />
+          <!-- 头像选择下拉框 -->
+          <div v-if="showAvatarDropdown" class="avatarDropdown">
+            <div class="avatarOptions">
+              <div
+                v-for="avatarId in avatarList"
+                :key="avatarId"
+                class="avatarOption"
+                :class="{ selected: selectedAvatarId === avatarId }"
+                @click="selectAvatar(avatarId)"
+              >
+                <img :src="getAvatarById(avatarId)" alt="可选头像" />
+                <span v-if="selectedAvatarId === avatarId" class="checkmark"
+                  >✔</span
+                >
+              </div>
+            </div>
+            <button class="button normalButton" @click="confirmAvatarChange">
+              确认
+            </button>
+          </div>
         </div>
         <div
           class="nameAndIdContainer"
@@ -97,6 +110,9 @@ export default {
         avatar: "", // 服务器上的头像 URL
         username: "",
       },
+      avatarMap: {},
+      selectedAvatarId: null, // 选中的头像
+      showAvatarDropdown: false, // 控制下拉框显示
       editableUserName: "",
       isEditingName: false,
       oldPassword: "",
@@ -112,18 +128,49 @@ export default {
   },
   mounted() {
     this.user = JSON.parse(localStorage.getItem("user"));
+
+    // 预加载所有头像
+    this.avatarMap = {};
+    const images = require.context("@/assets/images/avatars", false, /\.png$/);
+    images.keys().forEach((fileName) => {
+      const id = fileName.match(/(\d+)\.png$/)[1]; // 提取头像 ID
+      this.avatarMap[id] = images(fileName);
+    });
   },
   methods: {
-    handleFileUpload(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.previewAvatar = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    // TODO: 点击页面其他位置关闭下拉框
+    // TODO: 立刻更新顶部栏头像
+    getAvatarById(avatarId) {
+      return this.avatarMap[avatarId] || this.defaultAvatar;
+    },
+    toggleAvatarDropdown() {
+      this.showAvatarDropdown = !this.showAvatarDropdown;
+    },
+    selectAvatar(avatarId) {
+      this.selectedAvatarId = avatarId;
+    },
+    async confirmAvatarChange() {
+      try {
+        if (!this.selectedAvatarId) {
+          showToast(this.toast, "请先选择一个头像", "warning");
+          return;
+        }
+
+        await this.$axios.put(`/user/update-avatar/${this.user.id}`, null, {
+          params: {
+            avatarId: this.selectedAvatarId,
+          },
+        });
+
+        this.user.avatar = this.getAvatarById(this.selectedAvatarId);
+        localStorage.setItem("user", JSON.stringify(this.user));
+
+        showToast(this.toast, "头像更新成功", "success");
+        this.showAvatarDropdown = false;
+      } catch (error) {
+        console.error("头像更新失败", error);
+        showToast(this.toast, "头像更新失败", "error");
       }
-      // TODO: 存储头像逻辑
     },
 
     startEditingName() {
@@ -193,6 +240,11 @@ export default {
       this.resetChanges();
     },
   },
+  computed: {
+    avatarList() {
+      return Object.keys(this.avatarMap).map(Number); // 获取所有头像 ID
+    },
+  },
 };
 </script>
 
@@ -213,6 +265,71 @@ export default {
   border-radius: 50%;
   cursor: pointer;
   object-fit: cover;
+}
+
+.avatarDropdown {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  z-index: 10;
+  width: 80%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarOptions {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-rows: 1fr 1fr 1fr;
+  width: 100%;
+  overflow-x: scroll;
+  grid-auto-flow: column;
+}
+
+.avatarOption {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+
+.avatarOption img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatarOption.selected {
+  border-color: #4caf50;
+  opacity: 0.7;
+}
+
+.checkmark {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #4caf50;
+  color: white;
+  font-size: 12px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nameAndIdContainer {
