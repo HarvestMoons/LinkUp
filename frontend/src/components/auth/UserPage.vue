@@ -144,15 +144,16 @@ export default {
     });
   },
   methods: {
-    // TODO: 立刻更新顶部栏头像
     cancelDropdown() {
       this.showAvatarDropdown = false;
+      this.selectedAvatarId = null;
     },
     getAvatarById(avatarId) {
       return this.avatarMap[avatarId] || this.defaultAvatar;
     },
     toggleAvatarDropdown() {
       this.showAvatarDropdown = !this.showAvatarDropdown;
+      this.selectedAvatarId = null;
     },
     selectAvatar(avatarId) {
       this.selectedAvatarId = avatarId;
@@ -316,6 +317,7 @@ export default {
 }
 
 .avatarOption {
+  position: relative;
   width: 60px;
   height: 60px;
   border-radius: 50%;
@@ -346,9 +348,6 @@ export default {
   border-radius: 50%;
   width: 16px;
   height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .nameAndIdContainer {
