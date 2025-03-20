@@ -27,13 +27,13 @@ const routes = [
         path: '/register',
         name: 'register',
         component: RegisterPage,
-        meta: { title: '注册', guestOnly: true } // 标记仅允许未登录用户访问
+        meta: { title: '注册', guestOnly: true, requiresAuth: false } // 标记仅允许未登录用户访问
     },
     {
         path: '/login',
         name: 'login',
         component: LoginPage,
-        meta: { title: '登录', guestOnly: true } // 标记仅允许未登录用户访问
+        meta: { title: '登录', guestOnly: true, requiresAuth: false } // 标记仅允许未登录用户访问
     },
     {
         path: '/friends',

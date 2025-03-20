@@ -1,7 +1,13 @@
 <template>
   <div class="navContainer">
     <nav>
-      <router-link to="/user" class="userContainer" v-if="isAuthPage">
+      <router-link
+        to="/user"
+        class="userContainer"
+        v-if="
+          this.$store.getters.isAuthenticated && this.$route.meta.requiresAuth
+        "
+      >
         <img
           :src="this.$store.getters.getUserAvatar"
           alt="头像"
@@ -16,7 +22,11 @@
       <router-link to="/tasks">Tasks</router-link>
       |
       <router-link to="/groups">Groups</router-link>
-      <button v-if="isAuthPage" @click="logout" class="logoutButton">
+      <button
+        v-if="this.$route.meta.requiresAuth"
+        @click="logout"
+        class="logoutButton"
+      >
         Logout
       </button>
     </nav>
@@ -32,17 +42,16 @@ export default {
       user: [],
     };
   },
-  computed: {
-    // 判断当前路由是否为 /login 或 /register
-    isAuthPage() {
-      if (this.$route.meta.requiresAuth) {
-        this.fetchUserData();
+  watch: {
+    // 监听路由变化，判断是否需要调用 fetchUserData
+    async $route(to) {
+      if (to.meta.requiresAuth) {
+        await this.fetchUserData();
       }
-      return this.$route.meta.requiresAuth;
     },
   },
   methods: {
-    async logout() {
+    logout() {
       this.$store.dispatch("logout");
       this.$router.push("/login"); // 跳转到登录页面
     },
@@ -68,6 +77,9 @@ export default {
   },
   created() {
     this.$store.dispatch("loadAvatars");
+    if (this.$route.meta.requiresAuth) {
+      this.fetchUserData();
+    }
   },
 };
 </script>

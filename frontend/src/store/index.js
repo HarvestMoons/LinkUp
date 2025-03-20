@@ -23,11 +23,14 @@ export default createStore({
             state.user = null;
             state.userId = null;
             state.token = null;
+            state.friendList = null;
             sessionStorage.removeItem('user');
+            sessionStorage.removeItem('userId');
             Cookies.remove('JWT');
         },
         setUser(state, user) {
             state.user = user;
+            state.userId = user.id;
             sessionStorage.setItem('user', JSON.stringify(user)); // 存储用户信息
             sessionStorage.setItem('userId', user.id); // 存储用户信息
         },
@@ -70,11 +73,10 @@ export default createStore({
         getFriendList: (state) => state.friendList,
         getAvatarMap: (state) => state.avatarMap,
         getAvatar: (state) => (avatarId) => {
-            return state.avatarMap[avatarId] || require("@/assets/images/icon.png");
+            return avatarId == null ? require("@/assets/images/icon.png") : state.avatarMap[avatarId];
         },
         getUserAvatar: (state) => {
-            console.log(state.user)
-            return state.avatarMap[state.user.avatarId] || require("@/assets/images/icon.png");
+            return state.user == null ? require("@/assets/images/icon.png") : state.avatarMap[state.user.avatarId];
         },
     },
 });
