@@ -6,28 +6,31 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Getter
 @Setter
 @Entity
-@IdClass(GroupMemberId.class)  // 这里使用 @IdClass 指定复合主键类
+@IdClass(GroupMemberId.class) // 这里使用 @IdClass 指定复合主键类
 public class GroupMember {
 
     @Id
     @ManyToOne
     @JoinColumn(name = "group_id")
-    private TaskGroup taskGroup;  // 群组
+    private TaskGroup taskGroup; // 群组
 
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;    // 用户
+    private User user; // 用户
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;    // 用户角色（OWNER、ADMIN 或 MEMBER）
+    private Role role; // 用户角色（OWNER、ADMIN 或 MEMBER）
 
+    @CreationTimestamp
     @Column(name = "joined_at")
-    private Timestamp joinedAt;  // 加入时间
+    private Timestamp joinedAt; // 加入时间
 
     public enum Role {
         OWNER, ADMIN, MEMBER;

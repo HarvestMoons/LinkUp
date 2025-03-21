@@ -29,8 +29,8 @@
               class="messageItem"
               ref="messageItemRef"
               :class="{
-                'align-right': isSentByCurrentUser(message),
-                'align-left': !isSentByCurrentUser(message),
+                alignRight: isSentByCurrentUser(message),
+                alignLeft: !isSentByCurrentUser(message),
               }"
             >
               <img
@@ -39,15 +39,9 @@
                 alt="头像"
                 class="messageAvatar leftAvatar"
               />
-              <div>
+              <div class="messageContainer">
                 <div>{{ message.sender.username }}</div>
-                <div
-                  class="messageContent"
-                  :class="{
-                    rightContent: isSentByCurrentUser(message),
-                    leftContent: !isSentByCurrentUser(message),
-                  }"
-                >
+                <div class="messageContent">
                   {{ message.content }}
                 </div>
               </div>
@@ -119,7 +113,7 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 
 import SockJS from "sockjs-client";
-import {Stomp} from "@stomp/stompjs";
+import { Stomp } from "@stomp/stompjs";
 
 export default {
   components: { SideBar },
@@ -248,32 +242,36 @@ export default {
       return this.userId === message.sender.id;
     },
     connectWebSocket() {
-      const socket = new SockJS('/chatroom');  // 使用相对路径，避免跨域
-      this.stompClient = Stomp.over(socket);  // 使用 Stomp.over 兼容性更好
+      const socket = new SockJS("/chatroom"); // 使用相对路径，避免跨域
+      this.stompClient = Stomp.over(socket); // 使用 Stomp.over 兼容性更好
 
-      this.stompClient.connect({}, (frame) => {
-        console.log("STOMP连接成功:", frame);
+      this.stompClient.connect(
+        {},
+        (frame) => {
+          console.log("STOMP连接成功:", frame);
 
-        console.log("当前 groupId:", this.groupId);
-        if (!this.groupId) {
-          console.error("groupId 未定义，无法订阅 WebSocket 主题");
-          return;
-        }
+          console.log("当前 groupId:", this.groupId);
+          if (!this.groupId) {
+            console.error("groupId 未定义，无法订阅 WebSocket 主题");
+            return;
+          }
 
-        this.subscription = this.stompClient.subscribe(
+          this.subscription = this.stompClient.subscribe(
             `/topic/group/${this.groupId}`,
             (message) => {
               console.log("收到消息:", message.body);
               const receivedMessage = JSON.parse(message.body);
-              this.messages.push(receivedMessage);
+              if (receivedMessage.sender.id !== this.userId) {
+                this.messageList.push(receivedMessage);
+              }
             }
-        );
-      }, (error) => {
-        console.error("STOMP 连接失败:", error);
-      });
-    }
-,
-
+          );
+        },
+        (error) => {
+          console.error("STOMP 连接失败:", error);
+        }
+      );
+    },
     sendMessage() {
       if (!this.newMessage.trim()) {
         showToast(this.toast, "发送的内容不能为空", "error");
@@ -288,6 +286,7 @@ export default {
       };
 
       if (this.stompClient && this.stompClient.connected) {
+        console.log("发送消息:", message); // 调试日志
         this.stompClient.publish({
           destination: `/chat/sendMessage`, // 匹配@MessageMapping
           body: JSON.stringify(message),
@@ -384,7 +383,32 @@ export default {
   display: flex;
 }
 
+.alignLeft {
+  text-align: left;
+  align-self: flex-start; /* 左对齐 */
+}
+
+.alignRight {
+  text-align: right;
+  align-self: flex-end; /* 右对齐 */
+}
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.alignLeft .messageContainer {
+  align-items: flex-start;
+}
+
+.alignRight .messageContainer {
+  align-items: flex-end;
+}
+
 .messageContent {
+  display: inline-block;
+  width: fit-content;
   max-width: 600px; /* 限制消息宽度 */
   padding: 10px;
   border-radius: 8px;
@@ -392,21 +416,11 @@ export default {
   text-align: left;
 }
 
-.align-left {
-  text-align: left;
-  align-self: flex-start; /* 左对齐 */
-}
-
-.align-right {
-  text-align: right;
-  align-self: flex-end; /* 右对齐 */
-}
-
-.leftContent {
+.alignLeft .messageContent {
   background-color: #f0f0f0;
 }
 
-.rightContent {
+.alignRight .messageContent {
   background-color: #007bff;
   color: white;
 }
