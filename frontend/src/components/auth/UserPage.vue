@@ -181,6 +181,13 @@ export default {
     async saveUserName() {
       // TODO: 修改完名字会出现401错误，需解决
       this.isEditingName = false;
+
+      // 若未改变用户名则直接退出函数
+      if (this.editableUserName === this.user.username) {
+        return;
+      }
+
+      // 用户名合法性检验
       const errorMessage = validateInput("用户名", this.editableUserName);
       if (errorMessage) {
         this.editableUserName = this.user.username;
@@ -237,6 +244,8 @@ export default {
       this.isEditingPassword = false;
       this.resetChanges();
     },
+
+    // TODO: 注销账户
   },
   computed: {
     avatarList() {
