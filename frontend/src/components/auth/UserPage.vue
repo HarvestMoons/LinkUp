@@ -276,12 +276,15 @@ export default {
       try {
         // TODO: 处理用户为群主时的注销逻辑
         await this.$axios.delete(`/user/close-account/${this.user.id}`);
+
+        this.$store.dispatch("logout");
+        this.$router.push("/login");
+
         showToast(
           this.toast,
           `用户 ${this.user.username}(#${this.user.id}) 注销成功`,
           "success"
         );
-        this.$router.push("/login");
       } catch (error) {
         console.error("用户注销失败", error);
         showToast(this.toast, "用户注销失败", "error");
