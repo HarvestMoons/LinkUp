@@ -1,6 +1,13 @@
 <!-- UserPage.vue -->
 <template>
+  <ConfirmDialog
+    v-model:isVisible="isConfirmDialogVisible"
+    :message="confirmMessage"
+    @confirm="handleConfirm"
+  />
+
   <div v-if="showAvatarDropdown" class="overlay" @click="cancelDropdown"></div>
+
   <div class="container">
     <h1>个人信息</h1>
     <div class="blockContainer">
@@ -58,14 +65,23 @@
     </div>
     <div class="blockContainer">
       <div class="changeInfoContainer">
-        <button
-          class="button normalButton"
-          @click="editPassword"
-          v-if="!isEditingPassword"
-        >
-          修改密码
-        </button>
-        <div class="editPasswordContainer" v-else>
+        <div class="doubleButtonContainer">
+          <button
+            class="button normalButton"
+            @click="editPassword"
+            v-if="!isEditingPassword"
+          >
+            修改密码
+          </button>
+          <button
+            class="button warningButton"
+            @click="showDeactivateAccountConfirm"
+            v-if="!isEditingPassword"
+          >
+            注销账户
+          </button>
+        </div>
+        <div class="editPasswordContainer" v-if="isEditingPassword">
           <div class="allInputFields">
             <div class="formWithLabelAndInput">
               <label for="oldPassword">原密码:</label>
@@ -103,6 +119,8 @@
 </template>
 
 <script>
+import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
+
 import { validateInput } from "@/utils/userService";
 
 import { showToast } from "@/utils/toast";
@@ -110,6 +128,7 @@ import { useToast } from "vue-toastification";
 
 export default {
   name: "UserPage",
+  components: { ConfirmDialog },
   data() {
     return {
       user: {},
@@ -122,6 +141,8 @@ export default {
       newPassword: "",
       isEditingPassword: false,
       previewAvatar: "", // 本地预览头像
+      isConfirmDialogVisible: false,
+      confirmMessage: "用户数据将会被全部销毁，您确定要注销账户吗？",
     };
   },
   setup() {
@@ -245,7 +266,27 @@ export default {
       this.resetChanges();
     },
 
-    // TODO: 注销账户
+    showDeactivateAccountConfirm() {
+      this.isConfirmDialogVisible = true;
+    },
+    handleConfirm() {
+      this.deactivateAccount();
+    },
+    async deactivateAccount() {
+      try {
+        // TODO: 处理用户为群主时的注销逻辑
+        await this.$axios.delete(`/user/close-account/${this.user.id}`);
+        showToast(
+          this.toast,
+          `用户 ${this.user.username}(#${this.user.id}) 注销成功`,
+          "success"
+        );
+        this.$router.push("/login");
+      } catch (error) {
+        console.error("用户注销失败", error);
+        showToast(this.toast, "用户注销失败", "error");
+      }
+    },
   },
   computed: {
     avatarList() {
