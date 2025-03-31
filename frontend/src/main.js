@@ -8,6 +8,8 @@ import "vue-toastification/dist/index.css"
 import { API_BASE_URL, PUBLIC_AUTH_API } from './config/constants'
 import Cookies from 'js-cookie';  // 引入 js-cookie 库来操作 cookies
 import store from '@/store';
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
 
 const axiosInstance = axios.create({
     baseURL: API_BASE_URL, // 设置基本的 API URL
@@ -24,6 +26,12 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     (error) => {
+        if (error.response && error.response.status === 401) {
+            const toast = useToast();
+            showToast(toast, "检测到401错误，登出账号", "warning");
+            store.dispatch("logout");
+            router.push("/login");
+        }
         return Promise.reject(error);
     }
 );
