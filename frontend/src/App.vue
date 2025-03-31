@@ -25,7 +25,7 @@
       <button
         v-if="this.$route.meta.requiresAuth"
         @click="logout"
-        class="logoutButton"
+        class="button normalButton logoutButton"
       >
         Logout
       </button>
@@ -119,13 +119,6 @@ nav a.router-link-exact-active {
 
 .logoutButton {
   margin-left: 1%;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 80px;
 }
 
 .userAvatar {
