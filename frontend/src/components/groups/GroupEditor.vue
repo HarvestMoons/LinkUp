@@ -65,6 +65,10 @@
           v-for="member in showedGroupMembers"
           :key="member.id"
           class="memberItem"
+          :class="{
+            owner: isMemberGroupOwner(member),
+            admin: isMemberGroupAdmin(member),
+          }"
           @contextmenu="showMenu($event, member)"
         >
           <img
@@ -201,7 +205,7 @@ export default {
     return { toast };
   },
   async mounted() {
-    this.showedGroupMembers = this.groupMembers;
+    this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
     this.friends = await getFriendList(this.userId);
     window.addEventListener("click", this.closeMenu);
     window.addEventListener("wheel", this.closeMenu);
@@ -461,6 +465,17 @@ export default {
     getGroupMemberIdArray(groupMembers) {
       return groupMembers.map((item) => item.id);
     },
+
+    sortGroupMember(groupMembers) {
+      const rolePriority = {
+        [Role.Owner]: 1,
+        [Role.Admin]: 2,
+        [Role.Member]: 3,
+      };
+      let result = groupMembers;
+      result.sort((a, b) => rolePriority[a.role] - rolePriority[b.role]);
+      return result;
+    },
   },
   beforeUnmount() {
     window.removeEventListener("click", this.closeMenu);
@@ -470,7 +485,7 @@ export default {
     groupMembers: {
       handler() {
         this.$nextTick(() => {
-          this.showedGroupMembers = this.groupMembers;
+          this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
         });
       },
       deep: true, // 深度监听，确保数组更新时触发
@@ -538,6 +553,13 @@ export default {
   background-color: rgba(128, 128, 128, 0.1);
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(0, 0, 0, 0);
+}
+.memberItem.owner {
+  border: 2px solid rgba(0, 100, 0, 0.5);
+}
+.memberItem.admin {
+  border: 2px solid rgba(0, 0, 100, 0.5);
 }
 
 .memberAvatar {
