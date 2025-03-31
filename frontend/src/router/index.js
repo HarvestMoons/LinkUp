@@ -79,6 +79,11 @@ router.beforeEach((to, from, next) => {
     // 获取toast实例
     const toast = useToast();
 
+    if (to.path === '/' && !isAuthenticated) {
+        next({ name: 'login' })
+        return
+    }
+
     // 处理需要认证的路由
     if (to.meta.requiresAuth && !isAuthenticated) {
         toast.error('请先登录后再访问此页面');
