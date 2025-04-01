@@ -1,6 +1,6 @@
 <template>
   <div class="navContainer">
-    <nav>
+    <nav class="tabNav">
       <router-link
         to="/user"
         class="userContainer"
@@ -15,13 +15,33 @@
         />
         <span class="userNickname">{{ user.username }} (#{{ user.id }}) </span>
       </router-link>
-      <router-link to="/">Home</router-link>
-      |
-      <router-link to="/friends">Friends</router-link>
-      |
-      <router-link to="/tasks">Tasks</router-link>
-      |
-      <router-link to="/groups">Groups</router-link>
+      <router-link
+        to="/"
+        class="tab"
+        :class="{ active: isActive('/') || isActive('/home') }"
+        >Home</router-link
+      >
+
+      <router-link
+        to="/friends"
+        class="tab"
+        :class="{ active: isActive('/friends') }"
+        >Friends</router-link
+      >
+
+      <router-link
+        to="/tasks"
+        class="tab"
+        :class="{ active: isActive('/tasks') }"
+        >Tasks</router-link
+      >
+
+      <router-link
+        to="/groups"
+        class="tab"
+        :class="{ active: isActive('/groups') }"
+        >Groups</router-link
+      >
       <button
         v-if="this.$route.meta.requiresAuth"
         @click="logout"
@@ -31,7 +51,14 @@
       </button>
     </nav>
   </div>
+
   <router-view />
+
+  <div class="footerContainer">
+    <p>© 2025 Link Up</p>
+    <p>|</p>
+    <router-link to="/privacy">Privacy Policy</router-link>
+  </div>
 </template>
 <script>
 import { fetchFriends } from "@/utils/friendService";
@@ -74,6 +101,9 @@ export default {
         }
       }
     },
+    isActive(route) {
+      return this.$route.path === route;
+    },
   },
   created() {
     this.$store.dispatch("loadAvatars");
@@ -85,22 +115,33 @@ export default {
 </script>
 
 <style>
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .navContainer {
   position: relative;
   z-index: 500;
   padding: 30px;
+  padding-bottom: 0;
 }
 
 nav {
-  height: 50px;
+  height: 60px;
   display: flex;
   align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
   justify-content: center; /* 水平居中对齐 */
@@ -131,5 +172,57 @@ nav a.router-link-exact-active {
   display: flex;
   align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
   justify-content: center; /* 水平居中对齐 */
+}
+
+.tab {
+  display: flex;
+  align-items: center; /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  padding: 12px 20px;
+  background: #ddd;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: 0.3s;
+  position: relative;
+  width: 250px;
+  height: 100%;
+  border: 3px solid #ddd;
+  border-bottom: none;
+  box-sizing: border-box;
+}
+
+.tab.active {
+  background: white;
+  width: 300px;
+  z-index: 2;
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 3px; /* 和 container 的边框厚度一致 */
+  background: white; /* 盖住 container 的边框 */
+  bottom: -3px; /* 让它刚好覆盖 container 上边框 */
+}
+
+.footerContainer {
+  width: 100%;
+  height: 60px;
+  background: #2c3e50;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  gap: 10px;
+}
+
+.footerContainer a {
+  color: #42b983;
+  text-decoration: none;
 }
 </style>

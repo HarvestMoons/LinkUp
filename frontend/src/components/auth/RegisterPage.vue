@@ -1,45 +1,52 @@
 <!-- RegisterPage.vue -->
 <template>
-  <div class="loginContainer">
-    <h1>Register</h1>
-    <form @submit.prevent="register">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input
-          type="text"
-          id="usernameInput"
-          v-model="username"
-          @input="validateUsernameInput"
-          required
-        />
-      </div>
+  <div class="container">
+    <div class="loginContainer">
+      <h1>Register</h1>
+      <form @submit.prevent="register">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            id="usernameInput"
+            v-model="username"
+            @input="validateUsernameInput"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="passwordInput" v-model="password" required />
-      </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="passwordInput"
+            v-model="password"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input
-          type="password"
-          id="confirmPasswordInput"
-          v-model="confirmPassword"
-          required
-        />
-      </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirmPasswordInput"
+            v-model="confirmPassword"
+            required
+          />
+        </div>
 
-      <div v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
+        <div v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
 
-      <button type="submit" class="longButton normalButton">Register</button>
-    </form>
+        <button type="submit" class="longButton normalButton">Register</button>
+      </form>
 
-    <p>
-      Already have an account?
-      <router-link to="/login">Login here</router-link>
-    </p>
+      <p>
+        Already have an account?
+        <router-link to="/login">Login here</router-link>
+      </p>
+    </div>
   </div>
 </template>
 

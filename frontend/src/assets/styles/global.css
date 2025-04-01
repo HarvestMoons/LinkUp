@@ -47,8 +47,14 @@ ul {
 /* #endregion */
 
 .container {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    flex-grow: 1;
     text-align: center;
-    margin-top: 30px;
+    border-radius: 5px;
+    border: 3px solid #ddd;
+    padding: 10px;
 }
 
 /* #region button */

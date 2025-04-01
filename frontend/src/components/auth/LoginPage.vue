@@ -1,32 +1,39 @@
 <!-- LoginPage.vue -->
 <template>
-  <div class="loginContainer">
-    <h1>Login</h1>
-    <form @submit.prevent="login">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input
-          type="text"
-          id="usernameInput"
-          v-model="username"
-          @input="validateUsernameInput"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="passwordInput" v-model="password" required />
-      </div>
-      <div v-if="errorMessage" class="error-message">
-        {{ errorMessage }}
-      </div>
-      <button type="submit" class="longButton normalButton">Login</button>
-    </form>
+  <div class="container">
+    <div class="loginContainer">
+      <h1>Login</h1>
+      <form @submit.prevent="login">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input
+            type="text"
+            id="usernameInput"
+            v-model="username"
+            @input="validateUsernameInput"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="passwordInput"
+            v-model="password"
+            required
+          />
+        </div>
+        <div v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+        <button type="submit" class="longButton normalButton">Login</button>
+      </form>
 
-    <p>
-      Didn't have an account?
-      <router-link to="/register">Register here</router-link>
-    </p>
+      <p>
+        Didn't have an account?
+        <router-link to="/register">Register here</router-link>
+      </p>
+    </div>
   </div>
 </template>
 

@@ -26,6 +26,7 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     (error) => {
+        console.log("hello")
         if (error.response && error.response.status === 401) {
             const toast = useToast();
             showToast(toast, "检测到401错误，登出账号", "warning");

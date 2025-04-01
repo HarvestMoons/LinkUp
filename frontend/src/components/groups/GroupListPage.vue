@@ -1,7 +1,6 @@
 <!-- GroupListPage.vue -->
 <template>
   <div class="container">
-    <h1>Welcome to the Groups Page</h1>
     <!-- 添加好友输入框和按钮 -->
     <div class="blockContainer">
       <transition name="createGroupContainerTransition">

@@ -221,6 +221,23 @@ export default {
         await this.$axios.put(`/user/update-username/${this.user.id}`, null, {
           params: { newUsername: this.editableUserName },
         });
+
+        this.$store.dispatch("logout");
+        this.$router.push("/login");
+        /*
+        this.$store.dispatch("logout");
+        const response = await this.$axios.post(
+          `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
+          {
+            username: this.editableUserName,
+            password: this.password,
+          }
+        );
+
+        console.log(response);
+        this.$store.dispatch("login", response.data.token);
+*/
+        console.log(this.user);
         showToast(this.toast, `用户名称更改成功`, "success");
       } catch (error) {
         console.error("更改用户名称失败", error);
