@@ -90,10 +90,9 @@
 // TODO: 群组换头像
 import FriendSelection from "@/components/friends/FriendSelection.vue";
 
-import { Role } from "@/config/constants";
-
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import {Role} from "@/config/constants";
 
 export default {
   name: "GroupListPage",

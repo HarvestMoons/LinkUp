@@ -1,29 +1,31 @@
-import { MAX_STRING_LENGTH } from "@/config/constants";
+import  * as Constants from "@/config/constants";
 
-export function validatePassword(password) {
-    const minLength = 6;
-    const hasLetter = /[a-zA-Z]/.test(password);
-    const hasNumber = /\d/.test(password);
-    return password.length >= minLength && hasLetter && hasNumber;
-}
+export function validateInput(type, value,t) {
 
-export function validateUsername(username) {
-    const regex = /^\w+$/;
-    return regex.test(username);
-}
+    // 获取字段显示名称（如果未配置则使用原始type）
+    let fieldName = "";
 
-export function validateInput(type, value) {
+    switch (type) {
+        case Constants.NAME_VALIDATION:
+            fieldName = t('common.username')
+            if (!/^[a-zA-Z0-9_]+$/.test(value)) {
+                return t('validation.username_invalid')
+            }
+            break;
+        case Constants.PW_VALIDATION:
+            fieldName = t('common.password')
+            if (!/(?=.*[A-Za-z])(?=.*\d).{6,}/.test(value)){
+                return t('validation.password_invalid')
+            }
+            break;
+        default:
+            return t('error.unknown_parameter',{param:type})
+    }
     if (!value.trim()) {
-        return `${type}不能为空！`;
+        return t('validation.required', { field: fieldName })
     }
-    if (value.length > MAX_STRING_LENGTH) {
-        return `${type}过长！`;
+    if (value.length > Constants.MAX_STRING_LENGTH) {
+        return t('validation.too_long', { field: fieldName })
     }
-    if (type === "用户名" && !validateUsername(value)) {
-        return "用户名只能包含字母、数字和下划线！";
-    }
-    if (type === "密码" && !validatePassword(value)) {
-        return "密码至少6位，且需包含字母和数字！";
-    }
-    return ""; // 没有错误
+    return "" // 验证通过
 }

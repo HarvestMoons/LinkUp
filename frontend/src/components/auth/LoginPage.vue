@@ -7,20 +7,19 @@
         <div class="form-group">
           <label for="username">Username:</label>
           <input
-            type="text"
-            id="usernameInput"
-            v-model="username"
-            @input="validateUsernameInput"
-            required
+              type="text"
+              id="usernameInput"
+              v-model="username"
+              required
           />
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
           <input
-            type="password"
-            id="passwordInput"
-            v-model="password"
-            required
+              type="password"
+              id="passwordInput"
+              v-model="password"
+              required
           />
         </div>
         <div v-if="errorMessage" class="error-message">
@@ -38,8 +37,10 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {validateInput} from "@/utils/userService";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "LoginPage",
@@ -52,32 +53,35 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    const t = useI18n();
+    return {toast, t};
   },
   methods: {
-    // 用户名合法性校验（仅允许字母、数字和下划线）
-    validateUsername(username) {
-      const regex = /^\w+$/;
-      return regex.test(username);
-    },
-    // 如果输入不合法，恢复输入前的值，避免非法字符输入
-    validateUsernameInput() {
-      if (this.validateUsername(this.username) || this.username.length === 0) {
-        this.errorMessage = "";
-      } else {
-        this.username = this.username.slice(0, -1);
-        this.errorMessage = "用户名只能包含字母、数字和下划线！";
-      }
-    },
     async login() {
+
+      // 校验用户名
+      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username, this.$t);
+      if (this.errorMessage) {
+        this.username = "";
+        return;
+      }
+
+      // 校验密码
+      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password, this.$t);
+      if (this.errorMessage) {
+        this.password = "";
+        return;
+      }
+
+
       try {
         // 发送 POST 请求到后端进行用户登录
         const response = await this.$axios.post(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
-          {
-            username: this.username,
-            password: this.password,
-          }
+            `${this.$constants.PUBLIC_AUTH_API}/login`,
+            {
+              username: this.username,
+              password: this.password,
+            }
         );
 
         console.log(response);
@@ -93,7 +97,7 @@ export default {
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
           this.errorMessage =
-            error.response.data.message || "服务器异常，请稍后再试。";
+              error.response.data.message || "服务器异常，请稍后再试。";
         } else if (error.request) {
           // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
           this.errorMessage = "无法连接到服务器，请检查网络。";

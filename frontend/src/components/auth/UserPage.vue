@@ -209,7 +209,7 @@ export default {
       }
 
       // 用户名合法性检验
-      const errorMessage = validateInput("用户名", this.editableUserName);
+      const errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.editableUserName);
       if (errorMessage) {
         this.editableUserName = this.user.username;
         showToast(this.toast, errorMessage, "error");
@@ -254,7 +254,7 @@ export default {
         oldPassword: this.oldPassword,
         newPassword: this.newPassword,
       };
-      const errorMessage = validateInput("密码", this.newPassword);
+      const errorMessage = validateInput(this.$constants.PW_VALIDATION, this.newPassword);
       if (errorMessage) {
         showToast(this.toast, errorMessage, "error");
         return;

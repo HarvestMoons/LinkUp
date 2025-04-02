@@ -10,7 +10,6 @@
             type="text"
             id="usernameInput"
             v-model="username"
-            @input="validateUsernameInput"
             required
           />
         </div>
@@ -51,10 +50,10 @@
 </template>
 
 <script>
-import { validateInput, validateUsername } from "@/utils/userService";
-
+import { validateInput} from "@/utils/userService";
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "RegisterPage",
@@ -68,27 +67,19 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    const t = useI18n();
+    return {toast ,t};
   },
   methods: {
-    // 如果输入不合法，恢复输入前的值，避免非法字符输入
-    validateUsernameInput() {
-      if (validateUsername(this.username) || this.username.length === 0) {
-        this.errorMessage = "";
-      } else {
-        this.username = this.username.slice(0, -1);
-        this.errorMessage = "用户名只能包含字母、数字和下划线！";
-      }
-    },
     async register() {
       this.errorMessage = "";
 
       // 校验用户名
-      this.errorMessage = validateInput("用户名", this.username);
+      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username,this.$t);
       if (this.errorMessage) return;
 
       // 校验密码
-      this.errorMessage = validateInput("密码", this.password);
+      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password,this.$t);
       if (this.errorMessage) return;
 
       // 确认密码
@@ -98,7 +89,7 @@ export default {
       }
 
       try {
-        await this.$axios.post(`${this.$CONSTANT.PUBLIC_AUTH_API}/register`, {
+        await this.$axios.post(`${this.$constants.PUBLIC_AUTH_API}/register`, {
           username: this.username,
           password: this.password,
         });
