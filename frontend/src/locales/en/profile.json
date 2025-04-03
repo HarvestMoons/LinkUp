@@ -1,0 +1,30 @@
+{
+  "title": "Profile",
+  "buttons": {
+    "change_password": "Change Password",
+    "deactivate_account": "Deactivate Account"
+  },
+  "avatar": {
+    "not_selected": "Please select an avatar first",
+    "update_success": "Avatar updated successfully!",
+    "update_failed": "Failed to update avatar"
+  },
+  "username": {
+    "placeholder": "Please enter new username",
+    "update_success": "Username updated successfully",
+    "update_fail": "Failed to update username"
+  },
+  "password": {
+    "current_label": "Current password",
+    "new_label": "New password",
+    "placeholder_current": "Please enter your current password",
+    "placeholder_new": "Please enter new password",
+    "update_success": "Password updated successfully",
+    "update_fail": "Failed to update password"
+  },
+  "account": {
+    "delete_success": "Account {username}(#{id}) has been successfully deleted",
+    "delete_fail": "Failed to delete account",
+    "delete_confirm": "All your data will be permanently deleted. Are you sure you want to proceed?"
+  }
+}

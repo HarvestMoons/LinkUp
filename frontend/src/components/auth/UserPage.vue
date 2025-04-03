@@ -1,64 +1,64 @@
 <!-- UserPage.vue -->
 <template>
   <ConfirmDialog
-    v-model:isVisible="isConfirmDialogVisible"
-    :message="confirmMessage"
-    @confirm="handleConfirm"
+      v-model:isVisible="isConfirmDialogVisible"
+      :message="confirmMessage"
+      @confirm="handleConfirm"
   />
 
   <div v-if="showAvatarDropdown" class="overlay" @click="cancelDropdown"></div>
 
   <div class="container">
-    <h1>个人信息</h1>
+    <h1>{{$t('profile.title')}}</h1>
     <div class="blockContainer">
       <div class="basicInfo">
         <div class="profileSection">
           <img
-            :src="previewAvatar || this.$store.getters.getUserAvatar"
-            alt="头像"
-            class="avatar"
-            @click="toggleAvatarDropdown"
+              :src="previewAvatar || this.$store.getters.getUserAvatar"
+              alt="头像"
+              class="avatar"
+              @click="toggleAvatarDropdown"
           />
           <!-- 头像选择下拉框 -->
           <div v-if="showAvatarDropdown" class="avatarDropdown">
             <div class="avatarOptions">
               <div
-                v-for="avatarId in avatarList"
-                :key="avatarId"
-                class="avatarOption"
-                :class="{ selected: selectedAvatarId === avatarId }"
-                @click="selectAvatar(avatarId)"
+                  v-for="avatarId in avatarList"
+                  :key="avatarId"
+                  class="avatarOption"
+                  :class="{ selected: selectedAvatarId === avatarId }"
+                  @click="selectAvatar(avatarId)"
               >
-                <img :src="getAvatarById(avatarId)" alt="可选头像" />
+                <img :src="getAvatarById(avatarId)" alt="可选头像"/>
                 <span v-if="selectedAvatarId === avatarId" class="checkmark"
-                  >✔</span
+                >✔</span
                 >
               </div>
             </div>
             <div class="doubleButtonContainer">
               <button class="button warningButton" @click="cancelDropdown">
-                取消
+                {{ $t('common.cancel') }}
               </button>
               <button class="button normalButton" @click="confirmAvatarChange">
-                确认
+                {{ $t('common.confirm') }}
               </button>
             </div>
           </div>
         </div>
         <div
-          class="nameAndIdContainer"
-          @click="startEditingName"
-          v-if="!isEditingName"
+            class="nameAndIdContainer"
+            @click="startEditingName"
+            v-if="!isEditingName"
         >
           <span class="nameInfo">{{ user.username }}</span>
           <span class="idInfo">(#{{ user.id }})</span>
         </div>
         <div class="userField" v-else>
           <input
-            ref="userNameInput"
-            v-model="editableUserName"
-            @blur="saveUserName"
-            @keyup.enter="saveUserName"
+              ref="userNameInput"
+              v-model="editableUserName"
+              @blur="saveUserName"
+              @keyup.enter="saveUserName"
           />
         </div>
       </div>
@@ -67,49 +67,49 @@
       <div class="changeInfoContainer">
         <div class="doubleButtonContainer">
           <button
-            class="button normalButton"
-            @click="editPassword"
-            v-if="!isEditingPassword"
+              class="button normalButton"
+              @click="editPassword"
+              v-if="!isEditingPassword"
           >
-            修改密码
+            {{ $t('profile.buttons.change_password') }}
           </button>
           <button
-            class="button warningButton"
-            @click="showDeactivateAccountConfirm"
-            v-if="!isEditingPassword"
+              class="button warningButton"
+              @click="showDeactivateAccountConfirm"
+              v-if="!isEditingPassword"
           >
-            注销账户
+            {{ $t('profile.buttons.deactivate_account') }}
           </button>
         </div>
         <div class="editPasswordContainer" v-if="isEditingPassword">
           <div class="allInputFields">
             <div class="formWithLabelAndInput">
-              <label for="oldPassword">原密码:</label>
+              <label for="oldPassword"> {{ $t('profile.password.current_label') }}</label>
               <input
-                type="password"
-                id="oldPassword"
-                v-model="oldPassword"
-                placeholder="输入原密码以修改"
+                  type="password"
+                  id="oldPassword"
+                  v-model="oldPassword"
+                  :placeholder="$t('profile.password.placeholder_current')"
               />
             </div>
 
             <div class="formWithLabelAndInput">
-              <label for="newPassword">新密码:</label>
+              <label for="newPassword">{{ $t('profile.password.new_label') }}</label>
               <input
-                type="password"
-                id="newPassword"
-                v-model="newPassword"
-                placeholder="输入新密码"
+                  type="password"
+                  id="newPassword"
+                  v-model="newPassword"
+                  :placeholder="$t('profile.password.placeholder_new')"
               />
             </div>
           </div>
 
           <div class="doubleButtonContainer">
             <button class="button warningButton" @click="cancelEditPassword">
-              取消
+              {{ $t('common.cancel') }}
             </button>
             <button class="button normalButton" @click="saveChanges">
-              保存
+              {{ $t('common.save') }}
             </button>
           </div>
         </div>
@@ -121,14 +121,15 @@
 <script>
 import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
 
-import { validateInput } from "@/utils/userService";
+import {validateInput} from "@/utils/userService";
 
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import {showToast} from "@/utils/toast";
+import {useToast} from "vue-toastification";
+import {useI18n} from "vue-i18n";
 
 export default {
   name: "UserPage",
-  components: { ConfirmDialog },
+  components: {ConfirmDialog},
   data() {
     return {
       user: {},
@@ -142,12 +143,13 @@ export default {
       isEditingPassword: false,
       previewAvatar: "", // 本地预览头像
       isConfirmDialogVisible: false,
-      confirmMessage: "用户数据将会被全部销毁，您确定要注销账户吗？",
+      confirmMessage: this.$t('profile.account.delete_confirm'),
     };
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    const t = useI18n();
+    return {toast, t};
   },
   mounted() {
     this.user = this.$store.getters.getUser;
@@ -171,7 +173,7 @@ export default {
     async confirmAvatarChange() {
       try {
         if (!this.selectedAvatarId) {
-          showToast(this.toast, "请先选择一个头像", "warning");
+          showToast(this.toast, this.$t('profile.avatar.not_selected'), "warning");
           return;
         }
 
@@ -184,11 +186,10 @@ export default {
 
         this.$store.dispatch("setUser", this.user);
 
-        showToast(this.toast, "头像更新成功", "success");
+        showToast(this.toast, this.$t('profile.avatar.update_success'), "success");
         this.showAvatarDropdown = false;
       } catch (error) {
-        console.error("头像更新失败", error);
-        showToast(this.toast, "头像更新失败", "error");
+        showToast(this.toast, this.$t('profile.avatar.update_error'), "error");
       }
     },
 
@@ -200,7 +201,6 @@ export default {
       }, 0);
     },
     async saveUserName() {
-      // TODO: 修改完名字会出现401错误，需解决
       this.isEditingName = false;
 
       // 若未改变用户名则直接退出函数
@@ -219,7 +219,7 @@ export default {
       try {
         this.user.username = this.editableUserName;
         await this.$axios.put(`/user/update-username/${this.user.id}`, null, {
-          params: { newUsername: this.editableUserName },
+          params: {newUsername: this.editableUserName},
         });
 
         this.$store.dispatch("logout");
@@ -238,10 +238,9 @@ export default {
         this.$store.dispatch("login", response.data.token);
 */
         console.log(this.user);
-        showToast(this.toast, `用户名称更改成功`, "success");
+        showToast(this.toast, this.$t('profile.username.update_success'), "success");
       } catch (error) {
-        console.error("更改用户名称失败", error);
-        showToast(this.toast, "更改用户名称失败", "error");
+        showToast(this.toast, this.$t('profile.username.update_fail'), "error");
       }
     },
 
@@ -264,14 +263,13 @@ export default {
         await this.$axios.put(`/user/update-password/${this.user.id}`, null, {
           params: updatedData,
         });
-        showToast(this.toast, "密码修改成功", "success");
+        showToast(this.toast, this.$t('profile.password.update_success'), "success");
         this.isEditingPassword = false;
       } catch (error) {
-        console.error("密码修改失败", error);
         if (error.response) {
           showToast(this.toast, error.response.message, "error");
         } else {
-          showToast(this.toast, "密码修改失败", "error");
+          showToast(this.toast, this.$t('profile.password.update_fail'), "error");
         }
       }
     },
@@ -298,13 +296,15 @@ export default {
         this.$router.push("/login");
 
         showToast(
-          this.toast,
-          `用户 ${this.user.username}(#${this.user.id}) 注销成功`,
-          "success"
+            this.toast,
+            this.$t('profile.account.delete_success', {
+              username: this.user.username,
+              id: this.user.id
+            }),
+            "success"
         );
       } catch (error) {
-        console.error("用户注销失败", error);
-        showToast(this.toast, "用户注销失败", "error");
+        showToast(this.toast, this.$t('profile.account.delete_fail'), "error");
       }
     },
   },

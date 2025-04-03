@@ -60,14 +60,14 @@ export default {
     async login() {
 
       // 校验用户名
-      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username, this.$t);
+      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username);
       if (this.errorMessage) {
         this.username = "";
         return;
       }
 
       // 校验密码
-      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password, this.$t);
+      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password);
       if (this.errorMessage) {
         this.password = "";
         return;
@@ -87,7 +87,7 @@ export default {
         console.log(response);
         this.$store.dispatch("login", response.data.token);
 
-        showToast(this.toast, "登录成功！即将跳转到主页面...", "success");
+        showToast(this.toast, this.$t('auth.login.success'), "success");
         // 登录成功后跳转到主页
         setTimeout(() => {
           this.$router.push("/");
@@ -96,14 +96,15 @@ export default {
         console.error(error);
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
-          this.errorMessage =
-              error.response.data.message || "服务器异常，请稍后再试。";
+          this.errorMessage = this.$t(`errors.api.${error.response.status}`) ||
+              error.response.data.message ||
+              this.$t('errors.server.default');
         } else if (error.request) {
-          // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
-          this.errorMessage = "无法连接到服务器，请检查网络。";
+          //  请求已发送，但服务器无响应（网络错误或服务器崩溃）
+          this.errorMessage = this.$t('errors.server.network');
         } else {
-          // 其他未知错误
-          this.errorMessage = "发生未知错误，请稍后再试。";
+          // 未知错误
+          this.errorMessage = this.$t('errors.server.unknown');
         }
       }
     },

@@ -1,6 +1,0 @@
-{
-  "required": "{field} cannot be empty!",
-  "too_long": "{field} is too long!",
-  "username_invalid": "Username can only contain letters, numbers and underscores!",
-  "password_invalid": "Password must be at least 6 characters and contain both letters and numbers!"
-}

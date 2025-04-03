@@ -1,1 +1,26 @@
-{}
+{
+  "server": {
+    "default": "服务器异常，请稍后再试。",
+    "network": "无法连接到服务器，请检查网络。",
+    "unknown": "发生未知错误，请稍后再试。"
+  },
+  "unknown_parameter": "未知的参数值: {param}",
+  "api": {
+    "400": "请求参数错误",
+    "401": "未授权，请登录",
+    "403": "权限不足",
+    "404": "资源不存在",
+    "500": "服务器内部错误"
+  },
+  "auth": {
+    "login_required": "请先登录后再访问此页面",
+    "logout_required": "请先登出后再进行登录或注册"
+  },
+  "validation": {
+    "required": "{field}不能为空！",
+    "too_long": "{field}过长！",
+    "username_invalid": "用户名只能包含字母、数字和下划线！",
+    "password_invalid": "密码至少6位，且需包含字母和数字！",
+    "password_mismatch": "两次输入的密码不一致！"
+  }
+}

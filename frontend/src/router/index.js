@@ -8,7 +8,8 @@ import GroupListPage from '@/components/groups/GroupListPage'
 import GroupChatPage from '@/components/groups/GroupChatPage'
 import UserPage from '@/components/auth/UserPage'
 import { useToast } from 'vue-toastification';
-import store from '@/store';  // 导入 Vuex store
+import store from '@/store';
+import {t} from "@/i18n";
 
 const routes = [
     {
@@ -86,14 +87,14 @@ router.beforeEach((to, from, next) => {
 
     // 处理需要认证的路由
     if (to.meta.requiresAuth && !isAuthenticated) {
-        toast.error('请先登录后再访问此页面');
+        toast.error(t('error.auth.login_required'));
         next({ name: 'login' })
         return
     }
 
     // 处理仅允许未登录用户访问的路由
     if (to.meta.guestOnly && isAuthenticated) {
-        toast.error('请先登出后再进行登录或注册');
+        toast.error(t('error.auth.logout_required'));
         next({ name: 'home1' }) // 已登录用户访问登录/注册页时重定向到首页
         return
     }

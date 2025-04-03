@@ -4,8 +4,8 @@
     <div class="confirm-dialog">
       <h3>{{ message }}</h3>
       <div class="doubleButtonContainer">
-        <button @click="onConfirm" class="button warningButton">确认</button>
-        <button @click="onCancel" class="button normalButton">取消</button>
+        <button @click="onConfirm" class="button warningButton">{{ $t('common.confirm') }}</button>
+        <button @click="onCancel" class="button normalButton">{{ $t('common.cancel') }}</button>
       </div>
     </div>
   </div>

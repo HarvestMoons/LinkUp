@@ -23,8 +23,9 @@ const loadLocaleMessages = () => {
 
 const i18n = createI18n({
     legacy: false,
-    locale: 'zh-CN',
+    locale: 'en',
     messages: loadLocaleMessages() // 加载所有语言文件
 })
 
+export const t = i18n.global.t
 export default i18n

@@ -1,6 +1,0 @@
-{
-  "required": "{field}不能为空！",
-  "too_long": "{field}过长！",
-  "username_invalid": "用户名只能包含字母、数字和下划线！",
-  "password_invalid": "密码至少6位，且需包含字母和数字！"
-}

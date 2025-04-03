@@ -7,7 +7,7 @@ import Toast from "vue-toastification"
 import "vue-toastification/dist/index.css"
 import * as constants from './config/constants'
 import Cookies from 'js-cookie';  // 引入 js-cookie 库来操作 cookies
-import i18n from '@/i18n'
+import t from '@/i18n'
 import store from '@/store';
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
@@ -51,7 +51,7 @@ app.config.globalProperties.$constants = constants
 
 // 在挂载前注册所有插件
 app
-    .use(i18n) // 使用独立的i18n配置
+    .use(t) // 使用独立的i18n配置
     .use(store) // 注册 Vuex
     .use(router)          // 先注册路由
     .use(Toast)           // 再注册 Toast

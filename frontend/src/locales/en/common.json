@@ -1,4 +1,7 @@
 {
   "password": "password",
-  "username": "username"
+  "username": "username",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save"
 }

@@ -1,3 +1,26 @@
 {
-  "unknown_parameter": "Unknown parameter value: {param}"
+  "server": {
+    "default": "Server error, please try again later.",
+    "network": "Cannot connect to the server, please check your network.",
+    "unknown": "An unknown error occurred, please try again later."
+  },
+  "unknown_parameter": "Unknown parameter value: {param}",
+  "api": {
+    "400": "Bad request",
+    "401": "Unauthorized, please login",
+    "403": "Permission denied",
+    "404": "Resource not found",
+    "500": "Internal server error"
+  },
+  "auth": {
+    "login_required": "Please log in to access this page",
+    "logout_required": "Please log out before proceeding to login or registration"
+  },
+  "validation": {
+    "required": "{field} cannot be empty!",
+    "too_long": "{field} is too long!",
+    "username_invalid": "Username can only contain letters, numbers and underscores!",
+    "password_invalid": "Password must be at least 6 characters and contain both letters and numbers!",
+    "password_mismatch": "Passwords do not match!"
+  }
 }

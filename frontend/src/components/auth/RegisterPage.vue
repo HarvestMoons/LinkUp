@@ -75,16 +75,16 @@ export default {
       this.errorMessage = "";
 
       // 校验用户名
-      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username,this.$t);
+      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username);
       if (this.errorMessage) return;
 
       // 校验密码
-      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password,this.$t);
+      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password);
       if (this.errorMessage) return;
 
       // 确认密码
       if (this.password !== this.confirmPassword) {
-        this.errorMessage = "两次输入的密码不一致！";
+        this.errorMessage =  this.$t('error.validation.password_mismatch');
         return;
       }
 
@@ -94,21 +94,22 @@ export default {
           password: this.password,
         });
 
-        showToast(this.toast, "注册成功！即将跳转到登录页面...", "success");
+        showToast(this.toast, this.$t('auth.registration.success'), "success");
         setTimeout(() => {
           this.$router.push("/login"); // 明确跳转到登录页
         }, 3000);
       } catch (error) {
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
-          this.errorMessage =
-            error.response.data.message || "服务器异常，请稍后再试。";
+          this.errorMessage = this.$t(`errors.api.${error.response.status}`) ||
+              error.response.data.message ||
+              this.$t('errors.server.default');
         } else if (error.request) {
-          // 请求已发送，但服务器无响应（网络错误或服务器崩溃）
-          this.errorMessage = "无法连接到服务器，请检查网络。";
+          //  请求已发送，但服务器无响应（网络错误或服务器崩溃）
+          this.errorMessage = this.$t('errors.server.network');
         } else {
-          // 其他未知错误
-          this.errorMessage = "发生未知错误，请稍后再试。";
+          // 未知错误
+          this.errorMessage = this.$t('errors.server.unknown');
         }
       }
     },
