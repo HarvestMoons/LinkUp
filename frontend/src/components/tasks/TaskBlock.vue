@@ -50,7 +50,7 @@
     </div>
     <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
     <div class="taskDetails">
-      <p class="taskDescription">{{ task.description }}</p>
+      <p class="taskDescription">{{ task.description || "无描述" }}</p>
     </div>
   </div>
 </template>

@@ -556,10 +556,10 @@ export default {
   border: 2px solid rgba(0, 0, 0, 0);
 }
 .memberItem.owner {
-  border: 2px solid rgba(0, 100, 0, 0.5);
+  border: 2px solid #686160;
 }
 .memberItem.admin {
-  border: 2px solid rgba(0, 0, 100, 0.5);
+  border: 2px solid #c0b5b5;
 }
 
 .memberAvatar {

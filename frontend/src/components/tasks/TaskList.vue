@@ -624,8 +624,8 @@ export default {
 
 .tasksList {
   display: flex;
-  flex-direction: column; /* 让 .taskItem 垂直排列 */
-  align-items: center; /* 让 .taskItem 水平居中 */
+  flex-wrap: wrap; /* 允许换行 */
+  justify-content: center; /* 居中显示任务项 */
   width: 100%;
 }
 

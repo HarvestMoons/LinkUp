@@ -356,7 +356,7 @@ export default {
 }
 
 .groupHeader {
-  background: #4caf50;
+  background: #686160;
   color: white;
   text-align: center;
   padding: 10px;

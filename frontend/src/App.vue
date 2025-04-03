@@ -141,7 +141,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #433f3e;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -165,11 +165,11 @@ nav a {
   margin-right: 0.5%;
   margin-left: 0.5%;
   font-weight: bold;
-  color: #2c3e50;
+  color: #433f3e;
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: #938a8a;
 }
 
 .logoutButton,
@@ -205,7 +205,7 @@ nav a.router-link-exact-active {
   position: relative;
   width: 250px;
   height: 100%;
-  border: 3px solid #ddd;
+  border: 3px solid #938a8a;
   border-bottom: none;
   box-sizing: border-box;
 }
@@ -214,6 +214,7 @@ nav a.router-link-exact-active {
   background: white;
   width: 300px;
   z-index: 2;
+  color: #938a8a;
 }
 
 .tab.active::after {
@@ -238,7 +239,7 @@ nav a.router-link-exact-active {
 }
 
 .footerContainer a {
-  color: #42b983;
+  color: #d1c8c3;
   text-decoration: none;
 }
 
@@ -248,9 +249,10 @@ nav a.router-link-exact-active {
   border: none;
   cursor: pointer;
   width: 120px; /* 根据需要调整宽度 */
-  background-color: #007bff;
+  background-color: #938a8a;
   color: white;
   font-weight: bold;
+  height: 36px;
 }
 
 .languageSelect:hover {
