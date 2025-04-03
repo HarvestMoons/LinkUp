@@ -199,7 +199,7 @@ nav a.router-link-exact-active {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   text-decoration: none;
-  color: #333;
+  color: #433f3e;
   font-weight: bold;
   transition: 0.3s;
   position: relative;
@@ -229,7 +229,7 @@ nav a.router-link-exact-active {
 .footerContainer {
   width: 100%;
   height: 60px;
-  background: #2c3e50;
+  background: #2a2727;
   color: white;
   display: flex;
   align-items: center;
