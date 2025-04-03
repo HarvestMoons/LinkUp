@@ -11,6 +11,7 @@ export default createStore({
         token: Cookies.get('JWT') || null,
         friendList: null,
         avatarMap: {}, // 存储头像
+        currentLanguage: 'en',
     },
     mutations: {
         login(state, token) {
@@ -41,6 +42,9 @@ export default createStore({
         setAvatarMap(state, avatarMap) {
             state.avatarMap = avatarMap;
         },
+        setLanguage(state, language) {
+            state.currentLanguage = language;
+        },
     },
     actions: {
         logout({ commit }) {
@@ -64,6 +68,9 @@ export default createStore({
             });
             commit("setAvatarMap", avatarMap);
         },
+        setLanguage({ commit }, language) {
+            commit('setLanguage', language);
+        },
     },
     getters: {
         isAuthenticated: (state) => state.isLoggedIn,
@@ -77,6 +84,9 @@ export default createStore({
         },
         getUserAvatar: (state) => {
             return state.user == null ? require("@/assets/images/icon.png") : state.avatarMap[state.user.avatarId];
+        },
+        getCurrentLanguage(state) {
+            return state.currentLanguage;
         },
     },
 });

@@ -6,20 +6,15 @@
       <form @submit.prevent="login">
         <div class="form-group">
           <label for="username">Username:</label>
-          <input
-              type="text"
-              id="usernameInput"
-              v-model="username"
-              required
-          />
+          <input type="text" id="usernameInput" v-model="username" required />
         </div>
         <div class="form-group">
           <label for="password">Password:</label>
           <input
-              type="password"
-              id="passwordInput"
-              v-model="password"
-              required
+            type="password"
+            id="passwordInput"
+            v-model="password"
+            required
           />
         </div>
         <div v-if="errorMessage" class="error-message">
@@ -29,18 +24,20 @@
       </form>
 
       <p>
-        {{ $t('auth.login.no_account_prompt') }}
-        <router-link to="/register">{{ $t('auth.login.register_link') }}</router-link>
+        {{ $t("auth.login.no_account_prompt") }}
+        <router-link to="/register">{{
+          $t("auth.login.register_link")
+        }}</router-link>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import {showToast} from "@/utils/toast";
-import {useToast} from "vue-toastification";
-import {validateInput} from "@/utils/validationUtils";
-import {useI18n} from "vue-i18n";
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
+import { validateInput } from "@/utils/validationUtils";
+import { useI18n } from "vue-i18n";
 
 export default {
   name: "LoginPage",
@@ -54,55 +51,64 @@ export default {
   setup() {
     const toast = useToast();
     const t = useI18n();
-    return {toast, t};
+    return { toast, t };
   },
   methods: {
     async login() {
-
       // 校验用户名
-      this.errorMessage = validateInput(this.$constants.USER_NAME_VALIDATION, this.username);
+      this.errorMessage = validateInput(
+        this.$constants.USER_NAME_VALIDATION,
+        this.username
+      );
       if (this.errorMessage) {
         this.username = "";
         return;
       }
 
       // 校验密码
-      this.errorMessage = validateInput(this.$constants.PW_VALIDATION, this.password);
+      this.errorMessage = validateInput(
+        this.$constants.PW_VALIDATION,
+        this.password
+      );
       if (this.errorMessage) {
         this.password = "";
         return;
       }
 
-
       try {
         // 发送 POST 请求到后端进行用户登录
         const response = await this.$axios.post(
-            `${this.$constants.PUBLIC_AUTH_API}/login`,
-            {
-              username: this.username,
-              password: this.password,
-            }
+          `${this.$constants.PUBLIC_AUTH_API}/login`,
+          {
+            username: this.username,
+            password: this.password,
+          }
         );
 
         console.log(response);
-        this.$store.dispatch("login", response.data.token);
 
-        showToast(this.toast, this.$t('auth.login.success'), "success");
+        const responseUser = await this.$axios.get(`/user/info`);
+        this.user = responseUser.data;
+        this.$store.dispatch("setUser", this.user);
+
+        showToast(this.toast, this.$t("auth.login.success"), "success");
         // 登录成功后跳转到主页
         setTimeout(() => {
           this.$router.push("/");
+          this.$store.dispatch("login", response.data.token);
         }, 3000);
       } catch (error) {
         console.error(error);
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
-          this.errorMessage = error.response.data.message || this.$t('errors.server.default');
+          this.errorMessage =
+            error.response.data.message || this.$t("errors.server.default");
         } else if (error.request) {
           //  请求已发送，但服务器无响应（网络错误或服务器崩溃）
-          this.errorMessage = this.$t('errors.server.network');
+          this.errorMessage = this.$t("errors.server.network");
         } else {
           // 未知错误
-          this.errorMessage = this.$t('errors.server.unknown');
+          this.errorMessage = this.$t("errors.server.unknown");
         }
       }
     },

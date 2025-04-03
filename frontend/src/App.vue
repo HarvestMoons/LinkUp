@@ -4,19 +4,21 @@
       <router-link
         to="/user"
         class="userContainer"
-        v-if="
-          this.$store.getters.isAuthenticated && this.$route.meta.requiresAuth
-        "
+        v-if="this.$store.getters.isAuthenticated"
       >
         <img
           :src="this.$store.getters.getUserAvatar"
           alt="头像"
           class="userAvatar"
         />
-        <span class="userNickname">{{ user.username }} (#{{ user.id }}) </span>
+        <span class="userNickname"
+          >{{ this.$store.getters.getUser.username }} (#{{
+            this.$store.getters.getUserId
+          }})
+        </span>
       </router-link>
       <router-link
-        to="/"
+        to="/home"
         class="tab"
         :class="{ active: isActive('/') || isActive('/home') }"
         >Home</router-link
@@ -42,8 +44,14 @@
         :class="{ active: isActive('/groups') }"
         >Groups</router-link
       >
+
+      <select @change="changeLanguage" class="languageSelect">
+        <option value="en">English</option>
+        <option value="zh-CN">中文</option>
+      </select>
+
       <button
-        v-if="this.$route.meta.requiresAuth"
+        v-if="this.$store.getters.isAuthenticated"
         @click="logout"
         class="button normalButton logoutButton"
       >
@@ -66,7 +74,7 @@ import { fetchFriends } from "@/utils/friendService";
 export default {
   data() {
     return {
-      user: [],
+      user: {},
     };
   },
   watch: {
@@ -81,6 +89,7 @@ export default {
     logout() {
       this.$store.dispatch("logout");
       this.$router.push("/login"); // 跳转到登录页面
+      this.user = {};
     },
     async fetchUserData() {
       try {
@@ -103,6 +112,11 @@ export default {
     },
     isActive(route) {
       return this.$route.path === route;
+    },
+    // 处理语言选择的变化
+    changeLanguage(event) {
+      const selectedLanguage = event.target.value;
+      this.$store.dispatch("setLanguage", selectedLanguage);
     },
   },
   created() {
@@ -158,7 +172,8 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-.logoutButton {
+.logoutButton,
+.languageSelect {
   margin-left: 1%;
 }
 
@@ -172,6 +187,7 @@ nav a.router-link-exact-active {
   display: flex;
   align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
   justify-content: center; /* 水平居中对齐 */
+  margin-right: 1%;
 }
 
 .tab {
@@ -224,5 +240,29 @@ nav a.router-link-exact-active {
 .footerContainer a {
   color: #42b983;
   text-decoration: none;
+}
+
+.languageSelect {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  width: 120px; /* 根据需要调整宽度 */
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.languageSelect:hover {
+  filter: brightness(90%);
+}
+
+.languageSelect option {
+  background-color: #ddd; /* 默认选项背景色（灰色） */
+  color: #333; /* 默认文字颜色 */
+}
+
+.languageSelect:focus {
+  outline: none;
 }
 </style>

@@ -1,5 +1,6 @@
 // src/i18n.js
 import { createI18n } from 'vue-i18n'
+import store from '@/store'  // 引入 Vuex store
 
 // 自动加载所有 locales 下的 JSON 文件
 const loadLocaleMessages = () => {
@@ -23,9 +24,16 @@ const loadLocaleMessages = () => {
 
 const i18n = createI18n({
     legacy: false,
-    locale: 'en',
+    locale: store.getters.getCurrentLanguage,
     messages: loadLocaleMessages() // 加载所有语言文件
 })
+
+// 监听语言变化并更新 i18n 的 locale
+store.subscribe((mutation) => {
+    if (mutation.type === 'setLanguage') {
+        i18n.global.locale = mutation.payload;
+    }
+});
 
 export const t = i18n.global.t
 export default i18n

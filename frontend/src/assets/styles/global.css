@@ -64,6 +64,7 @@ ul {
     border: none;
     cursor: pointer;
     width: 100px;
+    font-weight: bold;
 }
 
 .button:hover {
