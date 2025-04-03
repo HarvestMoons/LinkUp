@@ -74,11 +74,15 @@
             class="groupItem"
             @click="goToGroup(group.id)"
           >
-            <img
-              :src="group.avatar || require('@/assets/images/icon.png')"
-              alt="头像"
-              class="avatar"
-            />
+            <div class="groupAvatar">
+              <img
+                v-for="(avatar, index) in group.avatars"
+                :key="index"
+                :src="avatar"
+                class="avatarInGroupAvatar"
+                :class="`avatar-${group.avatars.length}`"
+              />
+            </div>
             <span class="nickname">{{ group.name }} (#{{ group.id }})</span>
           </li>
         </ul>
@@ -93,8 +97,8 @@ import FriendSelection from "@/components/friends/FriendSelection.vue";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import {Role} from "@/config/constants";
-import {validateInput} from "@/utils/validationUtils";
+import { Role } from "@/config/constants";
+import { validateInput } from "@/utils/validationUtils";
 
 export default {
   name: "GroupListPage",
@@ -130,8 +134,26 @@ export default {
         this.groupListLoading = true;
         this.groups = [];
         const response = await this.$axios.get(`/user/groups/${this.userId}`);
-        this.groups = response.data.map((item) => item.taskGroup);
-        console.log(this.groups);
+        this.groups = await Promise.all(
+          response.data.map(async (item) => {
+            const group = item.taskGroup;
+
+            // 获取成员列表
+            const membersResponse = await this.$axios.get(
+              `/groups/${group.id}/members`
+            );
+            const members = membersResponse.data || [];
+
+            // 取前四个成员的头像
+            const avatars = members
+              .slice(0, 4)
+              .map((member) =>
+                this.$store.getters.getAvatar(member.user.avatarId)
+              );
+            console.log();
+            return { ...group, avatars };
+          })
+        );
       } catch (error) {
         console.error("获取群组数据失败:", error);
       } finally {
@@ -140,9 +162,11 @@ export default {
     },
 
     async createGroup() {
-
-      const errorMessage=validateInput(this.$constants.GROUP_NAME_VALIDATION,this.newGroup.name);
-      if(errorMessage){
+      const errorMessage = validateInput(
+        this.$constants.GROUP_NAME_VALIDATION,
+        this.newGroup.name
+      );
+      if (errorMessage) {
         showToast(this.toast, errorMessage, "error");
         return;
       }
@@ -208,10 +232,17 @@ export default {
 </script>
 
 <style scoped>
+.groupsList {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
 .groupItem {
   display: flex;
   align-items: center; /* 使头像和昵称垂直居中 */
-  margin-bottom: 15px; /* 每个列表项之间的间距 */
   transition: 0.2s ease;
   transform-origin: left;
 }
@@ -227,5 +258,70 @@ export default {
   overflow: hidden;
   justify-content: center;
   align-items: center;
+}
+
+.groupAvatar {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1.25%;
+}
+
+.avatarInGroupAvatar {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+  border: 2px solid white;
+  object-fit: cover;
+}
+
+.avatar-1 {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-2:nth-child(1) {
+  top: 25%;
+  left: 0;
+}
+.avatar-2:nth-child(2) {
+  top: 25%;
+  right: 0;
+}
+
+.avatar-3:nth-child(1) {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.avatar-3:nth-child(2) {
+  bottom: 0;
+  left: 0;
+}
+.avatar-3:nth-child(3) {
+  bottom: 0;
+  right: 0;
+}
+
+.avatar-4:nth-child(1) {
+  top: 0;
+  left: 0;
+}
+.avatar-4:nth-child(2) {
+  top: 0;
+  right: 0;
+}
+.avatar-4:nth-child(3) {
+  bottom: 0;
+  left: 0;
+}
+.avatar-4:nth-child(4) {
+  bottom: 0;
+  right: 0;
 }
 </style>
