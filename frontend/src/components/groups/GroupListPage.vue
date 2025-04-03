@@ -262,8 +262,8 @@ export default {
 
 .groupAvatar {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: clamp(3rem, 4vw, 5rem);
+  height: clamp(3rem, 4vw, 5rem);
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

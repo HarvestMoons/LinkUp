@@ -2,26 +2,26 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
-      <transition name="taskFormTransition">
-        <!-- 控制是否显示输入框 -->
-        <TaskForm
-          v-if="isCreating"
-          :task="newTask"
-          @cancel="cancelCreateTask"
-          @submit="submitTask"
-        />
-      </transition>
+      <!--<transition name="taskFormTransition">-->
+      <!-- 控制是否显示输入框 -->
+      <TaskForm
+        v-if="isCreating"
+        :task="newTask"
+        @cancel="cancelCreateTask"
+        @submit="submitTask"
+      />
+      <!--</transition>-->
 
       <!-- 默认的按钮 -->
-      <transition name="createButtonTransition">
-        <button
-          v-if="!isCreating"
-          @click="startCreateTask"
-          class="button extendButton"
-        >
-          创建任务
-        </button>
-      </transition>
+      <!--<transition name="createButtonTransition">-->
+      <button
+        v-if="!isCreating"
+        @click="startCreateTask"
+        class="button extendButton"
+      >
+        创建任务
+      </button>
+      <!--</transition>-->
     </div>
 
     <div class="blockContainer">
