@@ -101,9 +101,7 @@ export default {
       } catch (error) {
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
-          this.errorMessage = this.$t(`errors.api.${error.response.status}`) ||
-              error.response.data.message ||
-              this.$t('errors.server.default');
+          this.errorMessage = error.response.data.message || this.$t('errors.server.default');
         } else if (error.request) {
           //  请求已发送，但服务器无响应（网络错误或服务器崩溃）
           this.errorMessage = this.$t('errors.server.network');
