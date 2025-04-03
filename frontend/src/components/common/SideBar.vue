@@ -9,7 +9,7 @@
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <button class="button warningButton" @click="$emit('close')">
-        ✖ 关闭
+        ✖ {{$t('common.close')}}
       </button>
       <component :is="contentComponent" v-bind="contentProps"></component>
     </div>

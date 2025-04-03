@@ -121,7 +121,7 @@
 <script>
 import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
 
-import {validateInput} from "@/utils/userService";
+import {validateInput} from "@/utils/validationUtils";
 
 import {showToast} from "@/utils/toast";
 import {useToast} from "vue-toastification";
@@ -209,7 +209,7 @@ export default {
       }
 
       // 用户名合法性检验
-      const errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.editableUserName);
+      const errorMessage = validateInput(this.$constants.USER_NAME_VALIDATION, this.editableUserName);
       if (errorMessage) {
         this.editableUserName = this.user.username;
         showToast(this.toast, errorMessage, "error");

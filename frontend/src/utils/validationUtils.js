@@ -2,12 +2,10 @@ import  * as Constants from "@/config/constants";
 import {t} from "@/i18n";
 
 export function validateInput(type, value) {
-
-    // 获取字段显示名称（如果未配置则使用原始type）
     let fieldName = "";
 
     switch (type) {
-        case Constants.NAME_VALIDATION:
+        case Constants.USER_NAME_VALIDATION:
             fieldName = t('common.username')
             if (!/^[a-zA-Z0-9_]+$/.test(value)) {
                 return t('error.validation.username_invalid')
@@ -19,10 +17,13 @@ export function validateInput(type, value) {
                 return t('error.validation.password_invalid')
             }
             break;
+        case Constants.GROUP_NAME_VALIDATION:
+            fieldName=t('group.name')
+            break;
         default:
             return t('error.unknown_parameter',{param:type})
     }
-    if (!value.trim()) {
+    if (value==null||!value.trim()) {
         return t('error.validation.required', { field: fieldName })
     }
     if (value.length > Constants.MAX_STRING_LENGTH) {

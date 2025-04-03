@@ -29,8 +29,8 @@
       </form>
 
       <p>
-        Didn't have an account?
-        <router-link to="/register">Register here</router-link>
+        {{ $t('auth.login.no_account_prompt') }}
+        <router-link to="/register">{{ $t('auth.login.register_link') }}</router-link>
       </p>
     </div>
   </div>
@@ -39,7 +39,7 @@
 <script>
 import {showToast} from "@/utils/toast";
 import {useToast} from "vue-toastification";
-import {validateInput} from "@/utils/userService";
+import {validateInput} from "@/utils/validationUtils";
 import {useI18n} from "vue-i18n";
 
 export default {
@@ -60,7 +60,7 @@ export default {
     async login() {
 
       // 校验用户名
-      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username);
+      this.errorMessage = validateInput(this.$constants.USER_NAME_VALIDATION, this.username);
       if (this.errorMessage) {
         this.username = "";
         return;

@@ -1,7 +1,10 @@
 {
   "password": "密码",
   "username": "用户名",
+  "group": "群组",
+
   "cancel": "取消",
   "confirm": "确认",
-  "save": "保存"
+  "save": "保存",
+  "close": "关闭"
 }

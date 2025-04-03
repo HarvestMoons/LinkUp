@@ -2,8 +2,9 @@ export const API_BASE_URL = '/api';
 export const PUBLIC_AUTH_API = '/public';
 export const MAX_STRING_LENGTH = 25;
 
-export const NAME_VALIDATION=0;
+export const USER_NAME_VALIDATION=0;
 export const PW_VALIDATION=1;
+export const GROUP_NAME_VALIDATION=2;
 
 export const Role = {
     Admin: 'ADMIN',

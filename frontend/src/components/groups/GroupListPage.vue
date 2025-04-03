@@ -15,6 +15,7 @@
                 id="newGroupName"
                 v-model="newGroup.name"
                 placeholder="请输入群组名称"
+                required
               />
             </div>
             <div class="formWithLabelAndInput">
@@ -93,6 +94,7 @@ import FriendSelection from "@/components/friends/FriendSelection.vue";
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import {Role} from "@/config/constants";
+import {validateInput} from "@/utils/validationUtils";
 
 export default {
   name: "GroupListPage",
@@ -138,13 +140,15 @@ export default {
     },
 
     async createGroup() {
+
+      const errorMessage=validateInput(this.$constants.GROUP_NAME_VALIDATION,this.newGroup.name);
+      if(errorMessage){
+        showToast(this.toast, errorMessage, "error");
+        return;
+      }
+
       try {
-        console.log(this.newGroup);
         // TODO: 创建群组和拉人分两步会不会不好回滚(目前可以考虑使用定时清理数据库的方法解决)
-        if (this.newGroup.name === "") {
-          showToast(this.toast, "群组名不能为空", "error");
-          return;
-        }
         if (this.selectedFriends.length === 0) {
           showToast(this.toast, "至少需要选择一个好友", "error");
           return;
@@ -153,7 +157,6 @@ export default {
           name: this.newGroup.name,
           description: this.newGroup.description,
         });
-        console.log(responseNewGroup.data);
         await this.$axios.post(
           `/groups/${responseNewGroup.data.id}/members/${this.userId}`,
           null,

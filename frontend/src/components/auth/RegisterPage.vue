@@ -42,15 +42,15 @@
       </form>
 
       <p>
-        Already have an account?
-        <router-link to="/login">Login here</router-link>
+        {{ $t('auth.registration.existing_account') }}
+        <router-link to="/login">{{ $t('auth.registration.login_link') }}</router-link>
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import { validateInput} from "@/utils/userService";
+import { validateInput} from "@/utils/validationUtils";
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import {useI18n} from "vue-i18n";
@@ -75,7 +75,7 @@ export default {
       this.errorMessage = "";
 
       // 校验用户名
-      this.errorMessage = validateInput(this.$constants.NAME_VALIDATION, this.username);
+      this.errorMessage = validateInput(this.$constants.USER_NAME_VALIDATION, this.username);
       if (this.errorMessage) return;
 
       // 校验密码

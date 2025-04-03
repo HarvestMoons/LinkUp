@@ -1,7 +1,10 @@
 {
   "password": "password",
   "username": "username",
+  "group": "group",
+
   "cancel": "Cancel",
   "confirm": "Confirm",
-  "save": "Save"
+  "save": "Save",
+  "close": "Close"
 }
