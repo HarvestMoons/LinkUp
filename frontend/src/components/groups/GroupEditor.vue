@@ -598,7 +598,7 @@ export default {
 
 .editableText {
   font-weight: bold;
-  color: blue;
+  color: #5e4239;
 }
 
 .groupField input,

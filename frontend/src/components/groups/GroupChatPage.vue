@@ -421,7 +421,7 @@ export default {
 }
 
 .alignRight .messageContent {
-  background-color: #007bff;
+  background-color: #686160;
   color: white;
 }
 
