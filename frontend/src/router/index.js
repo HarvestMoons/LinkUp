@@ -7,9 +7,10 @@ import TasksPage from '@/components/tasks/TasksPage'
 import GroupListPage from '@/components/groups/GroupListPage'
 import GroupChatPage from '@/components/groups/GroupChatPage'
 import UserPage from '@/components/auth/UserPage'
+import PrivacyPage from '@/components/auth/PrivacyPage'
 import { useToast } from 'vue-toastification';
 import store from '@/store';
-import {t} from "@/i18n";
+import { t } from "@/i18n";
 
 const routes = [
     {
@@ -65,6 +66,12 @@ const routes = [
         name: 'user',
         component: UserPage,
         meta: { title: '个人信息', requiresAuth: true } // 需要登录才能访问
+    },
+    {
+        path: '/privacy',
+        name: 'privacy',
+        component: PrivacyPage,
+        meta: { title: '隐私政策' }
     }
 ]
 

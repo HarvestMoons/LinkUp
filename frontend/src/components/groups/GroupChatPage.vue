@@ -352,7 +352,7 @@ export default {
   display: flex;
   flex-direction: column;
   text-align: center;
-  height: calc(100vh - 177px);
+  height: calc(100vh - 186px);
 }
 
 .groupHeader {

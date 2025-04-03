@@ -1,4 +1,4 @@
-const {defineConfig} = require('@vue/cli-service');
+const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
     devServer: {
@@ -32,6 +32,14 @@ module.exports = defineConfig({
                 chunks: 'all', // 对所有模块进行分割
                 maxSize: 244 * 1024 // 单个chunk最大244KB（250,256字节）
             }
-        }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.md$/,
+                    use: "raw-loader",
+                },
+            ],
+        },
     }
 });
