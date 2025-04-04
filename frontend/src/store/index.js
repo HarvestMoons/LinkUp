@@ -12,10 +12,11 @@ export default createStore({
         friendList: null,
         avatarMap: {}, // 存储头像
         currentLanguage: 'en',
+        taskList: null,
+        groupList: null,
     },
     mutations: {
         login(state, token) {
-            state.isLoggedIn = true;
             state.token = token;
             Cookies.set('JWT', token); // 存储 token 到 cookie
         },
@@ -25,9 +26,14 @@ export default createStore({
             state.userId = null;
             state.token = null;
             state.friendList = null;
+            state.taskList = null;
+            state.groupList = null;
             sessionStorage.removeItem('user');
             sessionStorage.removeItem('userId');
             Cookies.remove('JWT');
+        },
+        setLogined(state) {
+            state.isLoggedIn = true;
         },
         setUser(state, user) {
             state.user = user;
@@ -45,6 +51,12 @@ export default createStore({
         setLanguage(state, language) {
             state.currentLanguage = language;
         },
+        setTaskList(state, taskList) {
+            state.taskList = taskList;
+        },
+        setGroupList(state, groupList) {
+            state.groupList = groupList;
+        },
     },
     actions: {
         logout({ commit }) {
@@ -52,6 +64,9 @@ export default createStore({
         },
         login({ commit }, token) {
             commit('login', token);
+        },
+        setLogined({ commit }) {
+            commit('setLogined');
         },
         setUser({ commit }, user) {
             commit('setUser', user);
@@ -71,6 +86,12 @@ export default createStore({
         setLanguage({ commit }, language) {
             commit('setLanguage', language);
         },
+        setTaskList({ commit }, taskList) {
+            commit('setTaskList', taskList);
+        },
+        setGroupList({ commit }, groupList) {
+            commit('setGroupList', groupList);
+        },
     },
     getters: {
         isAuthenticated: (state) => state.isLoggedIn,
@@ -88,5 +109,7 @@ export default createStore({
         getCurrentLanguage(state) {
             return state.currentLanguage;
         },
+        getTaskList: (state) => state.taskList,
+        getGroupList: (state) => state.groupList,
     },
 });

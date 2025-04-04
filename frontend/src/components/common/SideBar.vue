@@ -9,7 +9,7 @@
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <button class="button warningButton" @click="$emit('close')">
-        ✖ {{$t('common.close')}}
+        ✖ {{ $t("common.close") }}
       </button>
       <component :is="contentComponent" v-bind="contentProps"></component>
     </div>
@@ -18,6 +18,7 @@
 
 <script>
 export default {
+  emits: ["close"],
   props: {
     title: String,
     isVisible: Boolean,

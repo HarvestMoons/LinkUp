@@ -99,6 +99,7 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { Role } from "@/config/constants";
 import { validateInput } from "@/utils/validationUtils";
+import { fetchGroups, getGroupList } from "@/utils/groupService";
 
 export default {
   name: "GroupListPage",
@@ -118,49 +119,18 @@ export default {
     const toast = useToast();
     return { toast };
   },
-  mounted() {
+  async mounted() {
     this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;
     }
     // 在组件挂载后获取群组数据
-    this.fetchGroups();
+    this.groupListLoading = true;
+    this.groups = await getGroupList(this.userId);
+    this.groupListLoading = false; // 加载完成，更新状态
   },
   methods: {
-    async fetchGroups() {
-      // TODO: 按最新消息更新时间顺序显示
-      try {
-        this.groupListLoading = true;
-        this.groups = [];
-        const response = await this.$axios.get(`/user/groups/${this.userId}`);
-        this.groups = await Promise.all(
-          response.data.map(async (item) => {
-            const group = item.taskGroup;
-
-            // 获取成员列表
-            const membersResponse = await this.$axios.get(
-              `/groups/${group.id}/members`
-            );
-            const members = membersResponse.data || [];
-
-            // 取前四个成员的头像
-            const avatars = members
-              .slice(0, 4)
-              .map((member) =>
-                this.$store.getters.getAvatar(member.user.avatarId)
-              );
-            console.log();
-            return { ...group, avatars };
-          })
-        );
-      } catch (error) {
-        console.error("获取群组数据失败:", error);
-      } finally {
-        this.groupListLoading = false; // 加载完成，更新状态
-      }
-    },
-
     async createGroup() {
       const errorMessage = validateInput(
         this.$constants.GROUP_NAME_VALIDATION,
@@ -197,7 +167,7 @@ export default {
             }
           );
         }
-        await this.fetchGroups();
+        await fetchGroups(this.userId);
         this.cancelCreateGroup();
         showToast(this.toast, "群组创建成功", "success");
       } catch (error) {

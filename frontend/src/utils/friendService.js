@@ -28,7 +28,13 @@ export async function fetchFriends(userId) {
 }
 
 export async function getFriendList(userId) {
-    return store.getters.getFriendList
-        ? store.getters.getFriendList
-        : await fetchFriends(userId);
+    const cached = store.getters.getFriendList;
+    if (cached) {
+        // 后台异步更新
+        fetchFriends(userId);
+        return cached;
+    } else {
+        // 没缓存，直接等请求
+        return await fetchFriends(userId);
+    }
 }

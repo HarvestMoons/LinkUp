@@ -77,7 +77,6 @@
         tasks: groupTasks,
         taskListLoading: taskListLoading,
         groupId: groupId,
-        fetchTasks: fetchGroupTasks,
         isInGroupPage: true,
       }"
       @close="toggleTaskSidebar"
@@ -103,6 +102,8 @@
 </template>
 
 <script>
+import { markRaw } from "vue";
+
 import SideBar from "@/components/common/SideBar.vue";
 import TaskList from "@/components/tasks/TaskList.vue";
 import GroupEditor from "@/components/groups/GroupEditor.vue";
@@ -135,9 +136,11 @@ export default {
       showGroupSidebar: false,
       groupTasks: [],
       stompClient: null, // 修改为STOMP客户端
+      userId: null,
       userRole: Role.Member,
-      TaskList,
-      GroupEditor,
+      taskListLoading: false,
+      TaskList: markRaw(TaskList),
+      GroupEditor: markRaw(GroupEditor),
     };
   },
   setup() {
@@ -152,7 +155,7 @@ export default {
     }
     this.userId = this.user.id;
 
-    this.groupId = this.$route.params.id;
+    this.groupId = parseInt(this.$route.params.id);
     this.connectWebSocket(); // 修改后的连接方法
 
     this.checkMembership().then(() => {
@@ -161,6 +164,8 @@ export default {
         this.fetchUserRole();
         this.fetchMembers();
         this.fetchMessages();
+        this.taskListLoading = true;
+        this.fetchGroupTasks();
       }
     });
   },
@@ -317,7 +322,6 @@ export default {
       }
     },
     async fetchGroupTasks() {
-      this.taskListLoading = true;
       try {
         const response = await this.$axios.get(`/tasks/group/${this.groupId}`);
         this.groupTasks = response.data;

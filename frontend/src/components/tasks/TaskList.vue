@@ -383,10 +383,6 @@ export default {
     tasks: Array, // 任务数据
     taskListLoading: Boolean, // 是否在加载
     groupId: Number,
-    fetchTasks: {
-      type: Function,
-      required: true, // 确保调用 TaskList 时必须提供
-    },
     isInGroupPage: Boolean,
   },
   data() {
@@ -532,7 +528,6 @@ export default {
         this.isCreating = false;
         this.resetForm();
         this.showedTasks.push(newTask);
-        //await this.fetchTasks();
       } catch (error) {
         console.error("创建任务失败:", error);
         showToast(this.toast, "创建任务失败", "error");

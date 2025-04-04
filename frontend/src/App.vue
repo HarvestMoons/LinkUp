@@ -68,9 +68,10 @@
     <router-link to="/privacy">Privacy Policy</router-link>
   </div>
 </template>
-<script>
-import { fetchFriends } from "@/utils/friendService";
 
+<script>
+import { getFriendList } from "@/utils/friendService";
+import { getTaskList } from "@/utils/taskService";
 export default {
   data() {
     return {
@@ -101,7 +102,9 @@ export default {
           this.user = responseUser.data;
           this.$store.dispatch("setUser", this.user);
         }
-        await fetchFriends(this.user.id);
+
+        getFriendList(this.$store.getters.getUserId);
+        getTaskList(this.$store.getters.getUserId);
       } catch (error) {
         console.error("获取用户数据失败:", error);
         // 捕获 401 错误（JWT 过期或无效）

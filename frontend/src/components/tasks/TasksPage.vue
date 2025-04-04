@@ -5,7 +5,6 @@
       :tasks="tasks"
       :taskListLoading="taskListLoading"
       :groupId="null"
-      :fetchTasks="fetchTasks"
       :isInGroupPage="false"
     />
   </div>
@@ -15,6 +14,7 @@
 import TaskList from "@/components/tasks/TaskList.vue";
 
 import { useToast } from "vue-toastification";
+import { getTaskList } from "@/utils/taskService";
 
 export default {
   name: "TasksPage",
@@ -29,33 +29,17 @@ export default {
     const toast = useToast();
     return { toast };
   },
-  mounted() {
+  async mounted() {
     this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
       console.error("用户ID不存在，请重新登录");
       return;
     }
-    this.fetchTasks();
+    this.taskListLoading = true;
+    this.tasks = await getTaskList(this.userId);
+    this.taskListLoading = false; // 加载完成，更新状态
   },
-  methods: {
-    async fetchTasks() {
-      try {
-        this.taskListLoading = true;
-        this.tasks = [];
-        const responsePersonalTasks = await this.$axios.get(
-          `/tasks/user/${this.userId}/personal-tasks`
-        );
-        const responseGroupTasks = await this.$axios.get(
-          `/tasks/user/${this.userId}/group-tasks`
-        );
-        this.tasks = responsePersonalTasks.data.concat(responseGroupTasks.data);
-      } catch (error) {
-        console.error("获取任务数据失败:", error);
-      } finally {
-        this.taskListLoading = false; // 加载完成，更新状态
-      }
-    },
-  },
+  methods: {},
 };
 </script>
 

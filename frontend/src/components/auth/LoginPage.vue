@@ -38,6 +38,9 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { validateInput } from "@/utils/validationUtils";
 import { useI18n } from "vue-i18n";
+import { getFriendList } from "@/utils/friendService";
+import { getTaskList } from "@/utils/taskService";
+import { getGroupList } from "@/utils/groupService";
 
 export default {
   name: "LoginPage",
@@ -93,9 +96,13 @@ export default {
 
         showToast(this.toast, this.$t("auth.login.success"), "success");
         // 登录成功后跳转到主页
+        this.$store.dispatch("login", response.data.token);
+        getFriendList(this.user.id);
+        getTaskList(this.user.id);
+        getGroupList(this.user.id);
         setTimeout(() => {
           this.$router.push("/");
-          this.$store.dispatch("login", response.data.token);
+          this.$store.dispatch("setLogined");
         }, 3000);
       } catch (error) {
         console.error(error);
