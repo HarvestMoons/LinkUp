@@ -2,9 +2,9 @@ export const API_BASE_URL = '/api';
 export const PUBLIC_AUTH_API = '/public';
 export const MAX_STRING_LENGTH = 25;
 
-export const USER_NAME_VALIDATION=0;
-export const PW_VALIDATION=1;
-export const GROUP_NAME_VALIDATION=2;
+export const USER_NAME_VALIDATION = 0;
+export const PW_VALIDATION = 1;
+export const GROUP_NAME_VALIDATION = 2;
 
 export const Role = {
     Admin: 'ADMIN',
@@ -25,4 +25,12 @@ export const TaskPriority = {
     High: 'HIGH',
     Medium: 'MEDIUM',
     Low: 'LOW'
+};
+
+// 对应颜色定义（可以自定义为你喜欢的色调）
+export const TaskStatusColorMap = {
+    [TaskStatus.Todo]: 'blue',
+    [TaskStatus.InProgress]: 'orange',
+    [TaskStatus.Completed]: 'green',
+    [TaskStatus.Archived]: 'grey'
 };
