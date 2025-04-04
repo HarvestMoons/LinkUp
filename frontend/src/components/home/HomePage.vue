@@ -8,18 +8,18 @@
           你好，{{ this.$store.getters.getUser.username }}！今天有什么计划？
         </h2>
 
-        <div class="stat-card">
+        <div class="blockContainer">
           <h3>📌 待办任务</h3>
           <p>{{ todoTasks.length }} 个任务待完成</p>
         </div>
 
-        <div class="stat-card">
+        <div class="blockContainer">
           <h3>📊 任务完成率</h3>
           <p>本周: {{ weeklyCompletionRate }}%</p>
           <p>本月: {{ monthlyCompletionRate }}%</p>
         </div>
 
-        <div class="stat-card" v-if="upcomingDeadlines.length > 0">
+        <div class="blockContainer" v-if="upcomingDeadlines.length != 0">
           <h3>⚠️ 即将截止</h3>
           <ul>
             <li v-for="task in upcomingDeadlines" :key="task.id">
@@ -126,24 +126,35 @@ export default {
 <style scoped>
 .home-container {
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
+
+  align-items: center; /* 确保头像和文字都在导航栏中垂直居中 */
+  justify-content: center; /* 水平居中对齐 */
 }
 
 .info-panel {
   flex: 1;
   max-width: 400px;
+  min-width: 300px;
+  gap: 10px;
 }
 
-.stat-card {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+h3,
+p {
+  margin: 0;
+}
+
+.blockContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .calendar-view {
   flex: 2;
+  max-width: 600px;
+  min-width: 400px;
 }
 </style>
