@@ -1,4 +1,10 @@
 {
+  "enterGroup": "进入群聊",
+  "orderByStatus":"按任务状态排序",
+  "orderByPriority": "按任务优先级排序",
+  "edit": "编辑任务",
+  "noDescription": "无描述",
+  "overdue": "已逾期",
   "form": {
     "titleLabel": "任务标题",
     "titlePlaceholder": "请输入任务标题",
@@ -8,6 +14,11 @@
     "statusLabel": "任务状态",
     "dueDateLabel": "截止日期",
     "submitButton": "提交任务"
+  },
+  "priorityTiTle":{
+    "low": "低优先级",
+    "medium": "中优先级",
+    "high": "高优先级"
   },
   "priority": {
     "low": "低",
@@ -19,5 +30,21 @@
     "inProgress": "进行中",
     "completed": "已完成",
     "archived": "已存档"
+  },
+  "validation": {
+    "titleRequired": "任务名不能为空",
+    "dueDateRequired": "任务截止日期不能为空",
+    "dueDatePast": "不能以过去的日期为截止日期"
+  },
+  "success": {
+    "create": "任务创建成功",
+    "update": "任务更新成功",
+    "delete": "任务删除成功"
+  },
+  "errors": {
+    "create": "创建任务失败",
+    "update": "更新任务失败",
+    "delete": "删除任务失败",
+    "fetch": "获取任务失败"
   }
 }

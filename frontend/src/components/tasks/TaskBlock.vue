@@ -4,53 +4,52 @@
     <div class="taskOverview">
       <span class="taskTitle">{{ task.title }}</span>
       <span
-        v-if="showPriority"
-        class="taskPriority"
-        :class="{
+          v-if="showPriority"
+          class="taskPriority"
+          :class="{
           high: task.priority === TaskPriority.High,
           medium: task.priority === TaskPriority.Medium,
           low: task.priority === TaskPriority.Low,
-          overdue: isOverdue(task), // 判断是否逾期
+          overdue: isTaskOverdue,
         }"
       >
         {{
           task.priority === TaskPriority.High
-            ? "High" + (isOverdue(task) ? " (Overdue)" : "")
-            : task.priority === TaskPriority.Medium
-            ? "Medium" + (isOverdue(task) ? " (Overdue)" : "")
-            : task.priority === TaskPriority.Low
-            ? "Low"
-            : "Unknown"
+              ? $t('task.priority.high') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
+              : task.priority === TaskPriority.Medium
+                  ? $t('task.priority.medium') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
+                  : task.priority === TaskPriority.Low
+                      ? $t('task.priority.low')
+                      : "Unknown"
         }}
       </span>
       <span
-        v-if="showStatus"
-        class="taskStatus"
-        :class="{
+          v-if="showStatus"
+          class="taskStatus"
+          :class="{
           todo: task.status === TaskStatus.Todo,
           inProgress: task.status === TaskStatus.InProgress,
           completed: task.status === TaskStatus.Completed,
           archived: task.status === TaskStatus.Archived,
-          overdue: isOverdue(task), // 判断是否逾期
+          overdue: isTaskOverdue,
         }"
       >
         {{
           task.status === TaskStatus.Todo
-            ? "To Do" + (isOverdue(task) ? " (Overdue)" : "")
-            : task.status === TaskStatus.InProgress
-            ? "In Progress" + (isOverdue(task) ? " (Overdue)" : "")
-            : task.status === TaskStatus.Completed
-            ? "Completed"
-            : task.status === TaskStatus.Archived
-            ? "Archived"
-            : "Unknown"
+              ? $t('task.status.todo') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
+              : task.status === TaskStatus.InProgress
+                  ? $t('task.status.inProgress') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
+                  : task.status === TaskStatus.Completed
+                      ? $t('task.status.completed')
+                      : task.status === TaskStatus.Archived
+                          ? $t('task.status.archived')
+                          : "Unknown"
         }}
       </span>
       <span class="taskDueDate">{{ formatDate(task.dueDate) }}</span>
     </div>
-    <!--<div v-if="hoverTask === task.id" class="taskDetails">-->
     <div class="taskDetails">
-      <p class="taskDescription">{{ task.description || "无描述" }}</p>
+      <p class="taskDescription">{{ task.description || $t('task.noDescription') }}</p>
     </div>
   </div>
 </template>
@@ -65,33 +64,29 @@ export default {
     showPriority: Boolean,
     showStatus: Boolean,
   },
-  methods: {
-    formatDate(date) {
-      if (date == null) {
-        return;
-      }
-      return date.replace("T", " ").slice(0, 16);
-    },
-
-    isOverdue(task) {
+  computed: {
+    isTaskOverdue() {
       const now = new Date();
-      const dueDate = new Date(task.dueDate);
-      // 判断任务是否逾期且未完成或未归档
+      const dueDate = new Date(this.task.dueDate);
       return (
-        dueDate < now &&
-        task.status !== "COMPLETED" &&
-        task.status !== "ARCHIVED"
+          dueDate < now &&
+          this.task.status !== "COMPLETED" &&
+          this.task.status !== "ARCHIVED"
       );
     },
-  },
-  computed: {
     TaskStatus() {
-      return TaskStatus; // 让模板能访问 TaskStatus
+      return TaskStatus;
     },
     TaskPriority() {
-      return TaskPriority; // 让模板能访问 TaskPriority
-    },
+      return TaskPriority;
+    }
   },
+  methods: {
+    formatDate(date) {
+      if (date == null) return;
+      return date.replace("T", " ").slice(0, 16);
+    }
+  }
 };
 </script>
 

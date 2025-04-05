@@ -26,14 +26,14 @@
 
     <div class="blockContainer">
       <div class="orderSelection">
-        <h3 @click="changeOrderToStatus">按任务状态排序</h3>
+        <h3 @click="changeOrderToStatus">{{$t('task.orderByStatus')}}</h3>
         <span class="separator">|</span>
-        <h3 @click="changeOrderToPriority">按任务优先级排序</h3>
+        <h3 @click="changeOrderToPriority">{{$t('task.orderByPriority')}}</h3>
       </div>
     </div>
 
     <div class="tasksContainer">
-      <div v-if="taskListLoading" class="blockContainer loading">加载中...</div>
+      <div v-if="taskListLoading" class="blockContainer loading">{{$t('common.loading')}}</div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
         无任务
       </div>
@@ -42,7 +42,7 @@
         <div v-if="taskOrder === TaskOrder.Priority">
           <div v-if="highTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('high')">
-              <h2>HIGH PRIORITY</h2>
+              <h2>{{$t('task.priorityTiTle.high')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.high">
               <li
@@ -73,12 +73,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -89,7 +89,7 @@
 
           <div v-if="midTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('medium')">
-              <h2>MEDIUM PRIORITY</h2>
+              <h2>{{$t('task.priorityTiTle.medium')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.medium">
               <li
@@ -119,12 +119,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -135,7 +135,7 @@
 
           <div v-if="lowTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('low')">
-              <h2>LOW PRIORITY</h2>
+              <h2>{{$t('task.priorityTiTle.low')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.low">
               <li
@@ -165,12 +165,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -182,7 +182,7 @@
         <div v-else-if="taskOrder === TaskOrder.Status">
           <div v-if="todoTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('todo')">
-              <h2>TODO</h2>
+              <h2>{{$t('task.status.todo')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.todo">
               <li
@@ -212,12 +212,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -228,7 +228,7 @@
 
           <div v-if="inProgressTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('inProgress')">
-              <h2>IN PROGRESS</h2>
+              <h2>{{$t('task.status.inProgress')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.inProgress">
               <li
@@ -258,12 +258,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -274,7 +274,7 @@
 
           <div v-if="completedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('completed')">
-              <h2>COMPLETED</h2>
+              <h2>{{$t('task.status.completed')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.completed">
               <li
@@ -304,12 +304,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -320,7 +320,7 @@
 
           <div v-if="archivedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('archived')">
-              <h2>ARCHIVED</h2>
+              <h2>{{$t('task.status.archived')}}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.archived">
               <li
@@ -350,12 +350,12 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ 编辑任务</div>
+                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 进入群聊
+                        💬 {{$t('task.enterGroup')}}
                       </div>
                     </div>
                   </div>
@@ -490,12 +490,24 @@ export default {
     },
 
     isTaskLegal(task) {
-      if (task.title === "") {
-        showToast(this.toast, "任务名不能为空", "error");
-        return false;
-      }
-      if (task.dueDate === "") {
-        showToast(this.toast, "任务截止日期不能为空", "error");
+      const rules = [
+        {
+          condition: task.title === "",
+          message: 'task.validation.titleRequired'
+        },
+        {
+          condition: task.dueDate === "",
+          message: 'task.validation.dueDateRequired'
+        },
+        {
+          condition: new Date(task.dueDate) < new Date(),
+          message: 'task.validation.dueDatePast'
+        }
+      ];
+
+      const failedRule = rules.find(rule => rule.condition);
+      if (failedRule) {
+        showToast(this.toast, this.$t(failedRule.message), "error");
         return false;
       }
       return true;
@@ -513,24 +525,23 @@ export default {
     // 提交任务到后端
     async submitTask(newTask) {
       try {
-        // TODO: 更多输入限制（如日期范围）
         // 调用后端API创建任务
         if (!this.isTaskLegal(newTask)) {
           return;
         }
         newTask.creator = this.$store.getters.getUser;
         newTask.taskGroupId = this.groupId;
-        console.log(newTask);
         await this.$axios.post("/tasks/create", newTask);
-        showToast(this.toast, "任务创建成功", "success");
+        showToast(this.toast, this.$t('task.success.create'), "success");
 
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
         this.showedTasks.push(newTask);
+        //todo：需要更新保持数据一致性
       } catch (error) {
-        console.error("创建任务失败:", error);
-        showToast(this.toast, "创建任务失败", "error");
+        console.error(this.$t('task.errors.create'), error);
+        showToast(this.toast, this.$t('task.errors.create'), "error");
       }
     },
     // 重置任务表单
@@ -570,15 +581,15 @@ export default {
         }
         await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
         this.editingTasks[taskId] = false;
-        showToast(this.toast, "更新任务成功", "success");
+        showToast(this.toast, this.$t('task.success.update'), "success");
+        //todo：需要更新
       } catch (error) {
-        console.error("更新任务失败", error);
-        showToast(this.toast, "更新任务失败", "error");
+        console.error(this.$t('task.errors.update'), error);
+        showToast(this.toast, this.$t('task.errors.update'), "error");
       }
     },
 
     enterGroupChat(groupId) {
-      console.log("进入群聊", groupId);
       this.$router.push(`/group/${groupId}`);
     },
   },

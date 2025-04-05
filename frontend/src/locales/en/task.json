@@ -1,4 +1,10 @@
 {
+  "enterGroup": "Group",
+  "orderByStatus":"Order By Status",
+  "orderByPriority": "Order By Priority",
+  "edit": "Edit",
+  "noDescription":"No Description",
+  "overdue": "Overdue",
   "form": {
     "titleLabel": "Task Title",
     "titlePlaceholder": "Enter task title",
@@ -8,6 +14,11 @@
     "statusLabel": "Status",
     "dueDateLabel": "Due Date",
     "submitButton": "Submit Task"
+  },
+  "priorityTiTle":{
+    "low": "Low Priority",
+    "medium": "Medium Priority",
+    "high": "High Priority"
   },
   "priority": {
     "low": "Low",
@@ -19,5 +30,21 @@
     "inProgress": "In Progress",
     "completed": "Completed",
     "archived": "Archived"
+  },
+  "validation": {
+    "titleRequired": "Task title cannot be empty",
+    "dueDateRequired": "Due date cannot be empty",
+    "dueDatePast": "Due date cannot be in the past"
+  },
+  "success": {
+    "create": "Task created successfully",
+    "update": "Task updated successfully",
+    "delete": "Task deleted successfully"
+  },
+  "errors": {
+    "create": "Failed to create task",
+    "update": "Failed to update task",
+    "delete": "Failed to delete task",
+    "fetch": "Failed to load tasks"
   }
 }
