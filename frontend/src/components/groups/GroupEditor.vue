@@ -360,6 +360,9 @@ export default {
     },
     async saveGroupName() {
       this.isEditingName = false;
+      if( this.showedGroupName === this.editableGroupName){
+        return;
+      }
       this.errorMessage=validateInput(this.$constants.GROUP_NAME_VALIDATION,this.editableGroupName)
       if (this.errorMessage) {
         showToast(this.toast,this.errorMessage,"error")
@@ -378,6 +381,13 @@ export default {
     },
     async saveGroupDescription() {
       this.isEditingDescription = false;
+      if(this.showedGroupDescription === this.editableGroupDescription) {
+        return;
+      }
+      if(this.editableGroupDescription==null){
+        this.editableGroupDescription="";
+      }
+
       try {
         this.showedGroupDescription = this.editableGroupDescription;
         await this.$axios.put(
