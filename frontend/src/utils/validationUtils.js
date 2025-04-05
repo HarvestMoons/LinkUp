@@ -18,7 +18,7 @@ export function validateInput(type, value) {
             }
             break;
         case Constants.GROUP_NAME_VALIDATION:
-            fieldName=t('group.name')
+            fieldName=t('groups.name')
             break;
         default:
             return t('error.unknown_parameter',{param:type})

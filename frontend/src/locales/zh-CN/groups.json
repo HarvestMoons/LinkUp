@@ -1,0 +1,76 @@
+{
+  "name": "群组名",
+  "tasksButton": "任务",
+  "groupInfoButton": "群组信息",
+  "messagePlaceholder": "输入消息...",
+  "sendButton": "发送",
+  "createButton": "创建群组",
+  "noGroups": "无群组",
+  "create": {
+    "nameLabel": "群组名称",
+    "namePlaceholder": "请输入群组名称",
+    "descLabel": "群组描述",
+    "descPlaceholder": "请输入群组描述",
+    "selectFriendsLabel": "选择好友",
+    "submitButton": "创建群聊"
+  },
+  "sidebarTitles": {
+    "tasks": "群组任务",
+    "groupInfo": "群组信息"
+  },
+  "contextMenu": {
+    "deleteMember": "删除该成员",
+    "setAdmin": "设置该成员为管理员",
+    "removeAdmin": "设置该成员为非管理员",
+    "addFriend": "添加好友"
+  },
+  "errors": {
+    "notMember": "你不是该群组的成员，无法访问",
+    "checkPermissionFailed": "检查群组权限失败",
+    "checkPermissionDefault": "权限检查失败，请重试",
+    "loadGroupFailed": "加载群组失败",
+    "loadRoleFailed": "加载群组身份失败",
+    "loadMembersFailed": "加载群组成员失败",
+    "loadMessagesFailed": "加载聊天记录失败",
+    "emptyMessage": "发送的内容不能为空",
+    "connectionNotReady": "连接未就绪",
+    "fetchTasksFailed": "获取任务失败",
+    "removeMemberFailed": "删除群成员失败",
+    "setAdminFailed": "设置管理员失败",
+    "removeAdminFailed": "设置非管理员失败",
+    "updateNameFailed": "更改群组名称失败",
+    "updateDescFailed": "更改群组描述失败",
+    "disbandFailed": "群组解散失败",
+    "leaveFailed": "退出群组失败",
+    "inviteFailed": "邀请好友加入群组失败",
+    "selectAtLeastOne": "至少需要选择一个好友",
+    "createGroupFailed":"创建群组失败"
+  },
+  "confirm": {
+    "disbandWhenRemove": "当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 {username}(#{id})?"
+  },
+  "memberManagement": {
+    "removeMemberSuccess": "已将用户 {username}(#{id}) 踢出群组",
+    "setAdminSuccess": "已设置用户 {username}(#{id}) 为管理员",
+    "removeAdminSuccess": "已设置用户 {username}(#{id}) 为非管理员",
+    "inviteSuccess": "好友加入群组成功"
+  },
+  "groupManagement": {
+    "createSuccess": "群组创建成功",
+    "nameUpdateSuccess": "群组名称更改成功",
+    "descUpdateSuccess": "群组描述更改成功",
+    "disbandSuccess": "群组解散成功",
+    "leaveSuccess": "群组退出成功"
+  },
+  "permissionDenied": {
+    "edit": "你不是该群组的管理员，无权修改！"
+  },
+  "memberListTitle": "群成员",
+  "groupInfoTitle": "群组信息",
+  "groupNameLabel": "群组名称:",
+  "groupDescLabel": "群组描述:",
+  "noDescription": "无",
+  "inviteButton": "邀请",
+  "disbandButton": "解散群聊",
+  "leaveButton": "退出群聊"
+}

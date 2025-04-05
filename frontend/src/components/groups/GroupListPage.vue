@@ -4,83 +4,75 @@
     <!-- 添加好友输入框和按钮 -->
     <div class="blockContainer">
       <transition name="createGroupContainerTransition">
-        <!-- 控制是否显示输入框 -->
         <div class="createGroupContainer" v-if="isCreating">
-          <!-- 输入框区域 -->
           <div class="allInputFields">
             <div class="formWithLabelAndInput">
-              <label for="newGroupName">群组名称:</label>
+              <label for="newGroupName">{{ $t('groups.create.nameLabel') }}:</label>
               <input
-                type="text"
-                id="newGroupName"
-                v-model="newGroup.name"
-                placeholder="请输入群组名称"
-                required
+                  type="text"
+                  id="newGroupName"
+                  v-model="newGroup.name"
+                  :placeholder="$t('groups.create.namePlaceholder')"
+                  required
               />
             </div>
             <div class="formWithLabelAndInput">
-              <label for="newGroupDescription">群组描述:</label>
+              <label for="newGroupDescription">{{ $t('groups.create.descLabel') }}:</label>
               <textarea
-                id="newGroupDescription"
-                v-model="newGroup.description"
-                placeholder="请输入群组描述"
+                  id="newGroupDescription"
+                  v-model="newGroup.description"
+                  :placeholder="$t('groups.create.descPlaceholder')"
               ></textarea>
             </div>
-            <!-- 好友选择部分 -->
             <div class="formWithLabelAndInput">
-              <label for="selectFriends">选择好友:</label>
+              <label for="selectFriends">{{ $t('groups.create.selectFriendsLabel') }}:</label>
               <FriendSelection
-                v-model="selectedFriends"
-                :userId="userId"
-                :unavailableFriendIds="[]"
+                  v-model="selectedFriends"
+                  :userId="userId"
+                  :unavailableFriendIds="[]"
               />
             </div>
           </div>
 
           <div class="doubleButtonContainer">
-            <!-- 取消按钮 -->
             <button @click="cancelCreateGroup" class="button warningButton">
-              取消
+              {{ $t('common.cancel') }}
             </button>
-
-            <!-- 提交按钮 -->
             <button @click="createGroup" class="button normalButton">
-              创建群聊
+              {{ $t('groups.create.submitButton') }}
             </button>
           </div>
         </div>
       </transition>
 
-      <!-- 默认的按钮 -->
       <transition name="createGroupButton">
         <button
-          v-if="!isCreating"
-          @click="startCreateGroup"
-          class="button extendButton"
+            v-if="!isCreating"
+            @click="startCreateGroup"
+            class="button extendButton"
         >
-          创建群组
+          {{ $t('groups.createButton') }}
         </button>
       </transition>
     </div>
     <div class="blockContainer">
-      <div v-if="groupListLoading" class="loading">加载中...</div>
-      <div v-else-if="groups.length === 0" class="loading">无群组</div>
-      <!-- 显示群组列表 -->
+      <div v-if="groupListLoading" class="loading">{{ $t('common.loading') }}</div>
+      <div v-else-if="groups.length === 0" class="loading">{{ $t('groups.noGroups') }}</div>
       <div v-else>
         <ul class="groupsList">
           <li
-            v-for="group in groups"
-            :key="group.id"
-            class="groupItem"
-            @click="goToGroup(group.id)"
+              v-for="group in groups"
+              :key="group.id"
+              class="groupItem"
+              @click="goToGroup(group.id)"
           >
             <div class="groupAvatar">
               <img
-                v-for="(avatar, index) in group.avatars"
-                :key="index"
-                :src="avatar"
-                class="avatarInGroupAvatar"
-                :class="`avatar-${group.avatars.length}`"
+                  v-for="(avatar, index) in group.avatars"
+                  :key="index"
+                  :src="avatar"
+                  class="avatarInGroupAvatar"
+                  :class="`avatar-${group.avatars.length}`"
               />
             </div>
             <span class="nickname">{{ group.name }} (#{{ group.id }})</span>
@@ -92,7 +84,6 @@
 </template>
 
 <script>
-// TODO: 群组换头像
 import FriendSelection from "@/components/friends/FriendSelection.vue";
 
 import { showToast } from "@/utils/toast";
@@ -122,7 +113,6 @@ export default {
   async mounted() {
     this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
-      console.error("用户ID不存在，请重新登录");
       return;
     }
     // 在组件挂载后获取群组数据
@@ -144,7 +134,7 @@ export default {
       try {
         // TODO: 创建群组和拉人分两步会不会不好回滚(目前可以考虑使用定时清理数据库的方法解决)
         if (this.selectedFriends.length === 0) {
-          showToast(this.toast, "至少需要选择一个好友", "error");
+          showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), "error");
           return;
         }
         const responseNewGroup = await this.$axios.post(`/task-group/create`, {
@@ -169,10 +159,10 @@ export default {
         }
         await fetchGroups(this.userId);
         this.cancelCreateGroup();
-        showToast(this.toast, "群组创建成功", "success");
+        showToast(this.toast, this.$t('groups.groupManagement.createSuccess'), "success");
       } catch (error) {
         console.error("创建群组失败:", error);
-        showToast(this.toast, "创建群组失败", "error");
+        showToast(this.toast, this.$t('groups.errors.createGroupFailed'), "error");
       }
     },
 

@@ -1,0 +1,76 @@
+{
+  "name":"Group name",
+  "tasksButton": "Tasks",
+  "groupInfoButton": "Group Info",
+  "messagePlaceholder": "Type a message...",
+  "sendButton": "Send",
+  "createButton": "Create Group",
+  "noGroups": "No groups",
+  "create": {
+    "nameLabel": "Group name",
+    "namePlaceholder": "Enter group name",
+    "descLabel": "Group description",
+    "descPlaceholder": "Enter group description",
+    "selectFriendsLabel": "Select friends",
+    "submitButton": "Create Group Chat"
+  },
+  "sidebarTitles": {
+    "tasks": "Group Tasks",
+    "groupInfo": "Group Information"
+  },
+  "contextMenu": {
+    "deleteMember": "Delete Member",
+    "setAdmin": "Set as Admin",
+    "removeAdmin": "Remove Admin",
+    "addFriend": "Add Friend"
+  },
+  "errors": {
+    "notMember": "You are not a member of this group, access denied",
+    "checkPermissionFailed": "Failed to check group permissions",
+    "checkPermissionDefault": "Permission check failed, please try again",
+    "loadGroupFailed": "Failed to load group",
+    "loadRoleFailed": "Failed to load group role",
+    "loadMembersFailed": "Failed to load group members",
+    "loadMessagesFailed": "Failed to load chat history",
+    "emptyMessage": "Message content cannot be empty",
+    "connectionNotReady": " connection not ready",
+    "fetchTasksFailed": "Failed to fetch tasks",
+    "removeMemberFailed": "Failed to remove member",
+    "setAdminFailed": "Failed to set as admin",
+    "removeAdminFailed": "Failed to remove admin role",
+    "updateNameFailed": "Failed to update name",
+    "updateDescFailed": "Failed to update description",
+    "disbandFailed": "Failed to disband group",
+    "leaveFailed": "Failed to leave group",
+    "inviteFailed": "Failed to invite members",
+    "selectAtLeastOne": "Select at least one friend",
+    "createGroupFailed": "Failed to create group"
+  },
+  "confirm": {
+    "disbandWhenRemove": "This group only has two members. Removing {username}(#{id}) will disband the group. Confirm removal?"
+  },
+  "memberManagement": {
+    "removeMemberSuccess": "Removed {username}(#{id}) from group",
+    "setAdminSuccess": "Set {username}(#{id}) as admin",
+    "removeAdminSuccess": "Removed admin role from {username}(#{id})",
+    "inviteSuccess": "Members added successfully"
+  },
+  "groupManagement": {
+    "createSuccess": "Group created",
+    "nameUpdateSuccess": "Group name updated",
+    "descUpdateSuccess": "Group description updated",
+    "disbandSuccess": "Group disbanded",
+    "leaveSuccess": "Left group"
+  },
+  "permissionDenied": {
+    "edit": "You don't have permission to edit"
+  },
+  "memberListTitle": "Group Members",
+  "groupInfoTitle": "Group Info",
+  "groupNameLabel": "Group Name:",
+  "groupDescLabel": "Group Description:",
+  "noDescription": "None",
+  "inviteButton": "Invite",
+  "disbandButton": "Disband Group",
+  "leaveButton": "Leave Group"
+}

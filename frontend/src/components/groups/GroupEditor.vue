@@ -2,158 +2,155 @@
 <template>
   <!-- 自定义右键菜单 -->
   <div
-    v-if="isMenuVisible"
-    :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
-    class="contextMenu"
+      v-if="isMenuVisible"
+      :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+      class="contextMenu"
   >
     <ul>
       <li
-        v-if="
+          v-if="
           (isUserGroupAdmin() || isUserGroupOwner()) &&
           !isMemberGroupOwner(clickOnMember) &&
           !isUser(clickOnMember)
         "
-        @click="deleteMember(clickOnMember)"
+          @click="deleteMember(clickOnMember)"
       >
-        删除该成员
+        {{ $t('groups.contextMenu.deleteMember') }}
       </li>
       <li
-        v-if="
+          v-if="
           isUserGroupOwner() &&
           !(
             isMemberGroupAdmin(clickOnMember) ||
             isMemberGroupOwner(clickOnMember)
           )
         "
-        @click="setMemberAdmin(clickOnMember)"
+          @click="setMemberAdmin(clickOnMember)"
       >
-        设置该成员为管理员
+        {{ $t('groups.contextMenu.setAdmin') }}
       </li>
       <li
-        v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
-        @click="setMemberNotAdmin(clickOnMember)"
+          v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
+          @click="setMemberNotAdmin(clickOnMember)"
       >
-        设置该成员为非管理员
+        {{ $t('groups.contextMenu.removeAdmin') }}
       </li>
       <li
-        v-if="
+          v-if="
           !isUser(clickOnMember) && friends != null && !isFriend(clickOnMember)
         "
-        @click="addMemberAsFriend(clickOnMember)"
+          @click="addMemberAsFriend(clickOnMember)"
       >
-        添加好友
+        {{ $t('groups.contextMenu.addFriend') }}
       </li>
     </ul>
   </div>
 
   <!-- 引入自定义确认框组件 -->
   <ConfirmDialog
-    v-model:isVisible="isConfirmDialogVisible"
-    :message="confirmMessage"
-    @confirm="handleConfirm"
+      v-model:isVisible="isConfirmDialogVisible"
+      :message="confirmMessage"
+      @confirm="handleConfirm"
   />
 
   <div>
     <div class="blockContainer">
-      <h2>群成员</h2>
+      <h2>{{ $t('groups.memberListTitle') }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0" class="loading">
-          加载中...
+          {{ $t('common.loading') }}
         </div>
         <li
-          v-else
-          v-for="member in showedGroupMembers"
-          :key="member.id"
-          class="memberItem"
-          :class="{
+            v-else
+            v-for="member in showedGroupMembers"
+            :key="member.id"
+            class="memberItem"
+            :class="{
             owner: isMemberGroupOwner(member),
             admin: isMemberGroupAdmin(member),
           }"
-          @contextmenu="showMenu($event, member)"
+            @contextmenu="showMenu($event, member)"
         >
           <img
-            :src="this.$store.getters.getAvatar(member.avatarId)"
-            :alt="$t('common.avatarAlt')"
-            class="memberAvatar"
+              :src="this.$store.getters.getAvatar(member.avatarId)"
+              :alt="$t('common.avatarAlt')"
+              class="memberAvatar"
           />
           <span class="memberNickname"
-            >{{ member.username }} (#{{ member.id }})
+          >{{ member.username }} (#{{ member.id }})
           </span>
         </li>
         <div
-          class="memberItem"
-          @click="startAddingGroupMember"
-          v-if="!isSelectingFriend"
+            class="memberItem"
+            @click="startAddingGroupMember"
+            v-if="!isSelectingFriend"
         >
           +
         </div>
       </ul>
       <div v-if="isSelectingFriend" class="addGroupMemberContainer">
         <FriendSelection
-          v-model="selectedFriends"
-          :userId="userId"
-          :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
+            v-model="selectedFriends"
+            :userId="userId"
+            :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
         />
 
         <div class="doubleButtonContainer">
-          <!-- 取消按钮 -->
           <button @click="cancelAddingGroupMember" class="button warningButton">
-            取消
+            {{ $t('common.cancel') }}
           </button>
-
-          <!-- 提交按钮 -->
           <button @click="addGroupMember" class="button normalButton">
-            邀请
+            {{ $t('groups.inviteButton') }}
           </button>
         </div>
       </div>
     </div>
 
     <div class="blockContainer">
-      <h2>群组信息</h2>
+      <h2>{{ $t('groups.groupInfoTitle') }}</h2>
       <div class="groupField" v-if="isEditingName">
         <input
-          ref="groupNameInput"
-          v-model="editableGroupName"
-          @blur="saveGroupName"
-          @keyup.enter="saveGroupName"
-          class=""
+            ref="groupNameInput"
+            v-model="editableGroupName"
+            @blur="saveGroupName"
+            @keyup.enter="saveGroupName"
+            class=""
         />
       </div>
       <div class="groupField" @click="startEditing('name')" v-else>
-        <span>群组名称: </span>
+        <span>{{ $t('groups.groupNameLabel') }} </span>
         <span class="editableText">{{ showedGroupName }}</span>
       </div>
 
       <div class="groupField" v-if="isEditingDescription">
         <textarea
-          ref="groupDescriptionInput"
-          v-model="editableGroupDescription"
-          @blur="saveGroupDescription"
-          @keyup.enter="saveGroupDescription"
+            ref="groupDescriptionInput"
+            v-model="editableGroupDescription"
+            @blur="saveGroupDescription"
+            @keyup.enter="saveGroupDescription"
         ></textarea>
       </div>
       <div class="groupField" @click="startEditing('description')" v-else>
-        <span>群组描述: </span>
+        <span>{{ $t('groups.groupDescLabel') }} </span>
         <span class="editableText">{{
-          showedGroupDescription ? showedGroupDescription : "无"
-        }}</span>
+            showedGroupDescription ? showedGroupDescription : $t('groups.noDescription')
+          }}</span>
       </div>
     </div>
 
     <button
-      class="button warningButton"
-      @click="disbandGroup"
-      v-if="isUserGroupOwner()"
+        class="button warningButton"
+        @click="disbandGroup"
+        v-if="isUserGroupOwner()"
     >
-      解散群聊
+      {{ $t('groups.disbandButton') }}
     </button>
     <button
-      class="button warningButton"
-      @click="leaveGroup"
-      v-if="!isUserGroupOwner()"
+        class="button warningButton"
+        @click="leaveGroup"
+        v-if="!isUserGroupOwner()"
     >
-      退出群聊
+      {{ $t('groups.leaveButton') }}
     </button>
   </div>
 </template>
@@ -168,6 +165,7 @@ import { getFriendList } from "@/utils/friendService";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import {validateInput} from "@/utils/validationUtils";
 
 export default {
   name: "GroupEditor",
@@ -248,86 +246,86 @@ export default {
     },
 
     async deleteMember(member) {
-      console.log("delete", member);
       try {
         if (this.showedGroupMembers.length === 2) {
-          this.confirmMessage = `当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 ${member.username}(#${member.id})?`;
-          this.isConfirmDialogVisible = true; // 显示确认框
+          this.confirmMessage = this.$t('groups.confirm.disbandWhenRemove', {
+            username: member.username,
+            id: member.id
+          });
+          this.isConfirmDialogVisible = true;
         } else {
-          await this.$axios.delete(
-            `/groups/${this.groupId}/members/${member.id}`
-          );
+          await this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
           this.closeMenu();
           const index = this.groupMembers.findIndex(
-            (tempMember) => tempMember.id === member.id
+              (tempMember) => tempMember.id === member.id
           );
           this.showedGroupMembers.splice(index, 1);
           showToast(
-            this.toast,
-            `已将用户 ${member.username}(#${member.id}) 踢出群组`,
-            "success"
+              this.toast,
+              this.$t('groups.memberManagement.removeMemberSuccess', {
+                username: member.username,
+                id: member.id
+              }),
+              "success"
           );
         }
       } catch (error) {
-        console.error("删除群成员失败", error);
-        showToast(this.toast, "删除群成员失败", "error");
+        showToast(this.toast, this.$t('groups.errors.removeMemberFailed'), "error");
       }
     },
+
     async setMemberAdmin(member) {
-      console.log("set admin", member);
       try {
         await this.$axios.put(
-          `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
-          { newRole: Role.Admin }
+            `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
+            { newRole: Role.Admin }
         );
         this.closeMenu();
         member.role = Role.Admin;
         showToast(
-          this.toast,
-          `已设置用户 ${member.username}(#${member.id}) 为管理员`,
-          "success"
+            this.toast,
+            this.$t('groups.memberManagement.setAdminSuccess', {
+              username: member.username,
+              id: member.id
+            }),
+            "success"
         );
       } catch (error) {
-        console.error("设置管理员失败", error);
-        showToast(this.toast, "设置管理员失败", "error");
+        showToast(this.toast, this.$t('groups.errors.setAdminFailed'), "error");
       }
     },
+
     async setMemberNotAdmin(member) {
-      console.log("set not admin", this.groupId, member.id);
       try {
         await this.$axios.put(
-          `/groups/${this.groupId}/members/${member.id}/update-role`,
-          { newRole: Role.Member }
+            `/groups/${this.groupId}/members/${member.id}/update-role`,
+            { newRole: Role.Member }
         );
         this.closeMenu();
         member.role = Role.Member;
         showToast(
-          this.toast,
-          `已设置用户 ${member.username}(#${member.id}) 为非管理员`,
-          "success"
+            this.toast,
+            this.$t('groups.memberManagement.removeAdminSuccess', {
+              username: member.username,
+              id: member.id
+            }),
+            "success"
         );
       } catch (error) {
-        console.error("设置非管理员失败", error);
-        showToast(this.toast, "设置非管理员失败", "error");
+        showToast(this.toast, this.$t('groups.errors.removeAdminFailed'), "error");
       }
     },
-    async addMemberAsFriend(member) {
-      console.log("add friend with", member);
-      try {
-        await this.$axios.post(
-          "/friend-requests/send", // 后端的接口
-          {
-            senderId: Number(this.userId), // 将字符串转换为数字
-            receiverId: Number(member.id), // 将字符串转换为数字
-          }
-        );
 
-        // 处理成功的响应
-        showToast(this.toast, "好友请求已发送！", "success");
+    async addMemberAsFriend(member) {
+      try {
+        await this.$axios.post("/friend-requests/send", {
+          senderId: Number(this.userId),
+          receiverId: Number(member.id),
+        });
+        showToast(this.toast, this.$t('friends.success.requestSent'), "success");
         this.closeMenu();
       } catch (error) {
-        console.error("添加好友失败", error);
-        showToast(this.toast, "添加好友失败", "error");
+        showToast(this.toast, this.$t('friends.errors.sendRequestFailed'), "error");
       }
     },
     isFriend(member) {
@@ -349,7 +347,7 @@ export default {
           }, 0);
         }
       } else {
-        showToast(this.toast, "你不是该群组的管理员，无权修改！", "error");
+        showToast(this.toast, this.$t('groups.permissionDenied.edit'), "error");
       }
     },
 
@@ -362,20 +360,20 @@ export default {
     },
     async saveGroupName() {
       this.isEditingName = false;
+      this.errorMessage=validateInput(this.$constants.GROUP_NAME_VALIDATION,this.editableGroupName)
+      if (this.errorMessage) {
+        showToast(this.toast,this.errorMessage,"error")
+        return;
+      }
       try {
-        if (this.editableGroupName === "") {
-          this.editableGroupName = this.showedGroupName;
-          showToast(this.toast, "群组名称不能为空", "error");
-        }
         this.showedGroupName = this.editableGroupName;
         await this.$axios.put(`/task-group/${this.groupId}/update-name`, null, {
           params: { name: this.editableGroupName },
         });
-        showToast(this.toast, `群组名称更改成功`, "success");
+        showToast(this.toast, this.$t('groups.groupManagement.nameUpdateSuccess'), "success");
         this.updateHeader();
       } catch (error) {
-        console.error("更改群组名称失败", error);
-        showToast(this.toast, "更改群组名称失败", "error");
+        showToast(this.toast, this.$t('groups.errors.updateNameFailed'), "error");
       }
     },
     async saveGroupDescription() {
@@ -389,22 +387,20 @@ export default {
             params: { description: this.editableGroupDescription },
           }
         );
-        showToast(this.toast, `群组描述更改成功`, "success");
+        showToast(this.toast, this.$t('groups.groupManagement.descUpdateSuccess'), "success");
         this.updateHeader();
       } catch (error) {
-        console.error("更改群组描述失败", error);
-        showToast(this.toast, "更改群组描述失败", "error");
+        showToast(this.toast, this.$t('groups.errors.updateDescFailed'), "error");
       }
     },
-
+    //todo:创建、退、删群后，仍显示原有群聊信息，必须由用户手动刷新
     async disbandGroup() {
       try {
         await this.$axios.delete(`/task-group/${this.groupId}`);
-        showToast(this.toast, "群组解散成功", "success");
+        showToast(this.toast, this.$t('groups.groupManagement.disbandSuccess'), "success");
         this.$router.push("/groups");
       } catch (error) {
-        console.error("群组解散失败", error);
-        showToast(this.toast, "群组解散失败，请稍后重试", "error");
+        showToast(this.toast, this.$t('groups.errors.disbandFailed'), "error");
       }
     },
     async leaveGroup() {
@@ -416,17 +412,15 @@ export default {
             `/groups/${this.groupId}/members/${this.userId}`
           );
         }
-        showToast(this.toast, "群组退出成功", "success");
+        showToast(this.toast, this.$t('groups.groupManagement.leaveSuccess'), "success");
         this.$router.push("/groups");
       } catch (error) {
-        console.error("退出群组失败", error);
-        showToast(this.toast, "退出群组失败，请稍后重试", "error");
+        showToast(this.toast, this.$t('groups.errors.leaveFailed'), "error");
       }
     },
 
     startAddingGroupMember() {
       this.isSelectingFriend = true;
-      console.log("shoed members", this.groupMembers, this.showedGroupMembers);
     },
     cancelAddingGroupMember() {
       this.isSelectingFriend = false;
@@ -434,7 +428,8 @@ export default {
     async addGroupMember() {
       try {
         if (this.selectedFriends.length === 0) {
-          showToast(this.toast, "至少需要选择一个好友", "error");
+          console.log(this.$t('groups.errors.selectAtLeastOne'))
+          showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), "error");
           return;
         }
         const promises = [];
@@ -454,12 +449,10 @@ export default {
         }
         // 等待所有请求完成
         await Promise.all(promises);
-        console.log("shoed members", this.showedGroupMembers);
         this.isSelectingFriend = false;
-        showToast(this.toast, "好友加入群组成功", "success");
+        showToast(this.toast, this.$t('groups.memberManagement.inviteSuccess'), "success");
       } catch (error) {
-        console.error("邀请好友加入群组失败", error);
-        showToast(this.toast, "邀请好友加入群组失败，请重试", "error");
+        showToast(this.toast, this.$t('groups.errors.inviteFailed'), "error");
       }
     },
     getGroupMemberIdArray(groupMembers) {
