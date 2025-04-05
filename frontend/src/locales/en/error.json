@@ -12,10 +12,6 @@
     "404": "Resource not found",
     "500": "Internal server error"
   },
-  "auth": {
-    "login_required": "Please log in to access this page",
-    "logout_required": "Please log out before proceeding to login or registration"
-  },
   "validation": {
     "required": "{field} cannot be empty!",
     "too_long": "{field} is too long!",

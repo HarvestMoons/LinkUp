@@ -94,14 +94,14 @@ router.beforeEach((to, from, next) => {
 
     // 处理需要认证的路由
     if (to.meta.requiresAuth && !isAuthenticated) {
-        toast.error(t('error.auth.login_required'));
+        toast.error(t('auth.login_required'));
         next({ name: 'login' })
         return
     }
 
     // 处理仅允许未登录用户访问的路由
     if (to.meta.guestOnly && isAuthenticated) {
-        toast.error(t('error.auth.logout_required'));
+        toast.error(t('auth.logout_required'));
         next({ name: 'home1' }) // 已登录用户访问登录/注册页时重定向到首页
         return
     }

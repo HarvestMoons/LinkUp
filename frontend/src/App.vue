@@ -8,7 +8,7 @@
       >
         <img
           :src="this.$store.getters.getUserAvatar"
-          alt="头像"
+          :alt="$t('common.avatarAlt')"
           class="userAvatar"
         />
         <span class="userNickname"

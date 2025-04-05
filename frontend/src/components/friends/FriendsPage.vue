@@ -5,47 +5,49 @@
     <div class="blockContainer">
       <div class="addFriendContainer">
         <input
-          v-model="friendId"
-          type="text"
-          placeholder="输入用户Id"
-          class="addFriendInput"
+            v-model="friendId"
+            type="text"
+            :placeholder="$t('friends.inputPlaceholder')"
+            class="addFriendInput"
         />
         <button @click="sendFriendRequest" class="button normalButton">
-          添加好友
+          {{ $t('friends.addFriend') }}
         </button>
       </div>
     </div>
     <!-- 好友申请列表 -->
     <div v-if="pendingRequests.length > 0" class="blockContainer">
-      <div v-if="friendRequestLoading" class="loading">加载中...</div>
+      <div v-if="friendRequestLoading" class="loading">
+        {{ $t('common.loading') }}
+      </div>
       <div v-else>
         <ul class="friendRequestList">
           <li
-            v-for="request in pendingRequests"
-            :key="request.id"
-            class="friendRequestItem"
+              v-for="request in pendingRequests"
+              :key="request.id"
+              class="friendRequestItem"
           >
             <img
-              :src="this.$store.getters.getAvatar(request.sender.avatarId)"
-              alt="头像"
-              class="avatar"
+                :src="this.$store.getters.getAvatar(request.sender.avatarId)"
+                :alt="$t('common.avatarAlt')"
+                class="avatar"
             />
             <span class="nickname">
               {{ request.sender.username }} (#{{ request.sender.id }})
-              想加你为好友
+              {{ $t('friends.wantsToAdd') }}
             </span>
             <div class="doubleButtonContainer">
               <button
-                class="button normalButton"
-                @click="acceptRequest(request.id)"
+                  class="button normalButton"
+                  @click="acceptRequest(request.id)"
               >
-                接收
+                {{ $t('friends.accept') }}
               </button>
               <button
-                class="button normalButton"
-                @click="rejectRequest(request.id)"
+                  class="button normalButton"
+                  @click="rejectRequest(request.id)"
               >
-                拒绝
+                {{ $t('friends.reject') }}
               </button>
             </div>
           </li>
@@ -53,25 +55,29 @@
       </div>
     </div>
     <div class="blockContainer">
-      <div v-if="friendListLoading" class="loading">加载中...</div>
-      <div v-else-if="friends.length === 0" class="loading">无好友</div>
+      <div v-if="friendListLoading" class="loading">
+        {{ $t('common.loading') }}
+      </div>
+      <div v-else-if="friends.length === 0" class="loading">
+        {{ $t('friends.noFriends') }}
+      </div>
       <!-- 显示好友列表 -->
       <div v-else>
         <ul class="friendsList">
           <li v-for="friend in friends" :key="friend.id" class="friendItem">
             <img
-              :src="this.$store.getters.getAvatar(friend.avatarId)"
-              alt="头像"
-              class="avatar"
+                :src="this.$store.getters.getAvatar(friend.avatarId)"
+                :alt="$t('common.avatarAlt')"
+                class="avatar"
             />
             <span class="nickname"
-              >{{ friend.username }} (#{{ friend.id }})</span
+            >{{ friend.username }} (#{{ friend.id }})</span
             >
             <button
-              class="button normalButton"
-              @click="deleteFriend(friend.friend)"
+                class="button normalButton"
+                @click="deleteFriend(friend.friend)"
             >
-              删除好友
+              {{ $t('friends.deleteFriend') }}
             </button>
           </li>
         </ul>
@@ -104,7 +110,6 @@ export default {
   async mounted() {
     this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
-      console.error("用户ID不存在，请重新登录");
       return;
     }
     // 在组件挂载后获取好友数据
@@ -133,7 +138,7 @@ export default {
     // 发送添加好友请求
     async sendFriendRequest() {
       if (!this.friendId.trim()) {
-        showToast(this.toast, "请输入用户id！", "error"); // 提示错误信息
+        showToast(this.toast, this.$t('friends.errors.emptyUserId'), "error");
         return;
       }
 
@@ -145,15 +150,13 @@ export default {
             receiverId: Number(this.friendId), // 将字符串转换为数字
           }
         );
-
-        // 处理成功的响应
-        showToast(this.toast, "好友请求已发送！", "success");
+        showToast(this.toast, this.$t('friends.success.requestSent'), "success");
       } catch (error) {
         console.error("发送好友请求失败:", error);
         if (error.response.data.message) {
           showToast(this.toast, error.response.data.message, "error");
         } else {
-          showToast(this.toast, "发送好友请求失败，请稍后再试！", "error");
+          showToast(this.toast, this.$t('friends.errors.sendRequestFailed'), "error");
         }
       }
     },
@@ -168,11 +171,10 @@ export default {
         await this.fetchPendingRequests();
         this.friends = await fetchFriends(this.userId);
 
-        // 提示用户已成功接收好友请求
-        showToast(this.toast, "已成功接收好友申请", "success");
+        showToast(this.toast, this.$t('friends.success.requestAccepted'), "success");
       } catch (error) {
         console.error("接受好友申请失败:", error);
-        showToast(this.toast, "接受好友申请失败", "error");
+        showToast(this.toast, this.$t('friends.errors.acceptFailed'), "error");
       }
     },
 
@@ -185,10 +187,10 @@ export default {
         await this.fetchPendingRequests();
 
         // 提示用户已成功拒绝好友请求
-        showToast(this.toast, "已成功拒绝好友申请", "success");
+        showToast(this.toast, this.$t('friends.success.requestRejected'), "success");
       } catch (error) {
         console.error("拒绝好友申请失败:", error);
-        showToast(this.toast, "拒绝好友申请失败", "error");
+        showToast(this.toast, this.$t('friends.error.rejectFailed'), "error");
       }
     },
 
@@ -203,10 +205,10 @@ export default {
         });
         // 更新好友列表
         this.friends = await fetchFriends(this.userId);
-        showToast(this.toast, "已成功删除好友", "success");
+        showToast(this.toast, this.$t('friends.success.friendDeleted'), "success");
       } catch (error) {
         console.error("删除好友失败:", error);
-        showToast(this.toast, "删除好友失败", "error");
+        showToast(this.toast, this.$t('friends.error.deleteFailed'), "error");
       }
     },
   },

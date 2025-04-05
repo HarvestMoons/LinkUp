@@ -73,7 +73,7 @@
         >
           <img
             :src="this.$store.getters.getAvatar(member.avatarId)"
-            alt="头像"
+            :alt="$t('common.avatarAlt')"
             class="memberAvatar"
           />
           <span class="memberNickname"

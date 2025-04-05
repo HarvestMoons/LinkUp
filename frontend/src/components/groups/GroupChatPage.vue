@@ -36,7 +36,7 @@
               <img
                 v-if="!isSentByCurrentUser(message)"
                 :src="this.$store.getters.getAvatar(message.sender.avatarId)"
-                alt="头像"
+                :alt="$t('common.avatarAlt')"
                 class="messageAvatar leftAvatar"
               />
               <div class="messageContainer">
@@ -48,7 +48,7 @@
               <img
                 v-if="isSentByCurrentUser(message)"
                 :src="this.$store.getters.getAvatar(message.sender.avatarId)"
-                alt="头像"
+                :alt="$t('common.avatarAlt')"
                 class="messageAvatar rightAvatar"
               />
             </li>

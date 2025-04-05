@@ -1,1 +1,26 @@
-{}
+{
+  "errors": {
+    "emptyUserId": "Please enter user ID!",
+    "sendRequestFailed": "Failed to send friend request, please try again later!",
+    "acceptFailed": "Failed to accept friend request",
+    "rejectFailed": "Failed to reject friend request",
+    "deleteFailed": "Failed to delete friend"
+  },
+  "success": {
+    "requestSent": "Friend request sent",
+    "requestAccepted": "Friend request accepted successfully",
+    "requestRejected": "Friend request rejected successfully",
+    "friendDeleted": "Friend deleted successfully"
+  },
+  "status": {
+    "fetchFailed": "Failed to fetch friend requests data:"
+  },
+
+  "inputPlaceholder": "Enter user ID",
+  "addFriend": "Add Friend",
+  "wantsToAdd": "wants to add you as friend",
+  "accept": "Accept",
+  "reject": "Reject",
+  "deleteFriend": "Delete Friend",
+  "noFriends": "No friends"
+}

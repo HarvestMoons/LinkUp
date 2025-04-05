@@ -17,7 +17,7 @@
         >
           <img
             :src="this.$store.getters.getAvatar(friend.avatarId)"
-            alt="头像"
+            :alt="$t('common.avatarAlt')"
             class="avatar"
           />
           <span class="nickname">{{ friend.username }} (#{{ friend.id }})</span>

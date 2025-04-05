@@ -6,5 +6,8 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
   "save": "Save",
-  "close": "Close"
+  "close": "Close",
+
+  "loading": "Loading...",
+  "avatarAlt": "Avatar"
 }
