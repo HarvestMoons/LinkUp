@@ -5,25 +5,28 @@
       <!-- 左侧信息面板 -->
       <div class="info-panel">
         <h2 class="greeting">
-          你好，{{ this.$store.getters.getUser.username }}！今天有什么计划？
+          {{ $t('dashboard.greeting', { name: this.$store.getters.getUser.username }) }}
         </h2>
 
         <div class="blockContainer">
-          <h3>📌 待办任务</h3>
-          <p>{{ todoTasks.length }} 个任务待完成</p>
+          <h3>{{ $t('dashboard.todoTitle') }}</h3>
+          <p>{{ $t('dashboard.pendingTasks', todoTasks.length, { count: todoTasks.length }) }}</p>
         </div>
 
         <div class="blockContainer">
-          <h3>📊 任务完成率</h3>
-          <p>本周: {{ weeklyCompletionRate }}%</p>
-          <p>本月: {{ monthlyCompletionRate }}%</p>
+          <h3>{{ $t('dashboard.completionRate') }}</h3>
+          <p>{{ $t('dashboard.weeklyRate', { rate: weeklyCompletionRate }) }}</p>
+          <p>{{ $t('dashboard.monthlyRate', { rate: monthlyCompletionRate }) }}</p>
         </div>
 
-        <div class="blockContainer" v-if="upcomingDeadlines.length != 0">
-          <h3>⚠️ 即将截止</h3>
+        <div class="blockContainer" v-if="upcomingDeadlines.length !== 0">
+          <h3>{{ $t('dashboard.upcomingDeadlines') }}</h3>
           <ul>
             <li v-for="task in upcomingDeadlines" :key="task.id">
-              {{ task.title }} - 截止 {{ formatDate(task.dueDate) }}
+              {{ $t('dashboard.deadlineItem', {
+              title: task.title,
+              date: formatDate(task.dueDate)
+            }) }}
             </li>
           </ul>
         </div>
@@ -57,7 +60,6 @@ export default {
     this.user = this.$store.getters.getUser;
     this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
-      console.error("用户ID不存在，请重新登录");
       return;
     }
     this.tasks = await getTaskList(this.userId);

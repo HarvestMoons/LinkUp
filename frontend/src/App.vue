@@ -120,7 +120,6 @@ export default {
     isActive(route) {
       return this.$route.path === route;
     },
-    // 处理语言选择的变化
     changeLanguage(event) {
       const lang = event.target.value;
       this.$store.commit('setLanguage', lang);
@@ -159,8 +158,7 @@ body {
 .navContainer {
   position: relative;
   z-index: 500;
-  padding: 30px;
-  padding-bottom: 0;
+  padding: 30px 30px 0;
 }
 
 nav {

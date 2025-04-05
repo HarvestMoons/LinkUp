@@ -3,5 +3,14 @@
   "friends": "Friends",
   "tasks": "Tasks",
   "groups": "Groups",
-  "logout": "Logout"
+  "logout": "Logout",
+
+  "greeting": "Hello, {name}! What's your plan today?",
+  "todoTitle": "📌 Todo Tasks",
+  "pendingTasks": "{count} task pending | {count} tasks pending",
+  "completionRate": "📊 Completion Rate",
+  "weeklyRate": "This week: {rate}%",
+  "monthlyRate": "This month: {rate}%",
+  "upcomingDeadlines": "⚠️ Upcoming Deadlines",
+  "deadlineItem": "{title} - Due {date}"
 }
