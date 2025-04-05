@@ -1,6 +1,6 @@
 ## Privacy Policy
 
-Last updated: 2025/4/4
+Last updated: 2025/4/5
 
 ### Introduction
 
@@ -66,10 +66,5 @@ We may update this Privacy Policy from time to time in order to reflect, for exa
 
 If you have questions or comments about this Privacy Policy, please go to "Contact Us" page on this website, or contact us at:
 
-- Company: [Your Company Name]
-- [Address]
-- [City, State, ZIP Code]
-- [Email Address]
-- [Phone Number]
-
-- Data Protection Officer: [Data Protection Officer <email>]
+- Email Address: 22302010019@m.fudan.edu.cn     22302010011@m.fudan.edu.cn
+- Phone number: (+86)18046085666      (+86)18857833575

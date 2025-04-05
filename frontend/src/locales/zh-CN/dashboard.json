@@ -1,3 +1,7 @@
 {
-  "unknown_parameter": "未知的参数值: {param}"
+  "home": "首页",
+  "friends": "好友",
+  "tasks": "任务",
+  "groups": "群组",
+  "logout": "退出登录"
 }

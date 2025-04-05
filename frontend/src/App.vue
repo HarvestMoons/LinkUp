@@ -21,31 +21,35 @@
         to="/home"
         class="tab"
         :class="{ active: isActive('/') || isActive('/home') }"
-        >Home</router-link
+        >{{$t('dashboard.home')}}</router-link
       >
 
       <router-link
         to="/friends"
         class="tab"
         :class="{ active: isActive('/friends') }"
-        >Friends</router-link
+        >{{$t('dashboard.friends')}}</router-link
       >
 
       <router-link
         to="/tasks"
         class="tab"
         :class="{ active: isActive('/tasks') }"
-        >Tasks</router-link
+        >{{$t('dashboard.tasks')}}</router-link
       >
 
       <router-link
         to="/groups"
         class="tab"
         :class="{ active: isActive('/groups') }"
-        >Groups</router-link
+        >{{$t('dashboard.groups')}}</router-link
       >
 
-      <select @change="changeLanguage" class="languageSelect">
+      <select
+          v-model="$i18n.locale"
+          @change="changeLanguage"
+          class="languageSelect"
+      >
         <option value="en">English</option>
         <option value="zh-CN">中文</option>
       </select>
@@ -55,7 +59,7 @@
         @click="logout"
         class="button normalButton logoutButton"
       >
-        Logout
+        {{$t('dashboard.logout')}}
       </button>
     </nav>
   </div>
@@ -118,8 +122,10 @@ export default {
     },
     // 处理语言选择的变化
     changeLanguage(event) {
-      const selectedLanguage = event.target.value;
-      this.$store.dispatch("setLanguage", selectedLanguage);
+      const lang = event.target.value;
+      this.$store.commit('setLanguage', lang);
+      localStorage.setItem('userLanguage', lang);
+      this.$i18n.locale = lang;
     },
   },
   created() {

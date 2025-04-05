@@ -1,1 +1,7 @@
-{}
+{
+  "home": "Home",
+  "friends": "Friends",
+  "tasks": "Tasks",
+  "groups": "Groups",
+  "logout": "Logout"
+}
