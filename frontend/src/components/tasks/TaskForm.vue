@@ -4,57 +4,57 @@
     <!-- 输入框区域 -->
     <div class="allInputFields">
       <div class="formWithLabelAndInput">
-        <label for="taskTitle">任务标题:</label>
+        <label for="taskTitle">{{ $t('task.form.titleLabel') }}:</label>
         <input
-          type="text"
-          id="taskTitle"
-          v-model="localTask.title"
-          placeholder="请输入任务标题"
+            type="text"
+            id="taskTitle"
+            v-model="localTask.title"
+            :placeholder="$t('task.form.titlePlaceholder')"
         />
       </div>
       <div class="formWithLabelAndInput">
-        <label for="taskDescription">任务描述:</label>
+        <label for="taskDescription">{{ $t('task.form.descriptionLabel') }}:</label>
         <textarea
-          id="taskDescription"
-          v-model="localTask.description"
-          placeholder="请输入任务描述"
+            id="taskDescription"
+            v-model="localTask.description"
+            :placeholder="$t('task.form.descriptionPlaceholder')"
         ></textarea>
       </div>
       <div class="formWithLabelAndInput">
-        <label for="taskPriority">任务优先级:</label>
+        <label for="taskPriority">{{ $t('task.form.priorityLabel') }}:</label>
         <select v-model="localTask.priority" id="taskPriority">
-          <option value="LOW">低</option>
-          <option value="MEDIUM">中</option>
-          <option value="HIGH">高</option>
+          <option value="LOW">{{ $t('task.priority.low') }}</option>
+          <option value="MEDIUM">{{ $t('task.priority.medium') }}</option>
+          <option value="HIGH">{{ $t('task.priority.high') }}</option>
         </select>
       </div>
       <div class="formWithLabelAndInput">
-        <label for="taskStatus">任务状态:</label>
+        <label for="taskStatus">{{ $t('task.form.statusLabel') }}:</label>
         <select v-model="localTask.status" id="taskStatus">
-          <option value="TODO">待办</option>
-          <option value="IN_PROGRESS">进行中</option>
-          <option value="COMPLETED">已完成</option>
-          <option value="ARCHIVED">已存档</option>
+          <option value="TODO">{{ $t('task.status.todo') }}</option>
+          <option value="IN_PROGRESS">{{ $t('task.status.inProgress') }}</option>
+          <option value="COMPLETED">{{ $t('task.status.completed') }}</option>
+          <option value="ARCHIVED">{{ $t('task.status.archived') }}</option>
         </select>
       </div>
       <div class="formWithLabelAndInput">
-        <label for="taskDueDate">截止日期:</label>
+        <label for="taskDueDate">{{ $t('task.form.dueDateLabel') }}:</label>
         <input
-          type="datetime-local"
-          v-model="localTask.dueDate"
-          id="taskDueDate"
+            type="datetime-local"
+            v-model="localTask.dueDate"
+            id="taskDueDate"
         />
       </div>
     </div>
     <div class="doubleButtonContainer">
       <!-- 取消按钮 -->
       <button @click="$emit('cancel')" class="button warningButton">
-        取消
+        {{$t('common.cancel')}}
       </button>
 
       <!-- 提交按钮 -->
       <button @click="$emit('submit', localTask)" class="button normalButton">
-        提交任务
+        {{ $t('task.form.submitButton') }}
       </button>
     </div>
   </div>
@@ -73,9 +73,6 @@ export default {
   },
   watch: {
     task: {
-      handler(localTask) {
-        this.localTask = { ...localTask };
-      },
       deep: true,
     },
   },

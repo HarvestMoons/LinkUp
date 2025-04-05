@@ -64,7 +64,7 @@ We may update this Privacy Policy from time to time in order to reflect, for exa
 
 ### Contact Us
 
-If you have questions or comments about this Privacy Policy, please go to "Contact Us" page on this website, or contact us at:
+If you have questions or comments about this Privacy Policy, please contact us at:
 
 - Email Address: 22302010019@m.fudan.edu.cn     22302010011@m.fudan.edu.cn
 - Phone number: (+86)18046085666      (+86)18857833575

@@ -1,1 +1,23 @@
-{}
+{
+  "form": {
+    "titleLabel": "Task Title",
+    "titlePlaceholder": "Enter task title",
+    "descriptionLabel": "Task Description",
+    "descriptionPlaceholder": "Enter task description",
+    "priorityLabel": "Priority",
+    "statusLabel": "Status",
+    "dueDateLabel": "Due Date",
+    "submitButton": "Submit Task"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "status": {
+    "todo": "To Do",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "archived": "Archived"
+  }
+}
