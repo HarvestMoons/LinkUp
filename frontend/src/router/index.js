@@ -111,3 +111,4 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router
+//TODO:已登录状态下关闭页面再打开，会被导航到空白页面
