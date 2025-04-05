@@ -375,7 +375,8 @@ import { useToast } from "vue-toastification";
 import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 import TaskForm from "@/components/tasks/TaskForm.vue";
-
+//TODO:HTML大量重复，可以化简
+//TODO：严重bug，在此页面修改群组任务后，其groupId变成null，被判定为非群组任务
 export default {
   components: { TaskBlock, TaskForm },
   name: "TaskList",
