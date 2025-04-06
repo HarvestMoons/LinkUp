@@ -7,39 +7,45 @@
         <div class="createGroupContainer" v-if="isCreating">
           <div class="allInputFields">
             <div class="formWithLabelAndInput">
-              <label for="newGroupName">{{ $t('groups.create.nameLabel') }}:</label>
+              <label for="newGroupName"
+                >{{ $t("groups.create.nameLabel") }}:</label
+              >
               <input
-                  type="text"
-                  id="newGroupName"
-                  v-model="newGroup.name"
-                  :placeholder="$t('groups.create.namePlaceholder')"
-                  required
+                type="text"
+                id="newGroupName"
+                v-model="newGroup.name"
+                :placeholder="$t('groups.create.namePlaceholder')"
+                required
               />
             </div>
             <div class="formWithLabelAndInput">
-              <label for="newGroupDescription">{{ $t('groups.create.descLabel') }}:</label>
+              <label for="newGroupDescription"
+                >{{ $t("groups.create.descLabel") }}:</label
+              >
               <textarea
-                  id="newGroupDescription"
-                  v-model="newGroup.description"
-                  :placeholder="$t('groups.create.descPlaceholder')"
+                id="newGroupDescription"
+                v-model="newGroup.description"
+                :placeholder="$t('groups.create.descPlaceholder')"
               ></textarea>
             </div>
             <div class="formWithLabelAndInput">
-              <label for="selectFriends">{{ $t('groups.create.selectFriendsLabel') }}:</label>
+              <label for="selectFriends"
+                >{{ $t("groups.create.selectFriendsLabel") }}:</label
+              >
               <FriendSelection
-                  v-model="selectedFriends"
-                  :userId="userId"
-                  :unavailableFriendIds="[]"
+                v-model="selectedFriends"
+                :userId="userId"
+                :unavailableFriendIds="[]"
               />
             </div>
           </div>
 
           <div class="doubleButtonContainer">
             <button @click="cancelCreateGroup" class="button warningButton">
-              {{ $t('common.cancel') }}
+              {{ $t("common.cancel") }}
             </button>
             <button @click="createGroup" class="button normalButton">
-              {{ $t('groups.create.submitButton') }}
+              {{ $t("groups.create.submitButton") }}
             </button>
           </div>
         </div>
@@ -47,32 +53,36 @@
 
       <transition name="createGroupButton">
         <button
-            v-if="!isCreating"
-            @click="startCreateGroup"
-            class="button extendButton"
+          v-if="!isCreating"
+          @click="startCreateGroup"
+          class="button extendButton"
         >
-          {{ $t('groups.createButton') }}
+          {{ $t("groups.createButton") }}
         </button>
       </transition>
     </div>
     <div class="blockContainer">
-      <div v-if="groupListLoading" class="loading">{{ $t('common.loading') }}</div>
-      <div v-else-if="groups.length === 0" class="loading">{{ $t('groups.noGroups') }}</div>
+      <div v-if="groupListLoading" class="loading">
+        {{ $t("common.loading") }}
+      </div>
+      <div v-else-if="groups.length === 0" class="loading">
+        {{ $t("groups.noGroups") }}
+      </div>
       <div v-else>
         <ul class="groupsList">
           <li
-              v-for="group in groups"
-              :key="group.id"
-              class="groupItem"
-              @click="goToGroup(group.id)"
+            v-for="group in groups"
+            :key="group.id"
+            class="groupItem"
+            @click="goToGroup(group.id)"
           >
             <div class="groupAvatar">
               <img
-                  v-for="(avatar, index) in group.avatars"
-                  :key="index"
-                  :src="avatar"
-                  class="avatarInGroupAvatar"
-                  :class="`avatar-${group.avatars.length}`"
+                v-for="(avatar, index) in group.avatars"
+                :key="index"
+                :src="avatar"
+                class="avatarInGroupAvatar"
+                :class="`avatar-${group.avatars.length}`"
               />
             </div>
             <span class="nickname">{{ group.name }} (#{{ group.id }})</span>
@@ -97,8 +107,7 @@ export default {
   components: { FriendSelection },
   data() {
     return {
-      groups: [],
-      groupListLoading: false, // 加载状态
+      groupListLoading: true, // 加载状态
       friendListLoading: false,
       isCreating: false,
       newGroup: [],
@@ -109,6 +118,11 @@ export default {
   setup() {
     const toast = useToast();
     return { toast };
+  },
+  computed: {
+    groups() {
+      return this.$store.getters.getGroupList;
+    },
   },
   async mounted() {
     this.userId = this.$store.getters.getUserId; // 读取 userId
@@ -134,7 +148,11 @@ export default {
       try {
         // TODO: 创建群组和拉人分两步会不会不好回滚(目前可以考虑使用定时清理数据库的方法解决)
         if (this.selectedFriends.length === 0) {
-          showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), "error");
+          showToast(
+            this.toast,
+            this.$t("groups.errors.selectAtLeastOne"),
+            "error"
+          );
           return;
         }
         const responseNewGroup = await this.$axios.post(`/task-group/create`, {
@@ -157,12 +175,20 @@ export default {
             }
           );
         }
-        await fetchGroups(this.userId);
+        this.groups = await fetchGroups(this.userId);
         this.cancelCreateGroup();
-        showToast(this.toast, this.$t('groups.groupManagement.createSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.createSuccess"),
+          "success"
+        );
       } catch (error) {
         console.error("创建群组失败:", error);
-        showToast(this.toast, this.$t('groups.errors.createGroupFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.createGroupFailed"),
+          "error"
+        );
       }
     },
 

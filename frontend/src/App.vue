@@ -21,34 +21,34 @@
         to="/home"
         class="tab"
         :class="{ active: isActive('/') || isActive('/home') }"
-        >{{$t('dashboard.home')}}</router-link
+        >{{ $t("dashboard.home") }}</router-link
       >
 
       <router-link
         to="/friends"
         class="tab"
         :class="{ active: isActive('/friends') }"
-        >{{$t('dashboard.friends')}}</router-link
+        >{{ $t("dashboard.friends") }}</router-link
       >
 
       <router-link
         to="/tasks"
         class="tab"
         :class="{ active: isActive('/tasks') }"
-        >{{$t('dashboard.tasks')}}</router-link
+        >{{ $t("dashboard.tasks") }}</router-link
       >
 
       <router-link
         to="/groups"
         class="tab"
         :class="{ active: isActive('/groups') }"
-        >{{$t('dashboard.groups')}}</router-link
+        >{{ $t("dashboard.groups") }}</router-link
       >
 
       <select
-          v-model="$i18n.locale"
-          @change="changeLanguage"
-          class="languageSelect"
+        v-model="$i18n.locale"
+        @change="changeLanguage"
+        class="languageSelect"
       >
         <option value="en">English</option>
         <option value="zh-CN">中文</option>
@@ -59,7 +59,7 @@
         @click="logout"
         class="button normalButton logoutButton"
       >
-        {{$t('dashboard.logout')}}
+        {{ $t("dashboard.logout") }}
       </button>
     </nav>
   </div>
@@ -76,6 +76,7 @@
 <script>
 import { getFriendList } from "@/utils/friendService";
 import { getTaskList } from "@/utils/taskService";
+import { getGroupList } from "@/utils/groupService";
 export default {
   data() {
     return {
@@ -109,6 +110,7 @@ export default {
 
         getFriendList(this.$store.getters.getUserId);
         getTaskList(this.$store.getters.getUserId);
+        getGroupList(this.$store.getters.getUserId);
       } catch (error) {
         console.error("获取用户数据失败:", error);
         // 捕获 401 错误（JWT 过期或无效）
@@ -122,8 +124,8 @@ export default {
     },
     changeLanguage(event) {
       const lang = event.target.value;
-      this.$store.commit('setLanguage', lang);
-      localStorage.setItem('userLanguage', lang);
+      this.$store.commit("setLanguage", lang);
+      localStorage.setItem("userLanguage", lang);
       this.$i18n.locale = lang;
     },
   },

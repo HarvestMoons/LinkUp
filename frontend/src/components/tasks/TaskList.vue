@@ -26,14 +26,16 @@
 
     <div class="blockContainer">
       <div class="orderSelection">
-        <h3 @click="changeOrderToStatus">{{$t('task.orderByStatus')}}</h3>
+        <h3 @click="changeOrderToStatus">{{ $t("task.orderByStatus") }}</h3>
         <span class="separator">|</span>
-        <h3 @click="changeOrderToPriority">{{$t('task.orderByPriority')}}</h3>
+        <h3 @click="changeOrderToPriority">{{ $t("task.orderByPriority") }}</h3>
       </div>
     </div>
 
     <div class="tasksContainer">
-      <div v-if="taskListLoading" class="blockContainer loading">{{$t('common.loading')}}</div>
+      <div v-if="taskListLoading" class="blockContainer loading">
+        {{ $t("common.loading") }}
+      </div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
         无任务
       </div>
@@ -42,7 +44,7 @@
         <div v-if="taskOrder === TaskOrder.Priority">
           <div v-if="highTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('high')">
-              <h2>{{$t('task.priorityTiTle.high')}}</h2>
+              <h2>{{ $t("task.priorityTiTle.high") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.high">
               <li
@@ -73,12 +75,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -89,7 +93,7 @@
 
           <div v-if="midTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('medium')">
-              <h2>{{$t('task.priorityTiTle.medium')}}</h2>
+              <h2>{{ $t("task.priorityTiTle.medium") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.medium">
               <li
@@ -119,12 +123,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -135,7 +141,7 @@
 
           <div v-if="lowTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('low')">
-              <h2>{{$t('task.priorityTiTle.low')}}</h2>
+              <h2>{{ $t("task.priorityTiTle.low") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.low">
               <li
@@ -165,12 +171,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -182,7 +190,7 @@
         <div v-else-if="taskOrder === TaskOrder.Status">
           <div v-if="todoTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('todo')">
-              <h2>{{$t('task.status.todo')}}</h2>
+              <h2>{{ $t("task.status.todo") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.todo">
               <li
@@ -212,12 +220,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -228,7 +238,7 @@
 
           <div v-if="inProgressTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('inProgress')">
-              <h2>{{$t('task.status.inProgress')}}</h2>
+              <h2>{{ $t("task.status.inProgress") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.inProgress">
               <li
@@ -258,12 +268,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -274,7 +286,7 @@
 
           <div v-if="completedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('completed')">
-              <h2>{{$t('task.status.completed')}}</h2>
+              <h2>{{ $t("task.status.completed") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.completed">
               <li
@@ -304,12 +316,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -320,7 +334,7 @@
 
           <div v-if="archivedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('archived')">
-              <h2>{{$t('task.status.archived')}}</h2>
+              <h2>{{ $t("task.status.archived") }}</h2>
             </div>
             <ul class="tasksList" v-if="expandedSections.archived">
               <li
@@ -350,12 +364,14 @@
                       v-if="activeDropdown === task.id"
                       class="dropdown-menu"
                     >
-                      <div @click="editTask(task.id)">✏️ {{$t('task.edit')}}</div>
+                      <div @click="editTask(task.id)">
+                        ✏️ {{ $t("task.edit") }}
+                      </div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{$t('task.enterGroup')}}
+                        💬 {{ $t("task.enterGroup") }}
                       </div>
                     </div>
                   </div>
@@ -385,6 +401,7 @@ export default {
     taskListLoading: Boolean, // 是否在加载
     groupId: Number,
     isInGroupPage: Boolean,
+    refreshTaskList: Function,
   },
   data() {
     return {
@@ -433,7 +450,7 @@ export default {
     },
     showedTasks: {
       handler(showedTasks) {
-        if (showedTasks.length > 0) {
+        if (showedTasks != null && showedTasks.length > 0) {
           showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
           this.divideTasksByPriority(showedTasks);
           this.divideTasksByStatus(showedTasks);
@@ -494,19 +511,15 @@ export default {
       const rules = [
         {
           condition: task.title === "",
-          message: 'task.validation.titleRequired'
+          message: "task.validation.titleRequired",
         },
         {
           condition: task.dueDate === "",
-          message: 'task.validation.dueDateRequired'
+          message: "task.validation.dueDateRequired",
         },
-        {
-          condition: new Date(task.dueDate) < new Date(),
-          message: 'task.validation.dueDatePast'
-        }
       ];
 
-      const failedRule = rules.find(rule => rule.condition);
+      const failedRule = rules.find((rule) => rule.condition);
       if (failedRule) {
         showToast(this.toast, this.$t(failedRule.message), "error");
         return false;
@@ -533,16 +546,17 @@ export default {
         newTask.creator = this.$store.getters.getUser;
         newTask.taskGroupId = this.groupId;
         await this.$axios.post("/tasks/create", newTask);
-        showToast(this.toast, this.$t('task.success.create'), "success");
+        showToast(this.toast, this.$t("task.success.create"), "success");
 
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
         this.showedTasks.push(newTask);
         //todo：需要更新保持数据一致性
+        this.refreshTaskList();
       } catch (error) {
-        console.error(this.$t('task.errors.create'), error);
-        showToast(this.toast, this.$t('task.errors.create'), "error");
+        console.error(this.$t("task.errors.create"), error);
+        showToast(this.toast, this.$t("task.errors.create"), "error");
       }
     },
     // 重置任务表单
@@ -570,6 +584,7 @@ export default {
       this.editingTasks[taskId] = true;
     },
     async updateTask(taskId, updatedTask) {
+      console.log(updatedTask);
       try {
         if (!this.isTaskLegal(updatedTask)) {
           return;
@@ -580,13 +595,15 @@ export default {
         if (taskIndex !== -1) {
           this.showedTasks[taskIndex] = updatedTask;
         }
+        updatedTask.taskGroupId = updatedTask.taskGroup.id;
         await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
         this.editingTasks[taskId] = false;
-        showToast(this.toast, this.$t('task.success.update'), "success");
+        showToast(this.toast, this.$t("task.success.update"), "success");
         //todo：需要更新
+        this.refreshTaskList();
       } catch (error) {
-        console.error(this.$t('task.errors.update'), error);
-        showToast(this.toast, this.$t('task.errors.update'), "error");
+        console.error(this.$t("task.errors.update"), error);
+        showToast(this.toast, this.$t("task.errors.update"), "error");
       }
     },
 

@@ -40,7 +40,7 @@ export default {
     unavailableFriendIds: Array,
   },
   data() {
-    return { friendListLoading: false, friends: [], selectedFriends: [] };
+    return { friendListLoading: false, selectedFriends: [] };
   },
   mounted() {
     this.fetchFriends();
@@ -49,6 +49,9 @@ export default {
     // 计算属性：判断某个好友是否不可选
     isUnavailable() {
       return (friend) => this.unavailableFriendIds.includes(friend.id);
+    },
+    friends() {
+      return this.$store.getters.getFriendList;
     },
   },
   methods: {

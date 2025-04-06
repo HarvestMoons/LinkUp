@@ -10,34 +10,36 @@
         <p>{{ groupData.description }}</p>
         <div class="doubleButtonContainer">
           <button @click="toggleTaskSidebar" class="button sideBarButton">
-            📋 {{ $t('groups.tasksButton') }}
+            📋 {{ $t("groups.tasksButton") }}
           </button>
           <button @click="toggleGroupSidebar" class="button sideBarButton">
-            {{ $t('groups.groupInfoButton') }}
+            {{ $t("groups.groupInfoButton") }}
           </button>
         </div>
       </header>
 
       <!-- 聊天记录区域 -->
       <div class="chatArea">
-        <div v-if="messageLoading" class="loading">{{ $t('common.loading') }}</div>
+        <div v-if="messageLoading" class="loading">
+          {{ $t("common.loading") }}
+        </div>
         <div v-else>
           <ul class="messageList">
             <li
-                v-for="message in messageList"
-                :key="message.id"
-                class="messageItem"
-                ref="messageItemRef"
-                :class="{
+              v-for="message in messageList"
+              :key="message.id"
+              class="messageItem"
+              ref="messageItemRef"
+              :class="{
                 alignRight: isSentByCurrentUser(message),
                 alignLeft: !isSentByCurrentUser(message),
               }"
             >
               <img
-                  v-if="!isSentByCurrentUser(message)"
-                  :src="$store.getters.getAvatar(message.sender.avatarId)"
-                  :alt="$t('common.avatarAlt')"
-                  class="messageAvatar leftAvatar"
+                v-if="!isSentByCurrentUser(message)"
+                :src="$store.getters.getAvatar(message.sender.avatarId)"
+                :alt="$t('common.avatarAlt')"
+                class="messageAvatar leftAvatar"
               />
               <div class="messageContainer">
                 <div>{{ message.sender.username }}</div>
@@ -46,10 +48,10 @@
                 </div>
               </div>
               <img
-                  v-if="isSentByCurrentUser(message)"
-                  :src="$store.getters.getAvatar(message.sender.avatarId)"
-                  :alt="$t('common.avatarAlt')"
-                  class="messageAvatar rightAvatar"
+                v-if="isSentByCurrentUser(message)"
+                :src="$store.getters.getAvatar(message.sender.avatarId)"
+                :alt="$t('common.avatarAlt')"
+                class="messageAvatar rightAvatar"
               />
             </li>
           </ul>
@@ -59,13 +61,13 @@
       <!-- 底部输入框 -->
       <footer class="chatInputArea">
         <input
-            type="text"
-            v-model="newMessage"
-            :placeholder="$t('groups.messagePlaceholder')"
-            class="chatInput"
+          type="text"
+          v-model="newMessage"
+          :placeholder="$t('groups.messagePlaceholder')"
+          class="chatInput"
         />
         <button @click="sendMessage" class="button normalButton">
-          {{ $t('groups.sendButton') }}
+          {{ $t("groups.sendButton") }}
         </button>
       </footer>
     </div>
@@ -80,6 +82,7 @@
         taskListLoading: taskListLoading,
         groupId: groupId,
         isInGroupPage: true,
+        refreshTaskData: fetchGroupTasks,
       }"
       @close="toggleTaskSidebar"
     />
@@ -179,11 +182,11 @@ export default {
     async checkMembership() {
       try {
         const response = await this.$axios.get(
-            `/groups/${this.groupId}/members/${this.userId}/is-member`
+          `/groups/${this.groupId}/members/${this.userId}/is-member`
         );
         this.isMember = response.data;
         if (!this.isMember) {
-          showToast(this.toast, this.$t('groups.errors.notMember'), "error");
+          showToast(this.toast, this.$t("groups.errors.notMember"), "error");
           this.$router.push("/");
         }
       } catch (error) {
@@ -191,7 +194,11 @@ export default {
         if (error.response.data.message) {
           showToast(this.toast, error.response.data.message, "error");
         } else {
-          showToast(this.toast, this.$t('groups.errors.checkPermissionDefault'), "error");
+          showToast(
+            this.toast,
+            this.$t("groups.errors.checkPermissionDefault"),
+            "error"
+          );
         }
         this.$router.push("/");
       }
@@ -209,7 +216,7 @@ export default {
     async fetchUserRole() {
       try {
         const response = await this.$axios.get(
-            `/groups/${this.groupId}/members/${this.userId}/role`
+          `/groups/${this.groupId}/members/${this.userId}/role`
         );
         this.userRole = response.data;
         console.log("role", this.userRole);
@@ -221,7 +228,7 @@ export default {
     async fetchMembers() {
       try {
         const response = await this.$axios.get(
-            `/groups/${this.groupId}/members`
+          `/groups/${this.groupId}/members`
         );
         this.groupMembers = response.data.map((item) => {
           return {
@@ -238,7 +245,7 @@ export default {
     async fetchMessages() {
       try {
         const response = await this.$axios.get(
-            `/chat-message/group/${this.groupId}`
+          `/chat-message/group/${this.groupId}`
         );
         this.messageList = response.data;
       } catch (error) {
@@ -257,36 +264,36 @@ export default {
       this.stompClient = Stomp.over(socket);
 
       this.stompClient.connect(
-          {},
-          (frame) => {
-            console.log("STOMP连接成功:", frame);
-            console.log("当前 groupId:", this.groupId);
+        {},
+        (frame) => {
+          console.log("STOMP连接成功:", frame);
+          console.log("当前 groupId:", this.groupId);
 
-            if (!this.groupId) {
-              console.error("groupId 未定义，无法订阅 WebSocket 主题");
-              return;
-            }
-
-            this.subscription = this.stompClient.subscribe(
-                `/topic/group/${this.groupId}`,
-                (message) => {
-                  console.log("收到消息:", message.body);
-                  const receivedMessage = JSON.parse(message.body);
-                  if (receivedMessage.sender.id !== this.userId) {
-                    this.messageList.push(receivedMessage);
-                  }
-                }
-            );
-          },
-          (error) => {
-            console.error("STOMP 连接失败:", error);
+          if (!this.groupId) {
+            console.error("groupId 未定义，无法订阅 WebSocket 主题");
+            return;
           }
+
+          this.subscription = this.stompClient.subscribe(
+            `/topic/group/${this.groupId}`,
+            (message) => {
+              console.log("收到消息:", message.body);
+              const receivedMessage = JSON.parse(message.body);
+              if (receivedMessage.sender.id !== this.userId) {
+                this.messageList.push(receivedMessage);
+              }
+            }
+          );
+        },
+        (error) => {
+          console.error("STOMP 连接失败:", error);
+        }
       );
     },
 
     sendMessage() {
       if (!this.newMessage.trim()) {
-        showToast(this.toast, this.$t('groups.errors.emptyMessage'), "error");
+        showToast(this.toast, this.$t("groups.errors.emptyMessage"), "error");
         return;
       }
 
@@ -306,7 +313,11 @@ export default {
         this.newMessage = "";
       } else {
         console.error("STOMP连接未就绪");
-        showToast(this.toast, this.$t('groups.errors.connectionNotReady'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.connectionNotReady"),
+          "error"
+        );
       }
     },
 

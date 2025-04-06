@@ -2,155 +2,157 @@
 <template>
   <!-- 自定义右键菜单 -->
   <div
-      v-if="isMenuVisible"
-      :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
-      class="contextMenu"
+    v-if="isMenuVisible"
+    :style="{ top: menuPosition.top + 'px', left: menuPosition.left + 'px' }"
+    class="contextMenu"
   >
     <ul>
       <li
-          v-if="
+        v-if="
           (isUserGroupAdmin() || isUserGroupOwner()) &&
           !isMemberGroupOwner(clickOnMember) &&
           !isUser(clickOnMember)
         "
-          @click="deleteMember(clickOnMember)"
+        @click="deleteMember(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.deleteMember') }}
+        {{ $t("groups.contextMenu.deleteMember") }}
       </li>
       <li
-          v-if="
+        v-if="
           isUserGroupOwner() &&
           !(
             isMemberGroupAdmin(clickOnMember) ||
             isMemberGroupOwner(clickOnMember)
           )
         "
-          @click="setMemberAdmin(clickOnMember)"
+        @click="setMemberAdmin(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.setAdmin') }}
+        {{ $t("groups.contextMenu.setAdmin") }}
       </li>
       <li
-          v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
-          @click="setMemberNotAdmin(clickOnMember)"
+        v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
+        @click="setMemberNotAdmin(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.removeAdmin') }}
+        {{ $t("groups.contextMenu.removeAdmin") }}
       </li>
       <li
-          v-if="
+        v-if="
           !isUser(clickOnMember) && friends != null && !isFriend(clickOnMember)
         "
-          @click="addMemberAsFriend(clickOnMember)"
+        @click="addMemberAsFriend(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.addFriend') }}
+        {{ $t("groups.contextMenu.addFriend") }}
       </li>
     </ul>
   </div>
 
   <!-- 引入自定义确认框组件 -->
   <ConfirmDialog
-      v-model:isVisible="isConfirmDialogVisible"
-      :message="confirmMessage"
-      @confirm="handleConfirm"
+    v-model:isVisible="isConfirmDialogVisible"
+    :message="confirmMessage"
+    @confirm="handleConfirm"
   />
 
   <div>
     <div class="blockContainer">
-      <h2>{{ $t('groups.memberListTitle') }}</h2>
+      <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0" class="loading">
-          {{ $t('common.loading') }}
+          {{ $t("common.loading") }}
         </div>
         <li
-            v-else
-            v-for="member in showedGroupMembers"
-            :key="member.id"
-            class="memberItem"
-            :class="{
+          v-else
+          v-for="member in showedGroupMembers"
+          :key="member.id"
+          class="memberItem"
+          :class="{
             owner: isMemberGroupOwner(member),
             admin: isMemberGroupAdmin(member),
           }"
-            @contextmenu="showMenu($event, member)"
+          @contextmenu="showMenu($event, member)"
         >
           <img
-              :src="this.$store.getters.getAvatar(member.avatarId)"
-              :alt="$t('common.avatarAlt')"
-              class="memberAvatar"
+            :src="this.$store.getters.getAvatar(member.avatarId)"
+            :alt="$t('common.avatarAlt')"
+            class="memberAvatar"
           />
           <span class="memberNickname"
-          >{{ member.username }} (#{{ member.id }})
+            >{{ member.username }} (#{{ member.id }})
           </span>
         </li>
         <div
-            class="memberItem"
-            @click="startAddingGroupMember"
-            v-if="!isSelectingFriend"
+          class="memberItem"
+          @click="startAddingGroupMember"
+          v-if="!isSelectingFriend"
         >
           +
         </div>
       </ul>
       <div v-if="isSelectingFriend" class="addGroupMemberContainer">
         <FriendSelection
-            v-model="selectedFriends"
-            :userId="userId"
-            :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
+          v-model="selectedFriends"
+          :userId="userId"
+          :unavailableFriendIds="getGroupMemberIdArray(groupMembers)"
         />
 
         <div class="doubleButtonContainer">
           <button @click="cancelAddingGroupMember" class="button warningButton">
-            {{ $t('common.cancel') }}
+            {{ $t("common.cancel") }}
           </button>
           <button @click="addGroupMember" class="button normalButton">
-            {{ $t('groups.inviteButton') }}
+            {{ $t("groups.inviteButton") }}
           </button>
         </div>
       </div>
     </div>
 
     <div class="blockContainer">
-      <h2>{{ $t('groups.groupInfoTitle') }}</h2>
+      <h2>{{ $t("groups.groupInfoTitle") }}</h2>
       <div class="groupField" v-if="isEditingName">
         <input
-            ref="groupNameInput"
-            v-model="editableGroupName"
-            @blur="saveGroupName"
-            @keyup.enter="saveGroupName"
-            class=""
+          ref="groupNameInput"
+          v-model="editableGroupName"
+          @blur="saveGroupName"
+          @keyup.enter="saveGroupName"
+          class=""
         />
       </div>
       <div class="groupField" @click="startEditing('name')" v-else>
-        <span>{{ $t('groups.groupNameLabel') }} </span>
+        <span>{{ $t("groups.groupNameLabel") }} </span>
         <span class="editableText">{{ showedGroupName }}</span>
       </div>
 
       <div class="groupField" v-if="isEditingDescription">
         <textarea
-            ref="groupDescriptionInput"
-            v-model="editableGroupDescription"
-            @blur="saveGroupDescription"
-            @keyup.enter="saveGroupDescription"
+          ref="groupDescriptionInput"
+          v-model="editableGroupDescription"
+          @blur="saveGroupDescription"
+          @keyup.enter="saveGroupDescription"
         ></textarea>
       </div>
       <div class="groupField" @click="startEditing('description')" v-else>
-        <span>{{ $t('groups.groupDescLabel') }} </span>
+        <span>{{ $t("groups.groupDescLabel") }} </span>
         <span class="editableText">{{
-            showedGroupDescription ? showedGroupDescription : $t('groups.noDescription')
-          }}</span>
+          showedGroupDescription
+            ? showedGroupDescription
+            : $t("groups.noDescription")
+        }}</span>
       </div>
     </div>
 
     <button
-        class="button warningButton"
-        @click="disbandGroup"
-        v-if="isUserGroupOwner()"
+      class="button warningButton"
+      @click="disbandGroup"
+      v-if="isUserGroupOwner()"
     >
-      {{ $t('groups.disbandButton') }}
+      {{ $t("groups.disbandButton") }}
     </button>
     <button
-        class="button warningButton"
-        @click="leaveGroup"
-        v-if="!isUserGroupOwner()"
+      class="button warningButton"
+      @click="leaveGroup"
+      v-if="!isUserGroupOwner()"
     >
-      {{ $t('groups.leaveButton') }}
+      {{ $t("groups.leaveButton") }}
     </button>
   </div>
 </template>
@@ -162,10 +164,11 @@ import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
 import { Role } from "@/config/constants";
 
 import { getFriendList } from "@/utils/friendService";
+import { fetchGroups } from "@/utils/groupService";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
-import {validateInput} from "@/utils/validationUtils";
+import { validateInput } from "@/utils/validationUtils";
 
 export default {
   name: "GroupEditor",
@@ -248,71 +251,81 @@ export default {
     async deleteMember(member) {
       try {
         if (this.showedGroupMembers.length === 2) {
-          this.confirmMessage = this.$t('groups.confirm.disbandWhenRemove', {
+          this.confirmMessage = this.$t("groups.confirm.disbandWhenRemove", {
             username: member.username,
-            id: member.id
+            id: member.id,
           });
           this.isConfirmDialogVisible = true;
         } else {
-          await this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`);
+          await this.$axios.delete(
+            `/groups/${this.groupId}/members/${member.id}`
+          );
           this.closeMenu();
           const index = this.groupMembers.findIndex(
-              (tempMember) => tempMember.id === member.id
+            (tempMember) => tempMember.id === member.id
           );
           this.showedGroupMembers.splice(index, 1);
           showToast(
-              this.toast,
-              this.$t('groups.memberManagement.removeMemberSuccess', {
-                username: member.username,
-                id: member.id
-              }),
-              "success"
+            this.toast,
+            this.$t("groups.memberManagement.removeMemberSuccess", {
+              username: member.username,
+              id: member.id,
+            }),
+            "success"
           );
         }
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.removeMemberFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.removeMemberFailed"),
+          "error"
+        );
       }
     },
 
     async setMemberAdmin(member) {
       try {
         await this.$axios.put(
-            `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
-            { newRole: Role.Admin }
+          `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
+          { newRole: Role.Admin }
         );
         this.closeMenu();
         member.role = Role.Admin;
         showToast(
-            this.toast,
-            this.$t('groups.memberManagement.setAdminSuccess', {
-              username: member.username,
-              id: member.id
-            }),
-            "success"
+          this.toast,
+          this.$t("groups.memberManagement.setAdminSuccess", {
+            username: member.username,
+            id: member.id,
+          }),
+          "success"
         );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.setAdminFailed'), "error");
+        showToast(this.toast, this.$t("groups.errors.setAdminFailed"), "error");
       }
     },
 
     async setMemberNotAdmin(member) {
       try {
         await this.$axios.put(
-            `/groups/${this.groupId}/members/${member.id}/update-role`,
-            { newRole: Role.Member }
+          `/groups/${this.groupId}/members/${member.id}/update-role`,
+          { newRole: Role.Member }
         );
         this.closeMenu();
         member.role = Role.Member;
         showToast(
-            this.toast,
-            this.$t('groups.memberManagement.removeAdminSuccess', {
-              username: member.username,
-              id: member.id
-            }),
-            "success"
+          this.toast,
+          this.$t("groups.memberManagement.removeAdminSuccess", {
+            username: member.username,
+            id: member.id,
+          }),
+          "success"
         );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.removeAdminFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.removeAdminFailed"),
+          "error"
+        );
       }
     },
 
@@ -322,10 +335,18 @@ export default {
           senderId: Number(this.userId),
           receiverId: Number(member.id),
         });
-        showToast(this.toast, this.$t('friends.success.requestSent'), "success");
+        showToast(
+          this.toast,
+          this.$t("friends.success.requestSent"),
+          "success"
+        );
         this.closeMenu();
       } catch (error) {
-        showToast(this.toast, this.$t('friends.errors.sendRequestFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("friends.errors.sendRequestFailed"),
+          "error"
+        );
       }
     },
     isFriend(member) {
@@ -347,7 +368,7 @@ export default {
           }, 0);
         }
       } else {
-        showToast(this.toast, this.$t('groups.permissionDenied.edit'), "error");
+        showToast(this.toast, this.$t("groups.permissionDenied.edit"), "error");
       }
     },
 
@@ -360,12 +381,15 @@ export default {
     },
     async saveGroupName() {
       this.isEditingName = false;
-      if( this.showedGroupName === this.editableGroupName){
+      if (this.showedGroupName === this.editableGroupName) {
         return;
       }
-      this.errorMessage=validateInput(this.$constants.GROUP_NAME_VALIDATION,this.editableGroupName)
+      this.errorMessage = validateInput(
+        this.$constants.GROUP_NAME_VALIDATION,
+        this.editableGroupName
+      );
       if (this.errorMessage) {
-        showToast(this.toast,this.errorMessage,"error")
+        showToast(this.toast, this.errorMessage, "error");
         return;
       }
       try {
@@ -373,19 +397,27 @@ export default {
         await this.$axios.put(`/task-group/${this.groupId}/update-name`, null, {
           params: { name: this.editableGroupName },
         });
-        showToast(this.toast, this.$t('groups.groupManagement.nameUpdateSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.nameUpdateSuccess"),
+          "success"
+        );
         this.updateHeader();
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.updateNameFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.updateNameFailed"),
+          "error"
+        );
       }
     },
     async saveGroupDescription() {
       this.isEditingDescription = false;
-      if(this.showedGroupDescription === this.editableGroupDescription) {
+      if (this.showedGroupDescription === this.editableGroupDescription) {
         return;
       }
-      if(this.editableGroupDescription==null){
-        this.editableGroupDescription="";
+      if (this.editableGroupDescription == null) {
+        this.editableGroupDescription = "";
       }
 
       try {
@@ -397,20 +429,33 @@ export default {
             params: { description: this.editableGroupDescription },
           }
         );
-        showToast(this.toast, this.$t('groups.groupManagement.descUpdateSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.descUpdateSuccess"),
+          "success"
+        );
         this.updateHeader();
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.updateDescFailed'), "error");
+        showToast(
+          this.toast,
+          this.$t("groups.errors.updateDescFailed"),
+          "error"
+        );
       }
     },
     //todo:创建、退、删群后，仍显示原有群聊信息，必须由用户手动刷新
     async disbandGroup() {
       try {
         await this.$axios.delete(`/task-group/${this.groupId}`);
-        showToast(this.toast, this.$t('groups.groupManagement.disbandSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.disbandSuccess"),
+          "success"
+        );
+        fetchGroups(this.$store.getters.getUserId);
         this.$router.push("/groups");
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.disbandFailed'), "error");
+        showToast(this.toast, this.$t("groups.errors.disbandFailed"), "error");
       }
     },
     async leaveGroup() {
@@ -422,10 +467,15 @@ export default {
             `/groups/${this.groupId}/members/${this.userId}`
           );
         }
-        showToast(this.toast, this.$t('groups.groupManagement.leaveSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.leaveSuccess"),
+          "success"
+        );
+        fetchGroups(this.$store.getters.getUserId);
         this.$router.push("/groups");
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.leaveFailed'), "error");
+        showToast(this.toast, this.$t("groups.errors.leaveFailed"), "error");
       }
     },
 
@@ -438,8 +488,12 @@ export default {
     async addGroupMember() {
       try {
         if (this.selectedFriends.length === 0) {
-          console.log(this.$t('groups.errors.selectAtLeastOne'))
-          showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), "error");
+          console.log(this.$t("groups.errors.selectAtLeastOne"));
+          showToast(
+            this.toast,
+            this.$t("groups.errors.selectAtLeastOne"),
+            "error"
+          );
           return;
         }
         const promises = [];
@@ -460,9 +514,13 @@ export default {
         // 等待所有请求完成
         await Promise.all(promises);
         this.isSelectingFriend = false;
-        showToast(this.toast, this.$t('groups.memberManagement.inviteSuccess'), "success");
+        showToast(
+          this.toast,
+          this.$t("groups.memberManagement.inviteSuccess"),
+          "success"
+        );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.inviteFailed'), "error");
+        showToast(this.toast, this.$t("groups.errors.inviteFailed"), "error");
       }
     },
     getGroupMemberIdArray(groupMembers) {
