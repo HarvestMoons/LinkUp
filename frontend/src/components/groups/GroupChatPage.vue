@@ -82,7 +82,7 @@
         taskListLoading: taskListLoading,
         groupId: groupId,
         isInGroupPage: true,
-        refreshTaskData: fetchGroupTasks,
+        refreshTaskList: fetchGroupTasks,
       }"
       @close="toggleTaskSidebar"
     />

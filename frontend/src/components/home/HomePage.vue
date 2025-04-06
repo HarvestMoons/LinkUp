@@ -12,7 +12,7 @@
           }}
         </h2>
 
-        <div class="blockContainer">
+        <div class="blockContainer toTaskContainer" @click="enterTaskPage">
           <h3>{{ $t("dashboard.todoTitle") }}</h3>
           <p>
             {{
@@ -23,7 +23,7 @@
           </p>
         </div>
 
-        <div class="blockContainer">
+        <div class="blockContainer toTaskContainer" @click="enterTaskPage">
           <h3>{{ $t("dashboard.completionRate") }}</h3>
           <p>
             {{ $t("dashboard.weeklyRate", { rate: weeklyCompletionRate }) }}
@@ -33,7 +33,11 @@
           </p>
         </div>
 
-        <div class="blockContainer" v-if="upcomingDeadlines.length !== 0">
+        <div
+          class="blockContainer toTaskContainer"
+          v-if="upcomingDeadlines.length !== 0"
+          @click="enterTaskPage"
+        >
           <h3>{{ $t("dashboard.upcomingDeadlines") }}</h3>
           <ul>
             <li v-for="task in upcomingDeadlines" :key="task.id">
@@ -137,6 +141,9 @@ export default {
     formatDate(date) {
       return new Date(date).toLocaleDateString("zh-CN");
     },
+    enterTaskPage() {
+      this.$router.push(`/tasks`);
+    },
   },
 };
 </script>
@@ -174,5 +181,9 @@ p {
   flex: 2;
   max-width: 600px;
   min-width: 400px;
+}
+
+.toTaskContainer {
+  cursor: pointer;
 }
 </style>
