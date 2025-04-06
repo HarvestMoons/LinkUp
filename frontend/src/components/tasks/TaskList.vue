@@ -33,7 +33,10 @@
     </div>
 
     <div class="tasksContainer">
-      <div v-if="taskListLoading" class="blockContainer loading">
+      <div
+        v-if="tasks == null || taskListLoading"
+        class="blockContainer loading"
+      >
         {{ $t("common.loading") }}
       </div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
@@ -392,7 +395,6 @@ import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 import TaskForm from "@/components/tasks/TaskForm.vue";
 //TODO:HTML大量重复，可以化简
-//TODO：严重bug，在此页面修改群组任务后，其groupId变成null，被判定为非群组任务
 export default {
   components: { TaskBlock, TaskForm },
   name: "TaskList",
@@ -545,6 +547,7 @@ export default {
         }
         newTask.creator = this.$store.getters.getUser;
         newTask.taskGroupId = this.groupId;
+        console.log(newTask);
         await this.$axios.post("/tasks/create", newTask);
         showToast(this.toast, this.$t("task.success.create"), "success");
 
@@ -552,7 +555,6 @@ export default {
         this.isCreating = false;
         this.resetForm();
         this.showedTasks.push(newTask);
-        //todo：需要更新保持数据一致性
         this.refreshTaskList();
       } catch (error) {
         console.error(this.$t("task.errors.create"), error);
@@ -599,7 +601,6 @@ export default {
         await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
         this.editingTasks[taskId] = false;
         showToast(this.toast, this.$t("task.success.update"), "success");
-        //todo：需要更新
         this.refreshTaskList();
       } catch (error) {
         console.error(this.$t("task.errors.update"), error);

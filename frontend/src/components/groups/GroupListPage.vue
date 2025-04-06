@@ -62,7 +62,7 @@
       </transition>
     </div>
     <div class="blockContainer">
-      <div v-if="groupListLoading" class="loading">
+      <div v-if="groups == null || groupListLoading" class="loading">
         {{ $t("common.loading") }}
       </div>
       <div v-else-if="groups.length === 0" class="loading">
@@ -107,7 +107,7 @@ export default {
   components: { FriendSelection },
   data() {
     return {
-      groupListLoading: true, // 加载状态
+      groupListLoading: false, // 加载状态
       friendListLoading: false,
       isCreating: false,
       newGroup: [],
@@ -121,7 +121,7 @@ export default {
   },
   computed: {
     groups() {
-      return this.$store.getters.getGroupList;
+      return this.$store.getters.getGroupList || this.groups;
     },
   },
   async mounted() {

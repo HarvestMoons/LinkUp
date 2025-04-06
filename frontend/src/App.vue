@@ -12,7 +12,7 @@
           class="userAvatar"
         />
         <span class="userNickname"
-          >{{ this.$store.getters.getUser.username }} (#{{
+          >{{ this.$store.getters.getUser?.username || "" }} (#{{
             this.$store.getters.getUserId
           }})
         </span>

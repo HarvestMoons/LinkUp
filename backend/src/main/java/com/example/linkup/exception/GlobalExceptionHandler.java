@@ -29,15 +29,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    /*
-     * @ExceptionHandler(DataAccessException.class)
-     * public ResponseEntity<Map<String, Object>> handleDatabaseException() {
-     * Map<String, Object> response = new HashMap<>();
-     * response.put(ErrorMessageConstants.MESSAGE,
-     * ErrorMessageConstants.DATABASE_ERROR);
-     * return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-     * }
-     */
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, Object>> handleDatabaseException() {
+        Map<String, Object> response = new HashMap<>();
+        response.put(ErrorMessageConstants.MESSAGE, ErrorMessageConstants.DATABASE_ERROR);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException ex) {
         Map<String, Object> response = new HashMap<>();

@@ -6,7 +6,7 @@ module.exports = defineConfig({
         port: 3000,
         proxy: {
             '/api': {
-                target: "http://localhost:8099",// 代理 API 请求 // localhost
+                target: "http://8.155.47.138:8099",// 代理 API 请求 // localhost
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''
@@ -14,7 +14,7 @@ module.exports = defineConfig({
                 logLevel: 'debug'
             },
             '/chatroom': {  // 添加 WebSocket 代理
-                target: "http://localhost:8099",
+                target: "http://8.155.47.138:8099",
                 ws: true, // 关键：启用 WebSocket 代理
                 changeOrigin: true,
                 logLevel: 'debug'

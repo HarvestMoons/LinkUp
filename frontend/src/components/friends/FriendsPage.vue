@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="blockContainer">
-      <div v-if="friendListLoading" class="loading">
+      <div v-if="friends == null || friendListLoading" class="loading">
         {{ $t("common.loading") }}
       </div>
       <div v-else-if="friends.length === 0" class="loading">
@@ -98,8 +98,8 @@ export default {
     return {
       friendId: "",
       pendingRequests: [], // 存储待处理的好友申请列表
-      friendListLoading: true, // 加载状态
-      friendRequestLoading: true,
+      friendListLoading: false, // 加载状态
+      friendRequestLoading: false,
     };
   },
   setup() {
@@ -108,7 +108,7 @@ export default {
   },
   computed: {
     friends() {
-      return this.$store.getters.getFriendList;
+      return this.$store.getters.getFriendList || this.friends;
     },
   },
   async mounted() {
@@ -116,6 +116,7 @@ export default {
     if (!this.userId) {
       return;
     }
+
     // 在组件挂载后获取好友数据
     // 调用公共方法
 

@@ -443,7 +443,6 @@ export default {
         );
       }
     },
-    //todo:创建、退、删群后，仍显示原有群聊信息，必须由用户手动刷新
     async disbandGroup() {
       try {
         await this.$axios.delete(`/task-group/${this.groupId}`);

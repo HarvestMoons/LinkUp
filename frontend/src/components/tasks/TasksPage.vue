@@ -22,7 +22,7 @@ export default {
   components: { TaskList },
   data() {
     return {
-      taskListLoading: true,
+      taskListLoading: false,
     };
   },
   setup() {
@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     tasks() {
-      return this.$store.getters.getTaskList;
+      return this.$store.getters.getTaskList || this.tasks;
     },
   },
   async mounted() {

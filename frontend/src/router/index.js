@@ -105,7 +105,6 @@ router.beforeEach((to, from, next) => {
         next({ name: 'home1' }) // 已登录用户访问登录/注册页时重定向到首页
         return
     }
-
     document.title = `Link Up - ${typeof to.meta.title === 'string' ? to.meta.title : '默认标题'}`;
     next();
 });
