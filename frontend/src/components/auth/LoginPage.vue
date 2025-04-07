@@ -2,14 +2,14 @@
 <template>
   <div class="container">
     <div class="loginContainer">
-      <h1>Login</h1>
+      <h1>{{ $t("auth.login.title") }}</h1>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label for="username">Username:</label>
+          <label for="username">{{ $t("auth.username") }}:</label>
           <input type="text" id="usernameInput" v-model="username" required />
         </div>
         <div class="form-group">
-          <label for="password">Password:</label>
+          <label for="password">{{ $t("auth.password") }}:</label>
           <input
             type="password"
             id="passwordInput"
@@ -20,7 +20,9 @@
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-        <button type="submit" class="longButton normalButton">Login</button>
+        <button type="submit" class="longButton normalButton">
+          {{ $t("auth.login.title") }}
+        </button>
       </form>
 
       <p>
