@@ -1,5 +1,5 @@
 {
-  "name":"Group name",
+  "name": "Group name",
   "tasksButton": "Tasks",
   "groupInfoButton": "Group Info",
   "messagePlaceholder": "Type a message...",
@@ -65,6 +65,8 @@
   "permissionDenied": {
     "edit": "You don't have permission to edit"
   },
+  "groupNameLoading": "Group Name Loading",
+  "groupDescLoading": "Group Description Loading",
   "memberListTitle": "Group Members",
   "groupInfoTitle": "Group Info",
   "groupNameLabel": "Group Name:",
@@ -73,5 +75,4 @@
   "inviteButton": "Invite",
   "disbandButton": "Disband Group",
   "leaveButton": "Leave Group"
-
 }

@@ -64,7 +64,7 @@ ul {
     border-radius: 5px;
     border: none;
     cursor: pointer;
-    width: 100px;
+    min-width: 100px;
     font-weight: bold;
     height: 36px;
 }

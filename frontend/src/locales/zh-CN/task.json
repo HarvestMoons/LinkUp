@@ -1,10 +1,11 @@
 {
   "enterGroup": "进入群聊",
-  "orderByStatus":"按任务状态排序",
+  "orderByStatus": "按任务状态排序",
   "orderByPriority": "按任务优先级排序",
   "edit": "编辑任务",
   "noDescription": "无描述",
   "overdue": "已逾期",
+  "createButton": "创建任务",
   "form": {
     "titleLabel": "任务标题",
     "titlePlaceholder": "请输入任务标题",
@@ -15,7 +16,7 @@
     "dueDateLabel": "截止日期",
     "submitButton": "提交任务"
   },
-  "priorityTiTle":{
+  "priorityTiTle": {
     "low": "低优先级",
     "medium": "中优先级",
     "high": "高优先级"

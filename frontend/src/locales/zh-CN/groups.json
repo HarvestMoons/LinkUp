@@ -44,7 +44,7 @@
     "leaveFailed": "退出群组失败",
     "inviteFailed": "邀请好友加入群组失败",
     "selectAtLeastOne": "至少需要选择一个好友",
-    "createGroupFailed":"创建群组失败"
+    "createGroupFailed": "创建群组失败"
   },
   "confirm": {
     "disbandWhenRemove": "当前群聊只有两人，踢出该成员会直接解散群聊，是否确认踢出用户 {username}(#{id})?"
@@ -65,6 +65,8 @@
   "permissionDenied": {
     "edit": "你不是该群组的管理员，无权修改！"
   },
+  "groupNameLoading": "群组名称加载中",
+  "groupDescLoading": "群组描述加载中",
   "memberListTitle": "群成员",
   "groupInfoTitle": "群组信息",
   "groupNameLabel": "群组名称:",
@@ -73,5 +75,4 @@
   "inviteButton": "邀请",
   "disbandButton": "解散群聊",
   "leaveButton": "退出群聊"
-
 }

@@ -129,8 +129,8 @@ export default {
       groupId: null,
       groupData: {
         id: 1,
-        name: "群组名称加载中",
-        description: "群组描述加载中",
+        name: this.$t("groups.groupNameLoading"),
+        description: this.$t("groups.groupDescLoading"),
       },
       groupMembers: [],
       isMember: false,

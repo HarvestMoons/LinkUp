@@ -19,7 +19,7 @@
         @click="startCreateTask"
         class="button extendButton"
       >
-        创建任务
+        {{ $t("task.createButton") }}
       </button>
       <!--</transition>-->
     </div>

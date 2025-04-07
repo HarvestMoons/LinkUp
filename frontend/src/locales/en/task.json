@@ -1,10 +1,11 @@
 {
   "enterGroup": "Group",
-  "orderByStatus":"Order By Status",
+  "orderByStatus": "Order By Status",
   "orderByPriority": "Order By Priority",
   "edit": "Edit",
-  "noDescription":"No Description",
+  "noDescription": "No Description",
   "overdue": "Overdue",
+  "createButton": "Create Task",
   "form": {
     "titleLabel": "Task Title",
     "titlePlaceholder": "Enter task title",
@@ -15,7 +16,7 @@
     "dueDateLabel": "Due Date",
     "submitButton": "Submit Task"
   },
-  "priorityTiTle":{
+  "priorityTiTle": {
     "low": "Low Priority",
     "medium": "Medium Priority",
     "high": "High Priority"

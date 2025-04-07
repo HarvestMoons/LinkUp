@@ -257,7 +257,7 @@ nav a.router-link-exact-active {
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  width: 120px; /* 根据需要调整宽度 */
+  min-width: 110px; /* 根据需要调整宽度 */
   background-color: #938a8a;
   color: white;
   font-weight: bold;
