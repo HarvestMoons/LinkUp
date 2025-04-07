@@ -213,7 +213,7 @@ export default {
         );
       } catch (error) {
         console.error("拒绝好友申请失败:", error);
-        showToast(this.toast, this.$t("friends.error.rejectFailed"), "error");
+        showToast(this.toast, this.$t("friends.errors.rejectFailed"), "error");
       }
     },
 
@@ -235,7 +235,7 @@ export default {
         );
       } catch (error) {
         console.error("删除好友失败:", error);
-        showToast(this.toast, this.$t("friends.error.deleteFailed"), "error");
+        showToast(this.toast, this.$t("friends.errors.deleteFailed"), "error");
       }
     },
   },
