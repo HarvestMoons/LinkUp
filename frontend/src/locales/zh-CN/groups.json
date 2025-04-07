@@ -6,6 +6,7 @@
   "sendButton": "发送",
   "createButton": "创建群组",
   "noGroups": "无群组",
+  "groupAvatarAlt":"群组头像",
   "create": {
     "nameLabel": "群组名称",
     "namePlaceholder": "请输入群组名称",

@@ -373,11 +373,7 @@ export default {
     },
 
     updateHeader() {
-      try {
-        this.refreshGroupData();
-      } catch (error) {
-        console.error("更新群组抬头信息失败", error);
-      }
+      this.refreshGroupData();
     },
     async saveGroupName() {
       this.isEditingName = false;
@@ -491,7 +487,7 @@ export default {
           showToast(
             this.toast,
             this.$t("groups.errors.selectAtLeastOne"),
-            "error"
+            "warning"
           );
           return;
         }

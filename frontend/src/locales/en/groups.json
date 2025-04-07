@@ -6,6 +6,7 @@
   "sendButton": "Send",
   "createButton": "Create Group",
   "noGroups": "No groups",
+  "groupAvatarAlt": "groupAvatar",
   "create": {
     "nameLabel": "Group name",
     "namePlaceholder": "Enter group name",

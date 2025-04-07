@@ -83,7 +83,7 @@
                 :src="avatar"
                 class="avatarInGroupAvatar"
                 :class="`avatar-${group.avatars.length}`"
-              />
+               :alt="$t('groups.groupAvatarAlt')"/>
             </div>
             <span class="nickname">{{ group.name }} (#{{ group.id }})</span>
           </li>
@@ -144,14 +144,13 @@ export default {
         showToast(this.toast, errorMessage, "error");
         return;
       }
-
       try {
         // TODO: 创建群组和拉人分两步会不会不好回滚(目前可以考虑使用定时清理数据库的方法解决)
         if (this.selectedFriends.length === 0) {
           showToast(
             this.toast,
             this.$t("groups.errors.selectAtLeastOne"),
-            "error"
+            "warning"
           );
           return;
         }
@@ -183,7 +182,6 @@ export default {
           "success"
         );
       } catch (error) {
-        console.error("创建群组失败:", error);
         showToast(
           this.toast,
           this.$t("groups.errors.createGroupFailed"),
