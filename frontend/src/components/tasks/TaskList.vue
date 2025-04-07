@@ -2,6 +2,7 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
+      <HelpTooltip message="这里是一些提示内容。" />
       <!--<transition name="taskFormTransition">-->
       <!-- 控制是否显示输入框 -->
       <TaskForm
@@ -40,7 +41,7 @@
         {{ $t("common.loading") }}
       </div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
-        {{$t('task.noTask')}}
+        {{ $t("task.noTask") }}
       </div>
       <!-- 显示任务列表 -->
       <div v-else>
@@ -394,9 +395,11 @@ import { useToast } from "vue-toastification";
 import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 import TaskForm from "@/components/tasks/TaskForm.vue";
+import HelpTooltip from "@/components/common/HelpTooltip.vue";
+
 //TODO:HTML大量重复，可以化简
 export default {
-  components: { TaskBlock, TaskForm },
+  components: { TaskBlock, TaskForm, HelpTooltip },
   name: "TaskList",
   props: {
     tasks: Array, // 任务数据

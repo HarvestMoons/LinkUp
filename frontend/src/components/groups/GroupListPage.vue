@@ -3,6 +3,7 @@
   <div class="container">
     <!-- 添加好友输入框和按钮 -->
     <div class="blockContainer">
+      <HelpTooltip message="这里是一些提示内容。" />
       <transition name="createGroupContainerTransition">
         <div class="createGroupContainer" v-if="isCreating">
           <div class="allInputFields">
@@ -83,7 +84,8 @@
                 :src="avatar"
                 class="avatarInGroupAvatar"
                 :class="`avatar-${group.avatars.length}`"
-               :alt="$t('groups.groupAvatarAlt')"/>
+                :alt="$t('groups.groupAvatarAlt')"
+              />
             </div>
             <span class="nickname">{{ group.name }} (#{{ group.id }})</span>
           </li>
@@ -95,6 +97,7 @@
 
 <script>
 import FriendSelection from "@/components/friends/FriendSelection.vue";
+import HelpTooltip from "@/components/common/HelpTooltip.vue";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
@@ -104,7 +107,7 @@ import { fetchGroups, getGroupList } from "@/utils/groupService";
 
 export default {
   name: "GroupListPage",
-  components: { FriendSelection },
+  components: { FriendSelection, HelpTooltip },
   data() {
     return {
       groupListLoading: false, // 加载状态

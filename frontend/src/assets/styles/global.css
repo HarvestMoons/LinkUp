@@ -47,6 +47,7 @@ ul {
 /* #endregion */
 
 .container {
+    position: relative;
     margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -121,6 +122,7 @@ ul {
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     /* 阴影效果 */
     overflow-x: hidden;
+    position: relative;
 }
 
 .loading {

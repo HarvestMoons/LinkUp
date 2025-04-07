@@ -2,6 +2,7 @@
 <template>
   <div class="container">
     <div class="home-container">
+      <HelpTooltip message="这里是一些提示内容。" />
       <!-- 左侧信息面板 -->
       <div class="info-panel">
         <h2 class="greeting">
@@ -63,11 +64,12 @@
 <script>
 import { getTaskList } from "@/utils/taskService";
 import TaskCalendar from "@/components/tasks/TaskCalendar.vue";
+import HelpTooltip from "@/components/common/HelpTooltip.vue";
 import { TaskStatus } from "@/config/constants";
 
 export default {
   name: "HomePage",
-  components: { TaskCalendar },
+  components: { TaskCalendar, HelpTooltip },
   data() {
     return {
       user: null,
@@ -179,8 +181,9 @@ p {
 
 .calendar-view {
   flex: 2;
-  max-width: 600px;
+  max-width: min(100vw, 600px);
   min-width: 400px;
+  overflow: hidden;
 }
 
 .toTaskContainer {

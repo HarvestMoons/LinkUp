@@ -55,6 +55,7 @@
 
   <div>
     <div class="blockContainer">
+      <HelpTooltip message="这里是一些提示内容。" />
       <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0" class="loading">
@@ -107,6 +108,7 @@
     </div>
 
     <div class="blockContainer">
+      <HelpTooltip message="这里是一些提示内容。" />
       <h2>{{ $t("groups.groupInfoTitle") }}</h2>
       <div class="groupField" v-if="isEditingName">
         <input
@@ -160,6 +162,7 @@
 <script>
 import FriendSelection from "@/components/friends/FriendSelection.vue";
 import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
+import HelpTooltip from "@/components/common/HelpTooltip.vue";
 
 import { Role } from "@/config/constants";
 
@@ -172,7 +175,7 @@ import { validateInput } from "@/utils/validationUtils";
 
 export default {
   name: "GroupEditor",
-  components: { FriendSelection, ConfirmDialog },
+  components: { FriendSelection, ConfirmDialog, HelpTooltip },
   props: {
     groupId: Number,
     groupName: String,

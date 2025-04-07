@@ -8,9 +8,7 @@
   <transition name="slide">
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
-      <button class="button warningButton" @click="$emit('close')">
-        ✖ {{ $t("common.close") }}
-      </button>
+      <div class="closeSign" @click="$emit('close')">✖</div>
       <component :is="contentComponent" v-bind="contentProps"></component>
     </div>
   </transition>
@@ -35,6 +33,13 @@ export default {
 </script>
 
 <style scoped>
+.closeSign {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  cursor: pointer;
+}
+
 .overlay {
   position: fixed;
   top: 0;
@@ -46,7 +51,8 @@ export default {
 }
 
 .sidebar {
-  width: 640px;
+  max-width: 640px;
+  width: 100%;
   height: 100%;
   position: fixed;
   top: 0;
