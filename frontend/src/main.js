@@ -12,6 +12,7 @@ import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import i18n from "@/i18n";
 
+
 const axiosInstance = axios.create({
     baseURL: constants.API_BASE_URL, // 设置基本的 API URL
     withCredentials: true, // 允许跨域请求携带 Cookie
@@ -38,7 +39,6 @@ axiosInstance.interceptors.request.use(
 );
 
 const app = createApp(App)
-
 // 配置 axios
 app.config.globalProperties.$axios = axiosInstance
 axios.defaults.baseURL = constants.API_BASE_URL

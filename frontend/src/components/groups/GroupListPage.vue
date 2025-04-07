@@ -62,10 +62,10 @@
       </transition>
     </div>
     <div class="blockContainer">
-      <div v-if="groups == null || groupListLoading" class="loading">
-        {{ $t("common.loading") }}
+      <div v-if="groups == null || groupListLoading">
+        <MySpinner />
       </div>
-      <div v-else-if="groups.length === 0" class="loading">
+      <div v-else-if="groups.length === 0" class="nothing-notice">
         {{ $t("groups.noGroups") }}
       </div>
       <div v-else>
@@ -101,10 +101,11 @@ import { useToast } from "vue-toastification";
 import { Role } from "@/config/constants";
 import { validateInput } from "@/utils/validationUtils";
 import { fetchGroups, getGroupList } from "@/utils/groupService";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
   name: "GroupListPage",
-  components: { FriendSelection },
+  components: {MySpinner, FriendSelection },
   data() {
     return {
       groupListLoading: false, // 加载状态

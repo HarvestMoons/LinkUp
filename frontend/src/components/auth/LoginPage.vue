@@ -5,11 +5,11 @@
       <h1>{{ $t("auth.login.title") }}</h1>
       <form @submit.prevent="login">
         <div class="form-group">
-          <label for="username">{{ $t("auth.username") }}:</label>
+          <label for="username">{{ $t("common.username") }}:</label>
           <input type="text" id="usernameInput" v-model="username" required />
         </div>
         <div class="form-group">
-          <label for="password">{{ $t("auth.password") }}:</label>
+          <label for="password">{{ $t("common.password") }}:</label>
           <input
             type="password"
             id="passwordInput"

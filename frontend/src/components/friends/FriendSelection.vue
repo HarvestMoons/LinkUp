@@ -1,28 +1,30 @@
 <!-- FriendSelection.vue> -->
 <template>
   <div class="friendsDropdown">
-    <div v-if="friendListLoading" class="loading">{{$t('common.loading')}}</div>
-    <div v-else-if="friends.length === 0" class="loading">{{$t('friends.noFriends')}}</div>
+    <div v-if="friendListLoading">
+      <MySpinner/>
+    </div>
+    <div v-else-if="friends.length === 0" class="nothing-notice">{{ $t('friends.noFriends') }}</div>
     <div v-else>
       <ul class="friendsList">
         <li
-          v-for="friend in friends"
-          :key="friend.id"
-          class="friendItem"
-          @click="toggleSelection(friend)"
-          :class="{
+            v-for="friend in friends"
+            :key="friend.id"
+            class="friendItem"
+            @click="toggleSelection(friend)"
+            :class="{
             selected: selectedFriends.includes(friend),
             unavailable: isUnavailable(friend),
           }"
         >
           <img
-            :src="this.$store.getters.getAvatar(friend.avatarId)"
-            :alt="$t('common.avatarAlt')"
-            class="avatar"
+              :src="this.$store.getters.getAvatar(friend.avatarId)"
+              :alt="$t('common.avatarAlt')"
+              class="avatar"
           />
           <span class="nickname">{{ friend.username }} (#{{ friend.id }})</span>
           <span v-if="selectedFriends.includes(friend)" class="checkmark"
-            >✔</span
+          >✔</span
           >
         </li>
       </ul>
@@ -31,16 +33,18 @@
 </template>
 
 <script>
-import { getFriendList } from "@/utils/friendService";
+import {getFriendList} from "@/utils/friendService";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
   name: "FriendSelection",
+  components: {MySpinner},
   props: {
     userId: Number,
     unavailableFriendIds: Array,
   },
   data() {
-    return { friendListLoading: false, selectedFriends: [] };
+    return {friendListLoading: false, selectedFriends: []};
   },
   mounted() {
     this.fetchFriends();

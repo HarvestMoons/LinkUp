@@ -17,8 +17,8 @@
     </div>
     <!-- 好友申请列表 -->
     <div v-if="pendingRequests.length !== 0" class="blockContainer">
-      <div v-if="friendRequestLoading" class="loading">
-        {{ $t("common.loading") }}
+      <div v-if="friendRequestLoading" class="nothing-notice">
+        <MySpinner />
       </div>
       <div v-else>
         <ul class="friendRequestList">
@@ -55,10 +55,10 @@
       </div>
     </div>
     <div class="blockContainer">
-      <div v-if="friends == null || friendListLoading" class="loading">
-        {{ $t("common.loading") }}
+      <div v-if="friends == null || friendListLoading">
+        <MySpinner />
       </div>
-      <div v-else-if="friends.length === 0" class="loading">
+      <div v-else-if="friends.length === 0" class="nothing-notice">
         {{ $t("friends.noFriends") }}
       </div>
       <!-- 显示好友列表 -->
@@ -91,9 +91,11 @@ import { fetchFriends, getFriendList } from "@/utils/friendService";
 
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
   name: "FriendsPage",
+  components: {MySpinner},
   data() {
     return {
       friendId: "",

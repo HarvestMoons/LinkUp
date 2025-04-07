@@ -19,6 +19,7 @@
     "vue": "^3.2.13",
     "vue-i18n": "^11.1.2",
     "vue-router": "^4.0.3",
+    "vue-simple-spinner": "^1.2.10",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-markdown-it": "^1.0.10",
     "vuex": "^4.1.0"
