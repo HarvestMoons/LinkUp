@@ -1,0 +1,13 @@
+{
+  "password": "Contraseña",
+  "username": "Nombre de usuario",
+  "group": "grupo",
+
+  "cancel": "Cancelar",
+  "confirm": "Confirmar",
+  "save": "Guardar",
+  "close": "Cerrar",
+
+  "loading": "Cargando...",
+  "avatarAlt": "Avatar"
+}

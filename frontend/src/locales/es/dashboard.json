@@ -1,0 +1,17 @@
+{
+  "home": "Inicio",
+  "friends": "Amigos",
+  "tasks": "Tareas",
+  "groups": "Grupos",
+  "logout": "Cerrar sesión",
+  "privacyPolicy": "Política de Privacidad",
+
+  "greeting": "¡Hola, {name}! ¿Cuál es tu plan para hoy?",
+  "todoTitle": "📌 Tareas por hacer",
+  "pendingTasks": "{count} tarea pendiente | {count} tareas pendientes",
+  "completionRate": "📊 Tasa de completado",
+  "weeklyRate": "Esta semana: {rate}%",
+  "monthlyRate": "Este mes: {rate}%",
+  "upcomingDeadlines": "⚠️ Fechas límite próximas",
+  "deadlineItem": "{title} - Vence el {date}"
+}

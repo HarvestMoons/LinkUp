@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "emptyUserId": "¡Por favor ingresa un ID de usuario!",
+    "sendRequestFailed": "¡Error al enviar la solicitud de amistad, por favor inténtalo más tarde!",
+    "acceptFailed": "Error al aceptar la solicitud de amistad",
+    "rejectFailed": "Error al rechazar la solicitud de amistad",
+    "deleteFailed": "Error al eliminar amigo"
+  },
+  "success": {
+    "requestSent": "Solicitud de amistad enviada",
+    "requestAccepted": "Solicitud de amistad aceptada exitosamente",
+    "requestRejected": "Solicitud de amistad rechazada exitosamente",
+    "friendDeleted": "Amigo eliminado exitosamente"
+  },
+  "status": {
+    "fetchFailed": "Error al obtener datos de solicitudes de amistad:"
+  },
+  "inputPlaceholder": "Ingresa ID de usuario",
+  "addFriend": "Añadir amigo",
+  "wantsToAdd": "quiere añadirte como amigo",
+  "accept": "Aceptar",
+  "reject": "Rechazar",
+  "deleteFriend": "Eliminar amigo",
+  "noFriends": "No tienes amigos"
+}

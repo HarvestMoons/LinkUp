@@ -1,0 +1,22 @@
+{
+  "server": {
+    "default": "Error del servidor, por favor inténtalo más tarde.",
+    "network": "No se puede conectar al servidor, por favor verifica tu conexión.",
+    "unknown": "Ocurrió un error desconocido, por favor inténtalo más tarde."
+  },
+  "unknown_parameter": "Valor de parámetro desconocido: {param}",
+  "api": {
+    "400": "Solicitud incorrecta",
+    "401": "No autorizado, por favor inicia sesión",
+    "403": "Permiso denegado",
+    "404": "Recurso no encontrado",
+    "500": "Error interno del servidor"
+  },
+  "validation": {
+    "required": "¡{field} no puede estar vacío!",
+    "too_long": "¡{field} es demasiado largo!",
+    "username_invalid": "¡El nombre de usuario solo puede contener letras, números y guiones bajos!",
+    "password_invalid": "¡La contraseña debe tener al menos 6 caracteres y contener letras y números!",
+    "password_mismatch": "¡Las contraseñas no coinciden!"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "title": "Perfil",
+  "buttons": {
+    "change_password": "Cambiar contraseña",
+    "deactivate_account": "Desactivar cuenta"
+  },
+  "avatar": {
+    "not_selected": "Por favor selecciona un avatar primero",
+    "update_success": "¡Avatar actualizado correctamente!",
+    "update_failed": "Error al actualizar el avatar"
+  },
+  "username": {
+    "placeholder": "Ingresa un nuevo nombre de usuario",
+    "update_success": "Nombre de usuario actualizado correctamente",
+    "update_fail": "Error al actualizar el nombre de usuario"
+  },
+  "password": {
+    "current_label": "Contraseña actual",
+    "new_label": "Nueva contraseña",
+    "placeholder_current": "Ingresa tu contraseña actual",
+    "placeholder_new": "Ingresa una nueva contraseña",
+    "update_success": "Contraseña actualizada correctamente",
+    "update_fail": "Error al actualizar la contraseña"
+  },
+  "account": {
+    "delete_success": "La cuenta {username}(#{id}) ha sido eliminada correctamente",
+    "delete_fail": "Error al eliminar la cuenta",
+    "delete_confirm": "Todos tus datos serán eliminados permanentemente. ¿Estás seguro de que deseas continuar?"
+  }
+}

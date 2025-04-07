@@ -1,0 +1,79 @@
+{
+  "name": "Nombre del grupo",
+  "tasksButton": "Tareas",
+  "groupInfoButton": "Información del grupo",
+  "messagePlaceholder": "Escribe un mensaje...",
+  "sendButton": "Enviar",
+  "createButton": "Crear grupo",
+  "noGroups": "No hay grupos",
+  "groupAvatarAlt": "Avatar del grupo",
+  "create": {
+    "nameLabel": "Nombre del grupo",
+    "namePlaceholder": "Ingresa el nombre del grupo",
+    "descLabel": "Descripción del grupo",
+    "descPlaceholder": "Ingresa la descripción del grupo",
+    "selectFriendsLabel": "Seleccionar amigos",
+    "submitButton": "Crear chat grupal"
+  },
+  "sidebarTitles": {
+    "tasks": "Tareas del grupo",
+    "groupInfo": "Información del grupo"
+  },
+  "contextMenu": {
+    "deleteMember": "Eliminar miembro",
+    "setAdmin": "Hacer administrador",
+    "removeAdmin": "Quitar administrador",
+    "addFriend": "Añadir amigo"
+  },
+  "errors": {
+    "notMember": "No eres miembro de este grupo, acceso denegado",
+    "checkPermissionFailed": "Error al verificar permisos del grupo",
+    "checkPermissionDefault": "Error al verificar permisos, por favor inténtalo de nuevo",
+    "loadGroupFailed": "Error al cargar el grupo",
+    "loadRoleFailed": "Error al cargar el rol del grupo",
+    "loadMembersFailed": "Error al cargar miembros del grupo",
+    "loadMessagesFailed": "Error al cargar historial de chat",
+    "emptyMessage": "El mensaje no puede estar vacío",
+    "connectionNotReady": "La conexión no está lista",
+    "fetchTasksFailed": "Error al obtener tareas",
+    "removeMemberFailed": "Error al eliminar miembro",
+    "setAdminFailed": "Error al asignar como administrador",
+    "removeAdminFailed": "Error al quitar rol de administrador",
+    "updateNameFailed": "Error al actualizar nombre",
+    "updateDescFailed": "Error al actualizar descripción",
+    "disbandFailed": "Error al disolver el grupo",
+    "leaveFailed": "Error al abandonar el grupo",
+    "inviteFailed": "Error al invitar miembros",
+    "selectAtLeastOne": "Selecciona al menos un amigo",
+    "createGroupFailed": "Error al crear grupo"
+  },
+  "confirm": {
+    "disbandWhenRemove": "Este grupo solo tiene dos miembros. Eliminar a {username}(#{id}) disolverá el grupo. ¿Confirmas la eliminación?"
+  },
+  "memberManagement": {
+    "removeMemberSuccess": "{username}(#{id}) eliminado del grupo",
+    "setAdminSuccess": "{username}(#{id}) asignado como administrador",
+    "removeAdminSuccess": "Se quitó el rol de administrador a {username}(#{id})",
+    "inviteSuccess": "Miembros añadidos exitosamente"
+  },
+  "groupManagement": {
+    "createSuccess": "Grupo creado",
+    "nameUpdateSuccess": "Nombre del grupo actualizado",
+    "descUpdateSuccess": "Descripción del grupo actualizada",
+    "disbandSuccess": "Grupo disuelto",
+    "leaveSuccess": "Has abandonado el grupo"
+  },
+  "permissionDenied": {
+    "edit": "No tienes permiso para editar"
+  },
+  "groupNameLoading": "Cargando nombre del grupo",
+  "groupDescLoading": "Cargando descripción del grupo",
+  "memberListTitle": "Miembros del grupo",
+  "groupInfoTitle": "Información del grupo",
+  "groupNameLabel": "Nombre del grupo:",
+  "groupDescLabel": "Descripción del grupo:",
+  "noDescription": "Ninguna",
+  "inviteButton": "Invitar",
+  "disbandButton": "Disolver grupo",
+  "leaveButton": "Abandonar grupo"
+}

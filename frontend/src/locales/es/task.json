@@ -1,0 +1,52 @@
+{
+  "enterGroup": "Grupo",
+  "orderByStatus": "Ordenar por estado",
+  "orderByPriority": "Ordenar por prioridad",
+  "edit": "Editar",
+  "noDescription": "Sin descripción",
+  "noTask": "No hay tareas",
+  "overdue": "Atrasada",
+  "createButton": "Crear tarea",
+  "form": {
+    "titleLabel": "Título de la tarea",
+    "titlePlaceholder": "Ingresa el título de la tarea",
+    "descriptionLabel": "Descripción de la tarea",
+    "descriptionPlaceholder": "Ingresa la descripción de la tarea",
+    "priorityLabel": "Prioridad",
+    "statusLabel": "Estado",
+    "dueDateLabel": "Fecha límite",
+    "submitButton": "Enviar tarea"
+  },
+  "priorityTiTle": {
+    "low": "Prioridad baja",
+    "medium": "Prioridad media",
+    "high": "Prioridad alta"
+  },
+  "priority": {
+    "low": "Baja",
+    "medium": "Media",
+    "high": "Alta"
+  },
+  "status": {
+    "todo": "Por hacer",
+    "inProgress": "En progreso",
+    "completed": "Completada",
+    "archived": "Archivada"
+  },
+  "validation": {
+    "titleRequired": "El título de la tarea no puede estar vacío",
+    "dueDateRequired": "La fecha límite no puede estar vacía",
+    "dueDatePast": "La fecha límite no puede ser en el pasado"
+  },
+  "success": {
+    "create": "Tarea creada exitosamente",
+    "update": "Tarea actualizada exitosamente",
+    "delete": "Tarea eliminada exitosamente"
+  },
+  "errors": {
+    "create": "Error al crear la tarea",
+    "update": "Error al actualizar la tarea",
+    "delete": "Error al eliminar la tarea",
+    "fetch": "Error al cargar las tareas"
+  }
+}
