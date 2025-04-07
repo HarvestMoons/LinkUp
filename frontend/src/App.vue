@@ -52,6 +52,7 @@
       >
         <option value="en">English</option>
         <option value="zh-CN">中文</option>
+        <option value="es">Español</option>
       </select>
 
       <button
@@ -64,12 +65,12 @@
     </nav>
   </div>
 
-  <router-view />
+    <router-view />
 
   <div class="footerContainer">
     <p>© 2025 Link Up</p>
     <p>|</p>
-    <router-link to="/privacy">Privacy Policy</router-link>
+    <router-link to="/privacy">{{$t('dashboard.privacyPolicy')}}</router-link>
   </div>
 </template>
 

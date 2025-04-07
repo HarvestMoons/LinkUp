@@ -3,76 +3,50 @@
 </template>
 
 <script>
-import FullCalendar from "@fullcalendar/vue3";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { TaskStatusColorMap } from "@/config/constants";
+import FullCalendar from "@fullcalendar/vue3"
+import dayGridPlugin from "@fullcalendar/daygrid"
+import allLocales from '@fullcalendar/core/locales-all'
+import { TaskStatusColorMap } from "@/config/constants"
 
 export default {
   components: { FullCalendar },
   props: { tasks: Array },
-  computed: {
-    calendarOptions() {
-      return {
-        plugins: [dayGridPlugin],
-        initialView: "dayGridMonth",
-        events: this.tasks.map((task) => ({
-          // title: task.title,
-          start: task.dueDate,
-          end: task.dueDate.split("T")[0] + "T23:59:59",
-          color: this.isOverdue(task) ? "red" : TaskStatusColorMap[task.status],
-          // allDay: true,
-        })),
-        // eventContent: this.renderEventContent,
-      };
-    },
-  },
-  methods: {
-    isOverdue(task) {
-      const now = new Date();
-      const dueDate = new Date(task.dueDate);
-      // 判断任务是否逾期且未完成或未归档
+  setup(props) {
+    // 直接从 localStorage 获取语言，默认 'en'
+    const userLanguage = localStorage.getItem('userLanguage') || 'en'
+
+    // 静态配置（无需响应式）
+    const calendarOptions = {
+      plugins: [dayGridPlugin],
+      initialView: "dayGridMonth",
+      locale: userLanguage, // 直接使用 localStorage 的值
+      locales: allLocales,
+      events: props.tasks.map(task => ({
+        start: task.dueDate,
+        end: task.dueDate.split("T")[0] + "T23:59:59",
+        color: isOverdue(task) ? "red" : TaskStatusColorMap[task.status],
+        display: 'background'
+      }))
+    }
+
+    // 逾期判断函数
+    const isOverdue = (task) => {
+      const now = new Date()
+      const dueDate = new Date(task.dueDate)
       return (
-        dueDate < now &&
-        task.status !== "COMPLETED" &&
-        task.status !== "ARCHIVED"
-      );
-    },
-    /*
-    // 自定义事件内容渲染
-    renderEventContent(eventInfo) {
-      const { event } = eventInfo;
+          dueDate < now &&
+          task.status !== "COMPLETED" &&
+          task.status !== "ARCHIVED"
+      )
+    }
 
-      // 自定义样式
-      const circleStyle = `background-color: ${event.color}; width: 10px; height: 10px;`;
-
-      // 你可以根据 `event.title` 或 `taskId` 来定制内容
-      return {
-        domNodes: [
-          // 添加自定义的圆圈
-          this.createCircle(circleStyle),
-          // 是否显示标题
-          this.createTitle(),
-        ],
-      };
-    },
-    // 创建圆圈
-    createCircle(style) {
-      const circle = document.createElement("div");
-      circle.style.borderRadius = "50%";
-      circle.style.cssText = style;
-      return circle;
-    },
-    // 创建标题
-    createTitle() {
-      const titleElement = document.createElement("div");
-      titleElement.style.display = "none";
-    },
-    */
-  },
-};
+    return {calendarOptions}
+  }
+}
 </script>
 
 <style scoped>
+/* 原有样式保持不变 */
 .fc-daygrid-event-dot {
   width: 12px;
   height: 12px;

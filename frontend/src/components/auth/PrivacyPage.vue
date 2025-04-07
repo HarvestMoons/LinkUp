@@ -1,40 +1,48 @@
 <template>
   <div class="container">
-    <div v-html="renderedMarkdown"></div>
+    <!-- 添加加载状态提示 -->
+    <div v-if="loading">{{$t('common.loading')}}</div>
+    <div v-else v-html="renderedMarkdown"></div>
   </div>
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref, watch, onMounted } from "vue";
 import MarkdownIt from "markdown-it";
 import { useI18n } from "vue-i18n";
 
 export default {
   setup() {
-    const { locale } = useI18n();  // 获取当前的翻译函数和语言
+    const { locale } = useI18n();
     const mdParser = new MarkdownIt();
-    let renderedMarkdown = ref("");
+    const renderedMarkdown = ref("");
+    const loading = ref(true);
+    const error = ref(null);
 
-    // 动态加载和渲染Markdown文件
     const loadMarkdown = async () => {
+      loading.value = true;
+      error.value = null;
       try {
-        const markdownModule = await import(`@/assets/markdown/${locale.value}-privacy.md`);  // 动态导入 Markdown 文件
-        const text = markdownModule.default;  // 默认导出的文件内容
-        renderedMarkdown.value = mdParser.render(text);  // 渲染 Markdown 内容
-      } catch (error) {
-        console.error("Error loading markdown file:", error);
+        // 关键修改：显式指定文件路径格式
+        const markdownModule = await import(
+            /* @vite-ignore */ `@/assets/markdown/${locale.value}-privacy.md?raw`
+            );
+        renderedMarkdown.value = mdParser.render(markdownModule.default);
+      } catch (err) {
+        console.error("Error loading markdown:", err);
+        error.value = err;
+      } finally {
+        loading.value = false;
       }
     };
 
-    // 监听语言变化，切换Markdown文件
-    watch(locale, () => {
-      loadMarkdown();
-    });
+    // 用 onMounted 确保组件挂载后加载
+    onMounted(loadMarkdown);
 
-    // 初始加载
-    loadMarkdown();
+    // 监听语言变化
+    watch(locale, loadMarkdown);
 
-    return { renderedMarkdown };
+    return { renderedMarkdown, loading, error };
   },
 };
 </script>

@@ -4,6 +4,7 @@
   "tasks": "Tasks",
   "groups": "Groups",
   "logout": "Logout",
+  "privacyPolicy":"Privacy Policy",
 
   "greeting": "Hello, {name}! What's your plan today?",
   "todoTitle": "📌 Todo Tasks",

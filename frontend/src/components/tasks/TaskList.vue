@@ -40,7 +40,7 @@
         {{ $t("common.loading") }}
       </div>
       <div v-else-if="tasks.length === 0" class="blockContainer loading">
-        无任务
+        {{$t('task.noTask')}}
       </div>
       <!-- 显示任务列表 -->
       <div v-else>

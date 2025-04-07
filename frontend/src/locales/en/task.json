@@ -4,6 +4,7 @@
   "orderByPriority": "Order By Priority",
   "edit": "Edit",
   "noDescription": "No Description",
+  "noTask": "No Task",
   "overdue": "Overdue",
   "createButton": "Create Task",
   "form": {

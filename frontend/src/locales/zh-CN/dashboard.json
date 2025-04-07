@@ -4,6 +4,7 @@
   "tasks": "任务",
   "groups": "群组",
   "logout": "退出登录",
+  "privacyPolicy": "隐私政策",
 
   "greeting": "你好，{name}！今天有什么计划？",
   "todoTitle": "📌 待办任务",

@@ -15,7 +15,6 @@
   "status": {
     "fetchFailed": "Failed to fetch friend requests data:"
   },
-
   "inputPlaceholder": "Enter user ID",
   "addFriend": "Add Friend",
   "wantsToAdd": "wants to add you as friend",

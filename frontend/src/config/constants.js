@@ -27,7 +27,7 @@ export const TaskPriority = {
     Low: 'LOW'
 };
 
-// 对应颜色定义（可以自定义为你喜欢的色调）
+// 对应颜色定义
 export const TaskStatusColorMap = {
     [TaskStatus.Todo]: 'blue',
     [TaskStatus.InProgress]: 'orange',

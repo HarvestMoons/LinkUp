@@ -16,7 +16,7 @@
       </div>
     </div>
     <!-- 好友申请列表 -->
-    <div v-if="pendingRequests.length != 0" class="blockContainer">
+    <div v-if="pendingRequests.length !== 0" class="blockContainer">
       <div v-if="friendRequestLoading" class="loading">
         {{ $t("common.loading") }}
       </div>

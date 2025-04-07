@@ -1,8 +1,8 @@
 <!-- FriendSelection.vue> -->
 <template>
   <div class="friendsDropdown">
-    <div v-if="friendListLoading" class="loading">加载中...</div>
-    <div v-else-if="friends.length === 0" class="loading">无好友</div>
+    <div v-if="friendListLoading" class="loading">{{$t('common.loading')}}</div>
+    <div v-else-if="friends.length === 0" class="loading">{{$t('friends.noFriends')}}</div>
     <div v-else>
       <ul class="friendsList">
         <li
