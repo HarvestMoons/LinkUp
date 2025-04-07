@@ -3,7 +3,7 @@
   <div class="container">
     <!-- 添加好友输入框和按钮 -->
     <div class="blockContainer">
-      <HelpTooltip message="这里是一些提示内容。" />
+      <HelpTooltip :message="$t('help.createGroup')" />
       <transition name="createGroupContainerTransition">
         <div class="createGroupContainer" v-if="isCreating">
           <div class="allInputFields">

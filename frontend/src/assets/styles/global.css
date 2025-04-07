@@ -198,4 +198,9 @@ ul {
     /* 如果有更多的空间，昵称会自动占用 */
 }
 
+:root {
+    --owner-border-color: #76B7B2;
+    --admin-border-color: #686160;
+}
+
 /* #endregion */

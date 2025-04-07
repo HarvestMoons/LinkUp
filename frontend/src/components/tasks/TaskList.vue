@@ -2,7 +2,7 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
-      <HelpTooltip message="这里是一些提示内容。" />
+      <HelpTooltip :message="$t('help.createTask')" />
       <!--<transition name="taskFormTransition">-->
       <!-- 控制是否显示输入框 -->
       <TaskForm

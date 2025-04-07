@@ -55,7 +55,7 @@
 
   <div>
     <div class="blockContainer">
-      <HelpTooltip message="这里是一些提示内容。" />
+      <HelpTooltip :message="$t('help.groupRole')" />
       <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0">
@@ -77,7 +77,7 @@
             :alt="$t('common.avatarAlt')"
             class="memberAvatar"
           />
-          <span class="memberNickname"
+          <span class="memberName"
             >{{ member.username }} (#{{ member.id }})
           </span>
         </li>
@@ -108,7 +108,7 @@
     </div>
 
     <div class="blockContainer">
-      <HelpTooltip message="这里是一些提示内容。" />
+      <HelpTooltip :message="$t('help.groupInfo')" />
       <h2>{{ $t("groups.groupInfoTitle") }}</h2>
       <div class="groupField" v-if="isEditingName">
         <input
@@ -207,7 +207,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return { toast };
+    return {toast };
   },
   async mounted() {
     this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
@@ -616,10 +616,10 @@ export default {
   border: 2px solid rgba(0, 0, 0, 0);
 }
 .memberItem.owner {
-  border: 2px solid #686160;
+  border: 2px solid var(--owner-border-color);
 }
 .memberItem.admin {
-  border: 2px solid #c0b5b5;
+  border: 2px solid var(--admin-border-color);
 }
 
 .memberAvatar {

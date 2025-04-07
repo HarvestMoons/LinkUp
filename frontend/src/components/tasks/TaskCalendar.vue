@@ -26,7 +26,6 @@ export default {
         start: task.dueDate,
         end: task.dueDate.split("T")[0] + "T23:59:59",
         color: isOverdue(task) ? "red" : TaskStatusColorMap[task.status],
-        display: 'background'
       }))
     }))
 

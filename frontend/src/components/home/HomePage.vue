@@ -2,7 +2,7 @@
 <template>
   <div class="container">
     <div class="home-container">
-      <HelpTooltip message="这里是一些提示内容。" />
+      <HelpTooltip :message="$t('help.calender')" />
       <!-- 左侧信息面板 -->
       <div class="info-panel">
         <h2 class="greeting">
