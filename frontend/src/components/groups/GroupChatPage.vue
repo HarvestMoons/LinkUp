@@ -20,8 +20,8 @@
 
       <!-- 聊天记录区域 -->
       <div class="chatArea">
-        <div v-if="messageLoading" class="loading">
-          {{ $t("common.loading") }}
+        <div v-if="messageLoading">
+          <MySpinner />
         </div>
         <div v-else>
           <ul class="messageList">
@@ -120,9 +120,10 @@ import { useToast } from "vue-toastification";
 
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
-  components: { SideBar },
+  components: {MySpinner, SideBar },
   name: "GroupChatPage",
   data() {
     return {

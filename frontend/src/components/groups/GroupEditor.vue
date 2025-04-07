@@ -58,8 +58,8 @@
       <HelpTooltip message="这里是一些提示内容。" />
       <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
-        <div v-if="showedGroupMembers.length === 0" class="loading">
-          {{ $t("common.loading") }}
+        <div v-if="showedGroupMembers.length === 0">
+          <MySpinner />
         </div>
         <li
           v-else
@@ -172,10 +172,11 @@ import { fetchGroups } from "@/utils/groupService";
 import { showToast } from "@/utils/toast";
 import { useToast } from "vue-toastification";
 import { validateInput } from "@/utils/validationUtils";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
   name: "GroupEditor",
-  components: { FriendSelection, ConfirmDialog, HelpTooltip },
+  components: { MySpinner, FriendSelection, ConfirmDialog, HelpTooltip },
   props: {
     groupId: Number,
     groupName: String,

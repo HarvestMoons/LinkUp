@@ -36,11 +36,11 @@
     <div class="tasksContainer">
       <div
         v-if="tasks == null || taskListLoading"
-        class="blockContainer loading"
+        class="blockContainer nothing-notice"
       >
-        {{ $t("common.loading") }}
+        <MySpinner />
       </div>
-      <div v-else-if="tasks.length === 0" class="blockContainer loading">
+      <div v-else-if="tasks.length === 0" class="blockContainer nothing-notice">
         {{ $t("task.noTask") }}
       </div>
       <!-- 显示任务列表 -->
@@ -396,10 +396,11 @@ import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
 import TaskBlock from "@/components/tasks/TaskBlock.vue";
 import TaskForm from "@/components/tasks/TaskForm.vue";
 import HelpTooltip from "@/components/common/HelpTooltip.vue";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 //TODO:HTML大量重复，可以化简
 export default {
-  components: { TaskBlock, TaskForm, HelpTooltip },
+  components: { TaskBlock, TaskForm, HelpTooltip, MySpinner },
   name: "TaskList",
   props: {
     tasks: Array, // 任务数据

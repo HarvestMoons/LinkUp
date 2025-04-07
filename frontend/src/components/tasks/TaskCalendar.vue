@@ -7,19 +7,20 @@ import FullCalendar from "@fullcalendar/vue3"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import allLocales from '@fullcalendar/core/locales-all'
 import { TaskStatusColorMap } from "@/config/constants"
+import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 
 export default {
   components: { FullCalendar },
   props: { tasks: Array },
   setup(props) {
-    // 直接从 localStorage 获取语言，默认 'en'
-    const userLanguage = localStorage.getItem('userLanguage') || 'en'
+    const {locale}=useI18n()
 
     // 静态配置（无需响应式）
-    const calendarOptions = {
+    const calendarOptions = computed(()=>({
       plugins: [dayGridPlugin],
       initialView: "dayGridMonth",
-      locale: userLanguage, // 直接使用 localStorage 的值
+      locale:locale.value, // 直接使用 localStorage 的值
       locales: allLocales,
       events: props.tasks.map(task => ({
         start: task.dueDate,
@@ -27,7 +28,7 @@ export default {
         color: isOverdue(task) ? "red" : TaskStatusColorMap[task.status],
         display: 'background'
       }))
-    }
+    }))
 
     // 逾期判断函数
     const isOverdue = (task) => {
@@ -44,18 +45,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* 原有样式保持不变 */
-.fc-daygrid-event-dot {
-  width: 12px;
-  height: 12px;
-  margin-top: 2px;
-  margin-right: 4px;
-  border-width: 2px;
-}
-
-.fc-event-title {
-  display: none;
-}
-</style>

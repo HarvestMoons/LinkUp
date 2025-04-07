@@ -125,7 +125,14 @@ ul {
     position: relative;
 }
 
-.loading {
+/* 覆盖 Spinner 的文本样式 */
+.vue-simple-spinner-text {
+    font-size: clamp(1rem, 2vw, 5rem) !important;
+    font-weight: bold !important;
+    color: #938A8A; /* 可选：统一文本颜色 */
+}
+
+.nothing-notice {
     font-size: clamp(1rem, 2vw, 5rem);
     font-weight: bold;
 }

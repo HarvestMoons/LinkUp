@@ -1,19 +1,23 @@
 <template>
   <div class="container">
     <!-- 添加加载状态提示 -->
-    <div v-if="loading">{{$t('common.loading')}}</div>
+    <div v-if="loading">
+      <MySpinner/>
+    </div>
     <div v-else v-html="renderedMarkdown"></div>
   </div>
 </template>
 
 <script>
-import { ref, watch, onMounted } from "vue";
+import {ref, watch, onMounted} from "vue";
 import MarkdownIt from "markdown-it";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
+  components: {MySpinner},
   setup() {
-    const { locale } = useI18n();
+    const {locale} = useI18n();
     const mdParser = new MarkdownIt();
     const renderedMarkdown = ref("");
     const loading = ref(true);
@@ -42,7 +46,7 @@ export default {
     // 监听语言变化
     watch(locale, loadMarkdown);
 
-    return { renderedMarkdown, loading, error };
+    return {renderedMarkdown, loading, error};
   },
 };
 </script>
@@ -50,7 +54,7 @@ export default {
 <style scoped>
 .container {
   text-align: left; /* 让文本左对齐 */
-  padding: 20px;    /* 为容器添加内边距，避免文本紧贴边缘 */
+  padding: 20px; /* 为容器添加内边距，避免文本紧贴边缘 */
 }
 
 .container p {
