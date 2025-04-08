@@ -11,7 +11,7 @@
   <div class="container">
     <h1>{{ $t("profile.title") }}</h1>
     <div class="blockContainer">
-      <HelpTooltip :message="$t('help.editProfile')" />
+      <HelpTooltip>{{ $t("help.editProfile") }}</HelpTooltip>
       <div class="basicInfo">
         <div class="profileSection">
           <img

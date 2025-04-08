@@ -1,1 +1,22 @@
-{}
+{
+    "createGroup": "Create a group here to manage tasks with friends and communicate progress anytime.",
+    "createTask": "Click the button to create a new task visible only to you. Task details can be edited at any time.",
+    "editProfile": "Here you can freely change your avatar and username.",
+    "groupRole": {
+        "border": "Avatar borders indicate member roles:\n",
+        "owner": "Group owner, ",
+        "admin": "Administrator, ",
+        "normal": "No border - regular member.\n",
+        "rightClick": "Right-click other members’ avatars to set them as admins (owner only), remove them (owner and admins), or add as friends."
+    },
+    "groupInfo": "Group admins and the owner can edit the group name and description here.",
+    "calendar": {
+        "deadline": "The calendar marks the deadlines and times of all your tasks:\n",
+        "overdue": "Overdue, ",
+        "todo": "To-do, ",
+        "inProgress": "In progress, ",
+        "completed": "Completed, ",
+        "archived": "Archived.\n",
+        "toTask": "Click the stats on the left to jump to the task page."
+    }
+}

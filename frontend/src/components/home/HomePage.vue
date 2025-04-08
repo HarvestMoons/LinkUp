@@ -2,7 +2,65 @@
 <template>
   <div class="container">
     <div class="home-container">
-      <HelpTooltip :message="$t('help.calender')" />
+      <HelpTooltip>
+        {{ $t("help.calendar.deadline") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: red;
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.calendar.overdue") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: blue;
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.calendar.todo") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: orange;
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.calendar.inProgress") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: green;
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.calendar.completed") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: gray;
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.calendar.archived") }}
+        {{ $t("help.calendar.toTask") }}</HelpTooltip
+      >
       <!-- 左侧信息面板 -->
       <div class="info-panel">
         <h2 class="greeting">

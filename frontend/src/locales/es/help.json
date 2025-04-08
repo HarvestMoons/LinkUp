@@ -1,1 +1,22 @@
-{}
+{
+    "createGroup": "Crea un grupo aquí para gestionar tareas con tus amigos y comunicar el progreso en cualquier momento.",
+    "createTask": "Haz clic en el botón para crear una nueva tarea visible solo para ti. La información de la tarea se puede editar en cualquier momento.",
+    "editProfile": "Aquí puedes cambiar libremente tu avatar y nombre de usuario.",
+    "groupRole": {
+        "border": "El borde del avatar indica el rol del miembro:\n",
+        "owner": "Propietario del grupo, ",
+        "admin": "Administrador, ",
+        "normal": "Sin borde: miembro normal.\n",
+        "rightClick": "Haz clic derecho en el avatar de otro miembro para nombrarlo administrador (solo el propietario), expulsarlo (propietario y administradores) o añadirlo como amigo."
+    },
+    "groupInfo": "Los administradores y el propietario del grupo pueden modificar aquí el nombre y la descripción del grupo.",
+    "calendar": {
+        "deadline": "El calendario muestra las fechas y horas límite de todas tus tareas:\n",
+        "overdue": "Vencida, ",
+        "todo": "Por hacer, ",
+        "inProgress": "En curso, ",
+        "completed": "Completada, ",
+        "archived": "Archivada.\n",
+        "toTask": "Haz clic en la información estadística de la izquierda para ir a la página de tareas."
+    }
+}

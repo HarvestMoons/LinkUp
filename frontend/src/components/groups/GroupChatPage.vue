@@ -65,6 +65,7 @@
           v-model="newMessage"
           :placeholder="$t('groups.messagePlaceholder')"
           class="chatInput"
+          @keyup.enter="sendMessage"
         />
         <button @click="sendMessage" class="button normalButton">
           {{ $t("groups.sendButton") }}
@@ -123,7 +124,7 @@ import { Stomp } from "@stomp/stompjs";
 import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
-  components: {MySpinner, SideBar },
+  components: { MySpinner, SideBar },
   name: "GroupChatPage",
   data() {
     return {

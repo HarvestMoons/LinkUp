@@ -1,8 +1,8 @@
-<!-- HelpTooltio.vue -->
+<!-- HelpTooltip.vue -->
 <template>
   <div
     class="help-tooltip-wrapper"
-    @mouseenter="show = true"
+    @mouseenter="showTooltip"
     @mouseleave="show = false"
   >
     <!-- 问号图标 -->
@@ -10,7 +10,7 @@
 
     <!-- 浮窗 -->
     <div v-if="show" class="tooltip-box">
-      {{ message }}
+      <slot />
     </div>
   </div>
 </template>
@@ -18,16 +18,23 @@
 <script>
 export default {
   name: "HelpTooltip",
-  props: {
-    message: {
-      type: String,
-      required: true,
-    },
-  },
   data() {
     return {
       show: false,
     };
+  },
+  methods: {
+    showTooltip() {
+      this.show = true;
+      this.$nextTick(() => {
+        const tooltip = this.$el.querySelector(".tooltip-box");
+        const rect = this.$el.getBoundingClientRect();
+        tooltip.style.top = `${(rect.bottom + rect.top) / 2}px`;
+        tooltip.style.right = `${
+          document.documentElement.scrollWidth - (rect.right + rect.left) / 2
+        }px`;
+      });
+    },
   },
 };
 </script>
@@ -54,17 +61,17 @@ export default {
 }
 
 .tooltip-box {
-  position: absolute;
-  top: 100%;
-  right: 8px;
-  transform: translateY(-8px);
+  position: fixed;
+  top: auto; /* 会用 JS 设置 */
+  left: auto;
   background-color: #333;
   color: #fff;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 13px;
   white-space: pre-wrap;
-  min-width: 140px;
+  width: 140px;
+  z-index: 9999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 </style>

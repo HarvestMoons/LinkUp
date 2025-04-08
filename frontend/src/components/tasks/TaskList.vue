@@ -2,7 +2,7 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
-      <HelpTooltip :message="$t('help.createTask')" />
+      <HelpTooltip>{{ $t("help.createTask") }}</HelpTooltip>
       <!--<transition name="taskFormTransition">-->
       <!-- 控制是否显示输入框 -->
       <TaskForm

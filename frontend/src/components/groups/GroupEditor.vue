@@ -55,7 +55,33 @@
 
   <div>
     <div class="blockContainer">
-      <HelpTooltip :message="$t('help.groupRole')" />
+      <HelpTooltip>
+        {{ $t("help.groupRole.border") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--owner-border-color);
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.groupRole.owner") }}
+        <span
+          style="
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--admin-border-color);
+            border-radius: 50%;
+            margin-right: 5px;
+          "
+        ></span>
+        {{ $t("help.groupRole.admin") }}
+        {{ $t("help.groupRole.normal") }}
+        {{ $t("help.groupRole.rightClick") }}
+      </HelpTooltip>
       <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0">
@@ -108,7 +134,7 @@
     </div>
 
     <div class="blockContainer">
-      <HelpTooltip :message="$t('help.groupInfo')" />
+      <HelpTooltip>{{ $t("help.groupInfo") }}</HelpTooltip>
       <h2>{{ $t("groups.groupInfoTitle") }}</h2>
       <div class="groupField" v-if="isEditingName">
         <input
@@ -207,7 +233,7 @@ export default {
   },
   setup() {
     const toast = useToast();
-    return {toast };
+    return { toast };
   },
   async mounted() {
     this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
