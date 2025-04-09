@@ -1,0 +1,79 @@
+{
+  "name": "グループ名",
+  "tasksButton": "タスク",
+  "groupInfoButton": "グループ情報",
+  "messagePlaceholder": "メッセージを入力...",
+  "sendButton": "送信",
+  "createButton": "グループ作成",
+  "noGroups": "グループがありません",
+  "groupAvatarAlt": "グループアバター",
+  "create": {
+    "nameLabel": "グループ名",
+    "namePlaceholder": "グループ名を入力",
+    "descLabel": "グループ説明",
+    "descPlaceholder": "グループ説明を入力",
+    "selectFriendsLabel": "フレンドを選択",
+    "submitButton": "グループチャットを作成"
+  },
+  "sidebarTitles": {
+    "tasks": "グループタスク",
+    "groupInfo": "グループ情報"
+  },
+  "contextMenu": {
+    "deleteMember": "メンバーを削除",
+    "setAdmin": "管理者に設定",
+    "removeAdmin": "管理者権限を解除",
+    "addFriend": "フレンドを追加"
+  },
+  "errors": {
+    "notMember": "このグループのメンバーではないため、アクセスが拒否されました",
+    "checkPermissionFailed": "グループ権限の確認に失敗しました",
+    "checkPermissionDefault": "権限確認に失敗しました。もう一度お試しください",
+    "loadGroupFailed": "グループの読み込みに失敗しました",
+    "loadRoleFailed": "グループロールの読み込みに失敗しました",
+    "loadMembersFailed": "メンバーリストの読み込みに失敗しました",
+    "loadMessagesFailed": "チャット履歴の読み込みに失敗しました",
+    "emptyMessage": "メッセージ内容を入力してください",
+    "connectionNotReady": "接続が準備できていません",
+    "fetchTasksFailed": "タスクの取得に失敗しました",
+    "removeMemberFailed": "メンバーの削除に失敗しました",
+    "setAdminFailed": "管理者設定に失敗しました",
+    "removeAdminFailed": "管理者権限の解除に失敗しました",
+    "updateNameFailed": "名前の更新に失敗しました",
+    "updateDescFailed": "説明の更新に失敗しました",
+    "disbandFailed": "グループの解散に失敗しました",
+    "leaveFailed": "グループの退出に失敗しました",
+    "inviteFailed": "メンバーの招待に失敗しました",
+    "selectAtLeastOne": "最低1人のフレンドを選択してください",
+    "createGroupFailed": "グループの作成に失敗しました"
+  },
+  "confirm": {
+    "disbandWhenRemove": "このグループには2人のメンバーしかいません。{username}(#{id})を削除するとグループが解散します。削除しますか？"
+  },
+  "memberManagement": {
+    "removeMemberSuccess": "{username}(#{id})をグループから削除しました",
+    "setAdminSuccess": "{username}(#{id})を管理者に設定しました",
+    "removeAdminSuccess": "{username}(#{id})の管理者権限を解除しました",
+    "inviteSuccess": "メンバーを追加しました"
+  },
+  "groupManagement": {
+    "createSuccess": "グループを作成しました",
+    "nameUpdateSuccess": "グループ名を更新しました",
+    "descUpdateSuccess": "グループ説明を更新しました",
+    "disbandSuccess": "グループを解散しました",
+    "leaveSuccess": "グループを退出しました"
+  },
+  "permissionDenied": {
+    "edit": "編集権限がありません"
+  },
+  "groupNameLoading": "グループ名読み込み中",
+  "groupDescLoading": "グループ説明読み込み中",
+  "memberListTitle": "グループメンバー",
+  "groupInfoTitle": "グループ情報",
+  "groupNameLabel": "グループ名:",
+  "groupDescLabel": "グループ説明:",
+  "noDescription": "なし",
+  "inviteButton": "招待",
+  "disbandButton": "グループを解散",
+  "leaveButton": "グループを退出"
+}

@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "emptyUserId": "ユーザーIDを入力してください！",
+    "sendRequestFailed": "フレンドリクエストの送信に失敗しました。後ほどもう一度お試しください！",
+    "acceptFailed": "フレンドリクエストの承認に失敗しました",
+    "rejectFailed": "フレンドリクエストの拒否に失敗しました",
+    "deleteFailed": "フレンドの削除に失敗しました"
+  },
+  "success": {
+    "requestSent": "フレンドリクエストを送信しました",
+    "requestAccepted": "フレンドリクエストを承認しました",
+    "requestRejected": "フレンドリクエストを拒否しました",
+    "friendDeleted": "フレンドを削除しました"
+  },
+  "status": {
+    "fetchFailed": "フレンドリクエストデータの取得に失敗しました:"
+  },
+  "inputPlaceholder": "ユーザーIDを入力",
+  "addFriend": "フレンド追加",
+  "wantsToAdd": "さんがあなたをフレンドに追加しようとしています",
+  "accept": "承認",
+  "reject": "拒否",
+  "deleteFriend": "フレンド削除",
+  "noFriends": "フレンドがいません"
+}

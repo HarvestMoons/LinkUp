@@ -1,0 +1,52 @@
+{
+  "enterGroup": "グループに入る",
+  "orderByStatus": "状態で並べ替え",
+  "orderByPriority": "優先度で並べ替え",
+  "edit": "編集",
+  "noDescription": "説明なし",
+  "noTask": "タスクがありません",
+  "overdue": "期限超過",
+  "createButton": "タスクを作成",
+  "form": {
+    "titleLabel": "タスクタイトル",
+    "titlePlaceholder": "タスクタイトルを入力",
+    "descriptionLabel": "タスク説明",
+    "descriptionPlaceholder": "タスク説明を入力",
+    "priorityLabel": "優先度",
+    "statusLabel": "状態",
+    "dueDateLabel": "期限日",
+    "submitButton": "タスクを登録"
+  },
+  "priorityTiTle": {
+    "low": "低優先度",
+    "medium": "中優先度",
+    "high": "高優先度"
+  },
+  "priority": {
+    "low": "低",
+    "medium": "中",
+    "high": "高"
+  },
+  "status": {
+    "todo": "未着手",
+    "inProgress": "進行中",
+    "completed": "完了",
+    "archived": "アーカイブ済み"
+  },
+  "validation": {
+    "titleRequired": "タスクタイトルは必須です",
+    "dueDateRequired": "期限日は必須です",
+    "dueDatePast": "期限日は過去の日付にできません"
+  },
+  "success": {
+    "create": "タスクを作成しました",
+    "update": "タスクを更新しました",
+    "delete": "タスクを削除しました"
+  },
+  "errors": {
+    "create": "タスクの作成に失敗しました",
+    "update": "タスクの更新に失敗しました",
+    "delete": "タスクの削除に失敗しました",
+    "fetch": "タスクの読み込みに失敗しました"
+  }
+}

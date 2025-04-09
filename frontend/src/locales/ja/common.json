@@ -1,0 +1,13 @@
+{
+  "password": "パスワード",
+  "username": "ユーザー名",
+  "group": "グループ",
+
+  "cancel": "キャンセル",
+  "confirm": "確認",
+  "save": "保存",
+  "close": "閉じる",
+
+  "loading": "読み込み中...",
+  "avatarAlt": "アバター"
+}

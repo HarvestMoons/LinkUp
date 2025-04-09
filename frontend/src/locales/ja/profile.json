@@ -1,0 +1,30 @@
+{
+  "title": "プロフィール",
+  "buttons": {
+    "change_password": "パスワード変更",
+    "deactivate_account": "アカウント削除"
+  },
+  "avatar": {
+    "not_selected": "アバターを選択してください",
+    "update_success": "アバターを更新しました！",
+    "update_failed": "アバターの更新に失敗しました"
+  },
+  "username": {
+    "placeholder": "新しいユーザー名を入力してください",
+    "update_success": "ユーザー名を更新しました",
+    "update_fail": "ユーザー名の更新に失敗しました"
+  },
+  "password": {
+    "current_label": "現在のパスワード",
+    "new_label": "新しいパスワード",
+    "placeholder_current": "現在のパスワードを入力してください",
+    "placeholder_new": "新しいパスワードを入力してください",
+    "update_success": "パスワードを更新しました",
+    "update_fail": "パスワードの更新に失敗しました"
+  },
+  "account": {
+    "delete_success": "アカウント {username}(#{id}) を削除しました",
+    "delete_fail": "アカウントの削除に失敗しました",
+    "delete_confirm": "すべてのデータが完全に削除されます。本当に削除しますか？"
+  }
+}
