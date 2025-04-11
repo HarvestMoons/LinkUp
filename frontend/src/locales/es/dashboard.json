@@ -5,7 +5,6 @@
   "groups": "Grupos",
   "logout": "Cerrar sesión",
   "privacyPolicy": "Política de Privacidad",
-
   "greeting": "¡Hola, {name}! ¿Cuál es tu plan para hoy?",
   "todoTitle": "📌 Tareas por hacer",
   "pendingTasks": "{count} tarea pendiente | {count} tareas pendientes",
@@ -13,5 +12,6 @@
   "weeklyRate": "Esta semana: {rate}%",
   "monthlyRate": "Este mes: {rate}%",
   "upcomingDeadlines": "⚠️ Fechas límite próximas",
-  "deadlineItem": "{title} - Vence el {date}"
+  "deadlineItem": "{title} - Vence el {date}",
+  "menu": "Menú"
 }

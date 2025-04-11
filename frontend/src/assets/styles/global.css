@@ -1,3 +1,21 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #433f3e;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 div {
     -webkit-user-select: none;
     /*谷歌 /Chrome*/
@@ -66,6 +84,38 @@ p {
     padding: 10px;
     background-color: #ffffff;
 }
+
+/* #region languageSelect */
+.languageSelect {
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    min-width: 110px;
+    /* 根据需要调整宽度 */
+    background-color: #938a8a;
+    color: white;
+    font-weight: bold;
+    height: 36px;
+}
+
+.languageSelect:hover {
+    filter: brightness(90%);
+}
+
+.languageSelect option {
+    background-color: #ddd;
+    /* 默认选项背景色（灰色） */
+    color: #333;
+    /* 默认文字颜色 */
+}
+
+.languageSelect:focus {
+    outline: none;
+}
+
+/* #endregion */
 
 /* #region button */
 .button {
@@ -226,6 +276,12 @@ p {
         font-size: 10px;
         padding: 5px 10px;
         min-width: 60px;
+    }
+
+    .languageSelect {
+        font-size: 10px;
+        min-width: 80px;
+        padding: 5px 10px;
     }
 
     .nickname {

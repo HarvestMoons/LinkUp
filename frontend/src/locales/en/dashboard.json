@@ -4,8 +4,7 @@
   "tasks": "Tasks",
   "groups": "Groups",
   "logout": "Logout",
-  "privacyPolicy":"Privacy Policy",
-
+  "privacyPolicy": "Privacy Policy",
   "greeting": "Hello, {name}! What's your plan today?",
   "todoTitle": "📌 Todo Tasks",
   "pendingTasks": "{count} task pending | {count} tasks pending",
@@ -13,5 +12,6 @@
   "weeklyRate": "This week: {rate}%",
   "monthlyRate": "This month: {rate}%",
   "upcomingDeadlines": "⚠️ Upcoming Deadlines",
-  "deadlineItem": "{title} - Due {date}"
+  "deadlineItem": "{title} - Due {date}",
+  "menu": "Menu"
 }

@@ -5,7 +5,6 @@
   "groups": "群组",
   "logout": "退出登录",
   "privacyPolicy": "隐私政策",
-
   "greeting": "你好，{name}！今天有什么计划？",
   "todoTitle": "📌 待办任务",
   "pendingTasks": "{count}个任务待完成",
@@ -13,5 +12,6 @@
   "weeklyRate": "本周: {rate}%",
   "monthlyRate": "本月: {rate}%",
   "upcomingDeadlines": "⚠️ 即将截止",
-  "deadlineItem": "{title} - 截止 {date}"
+  "deadlineItem": "{title} - 截止 {date}",
+  "menu": "导航栏"
 }

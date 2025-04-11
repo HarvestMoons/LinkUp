@@ -9,7 +9,11 @@
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <div class="closeSign" @click="$emit('close')">✖</div>
-      <component :is="contentComponent" v-bind="contentProps" />
+      <component
+        :is="contentComponent"
+        v-bind="contentProps"
+        @request-close="$emit('close')"
+      />
     </div>
   </transition>
 </template>
@@ -28,8 +32,8 @@ export default {
       default: () => ({}), // 默认是空对象
     },
   },
-  emits: ['close'],
-}
+  emits: ["close"],
+};
 </script>
 
 <style scoped>
@@ -63,6 +67,9 @@ export default {
   overflow-y: auto;
   z-index: 1000;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .slide-enter-active,

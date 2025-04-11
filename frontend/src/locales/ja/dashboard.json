@@ -5,7 +5,6 @@
   "groups": "グループ",
   "logout": "ログアウト",
   "privacyPolicy": "プライバシーポリシー",
-
   "greeting": "こんにちは、{name}さん！今日の予定は何ですか？",
   "todoTitle": "📌 やることリスト",
   "pendingTasks": "残り{count}タスク | 残り{count}タスク",
@@ -13,5 +12,6 @@
   "weeklyRate": "今週: {rate}%",
   "monthlyRate": "今月: {rate}%",
   "upcomingDeadlines": "⚠️ 迫っている締切",
-  "deadlineItem": "{title} - 締切 {date}"
+  "deadlineItem": "{title} - 締切 {date}",
+  "menu": "メニュー"
 }
