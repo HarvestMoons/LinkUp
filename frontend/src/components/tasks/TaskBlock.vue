@@ -4,9 +4,9 @@
     <div class="taskOverview">
       <span class="taskTitle">{{ task.title }}</span>
       <span
-          v-if="showPriority"
-          class="taskPriority"
-          :class="{
+        v-if="showPriority"
+        class="taskPriority"
+        :class="{
           high: task.priority === TaskPriority.High,
           medium: task.priority === TaskPriority.Medium,
           low: task.priority === TaskPriority.Low,
@@ -15,18 +15,20 @@
       >
         {{
           task.priority === TaskPriority.High
-              ? $t('task.priority.high') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
-              : task.priority === TaskPriority.Medium
-                  ? $t('task.priority.medium') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
-                  : task.priority === TaskPriority.Low
-                      ? $t('task.priority.low')
-                      : "Unknown"
+            ? $t("task.priority.high") +
+              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            : task.priority === TaskPriority.Medium
+            ? $t("task.priority.medium") +
+              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            : task.priority === TaskPriority.Low
+            ? $t("task.priority.low")
+            : "Unknown"
         }}
       </span>
       <span
-          v-if="showStatus"
-          class="taskStatus"
-          :class="{
+        v-if="showStatus"
+        class="taskStatus"
+        :class="{
           todo: task.status === TaskStatus.Todo,
           inProgress: task.status === TaskStatus.InProgress,
           completed: task.status === TaskStatus.Completed,
@@ -36,20 +38,24 @@
       >
         {{
           task.status === TaskStatus.Todo
-              ? $t('task.status.todo') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
-              : task.status === TaskStatus.InProgress
-                  ? $t('task.status.inProgress') + (isTaskOverdue ? ` (${$t('task.overdue')})` : "")
-                  : task.status === TaskStatus.Completed
-                      ? $t('task.status.completed')
-                      : task.status === TaskStatus.Archived
-                          ? $t('task.status.archived')
-                          : "Unknown"
+            ? $t("task.status.todo") +
+              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            : task.status === TaskStatus.InProgress
+            ? $t("task.status.inProgress") +
+              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            : task.status === TaskStatus.Completed
+            ? $t("task.status.completed")
+            : task.status === TaskStatus.Archived
+            ? $t("task.status.archived")
+            : "Unknown"
         }}
       </span>
       <span class="taskDueDate">{{ formatDate(task.dueDate) }}</span>
     </div>
     <div class="taskDetails">
-      <p class="taskDescription">{{ task.description || $t('task.noDescription') }}</p>
+      <p class="taskDescription">
+        {{ task.description || $t("task.noDescription") }}
+      </p>
     </div>
   </div>
 </template>
@@ -69,9 +75,9 @@ export default {
       const now = new Date();
       const dueDate = new Date(this.task.dueDate);
       return (
-          dueDate < now &&
-          this.task.status !== "COMPLETED" &&
-          this.task.status !== "ARCHIVED"
+        dueDate < now &&
+        this.task.status !== "COMPLETED" &&
+        this.task.status !== "ARCHIVED"
       );
     },
     TaskStatus() {
@@ -79,14 +85,14 @@ export default {
     },
     TaskPriority() {
       return TaskPriority;
-    }
+    },
   },
   methods: {
     formatDate(date) {
       if (date == null) return;
       return date.replace("T", " ").slice(0, 16);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -173,5 +179,20 @@ export default {
   font-size: 14px;
   color: #333;
   font-style: italic;
+}
+
+@media screen and (max-width: 768px) {
+  .taskTitle {
+    font-size: 15px;
+  }
+  .taskDueDate {
+    font-size: 10px;
+  }
+  .taskStatus {
+    font-size: 10px;
+  }
+  .taskContent {
+    height: 100px;
+  }
 }
 </style>

@@ -66,12 +66,12 @@
     </nav>
   </div>
 
-    <router-view />
+  <router-view />
 
   <div class="footerContainer">
     <p>© 2025 Link Up</p>
     <p>|</p>
-    <router-link to="/privacy">{{$t('dashboard.privacyPolicy')}}</router-link>
+    <router-link to="/privacy">{{ $t("dashboard.privacyPolicy") }}</router-link>
   </div>
 </template>
 
@@ -277,5 +277,16 @@ nav a.router-link-exact-active {
 
 .languageSelect:focus {
   outline: none;
+}
+
+@media screen and (max-width: 768px) {
+  .tab {
+    padding: 6px 10px;
+  }
+  .languageSelect {
+    font-size: 10px;
+    min-width: 80px;
+    padding: 5px 10px;
+  }
 }
 </style>

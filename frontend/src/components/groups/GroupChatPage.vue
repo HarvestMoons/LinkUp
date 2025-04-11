@@ -389,6 +389,9 @@ export default {
   font-weight: bold;
   border-radius: 10px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* 聊天区域 */
