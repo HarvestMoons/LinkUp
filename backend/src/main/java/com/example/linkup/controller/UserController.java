@@ -1,5 +1,6 @@
 package com.example.linkup.controller;
 
+import com.example.linkup.dto.UserInfoDto;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
@@ -30,14 +31,13 @@ public class UserController {
     }
 
     // TODO: 尽量只给前端拿到以及使用userid
-    // 获取当前用户的用户名
     @GetMapping("/info")
-    public ResponseEntity<User> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<UserInfoDto> getUserInfo(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
             // 返回当前登录用户信息
             User user = userService.findByUsername(userDetails.getUsername());
             if (user != null) {
-                return ResponseEntity.ok(user); // 返回 HTTP 200 和用户信息
+                return ResponseEntity.ok(new UserInfoDto(user)); // 返回 HTTP 200 和用户信息
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 用户不存在时返回 404
             }
