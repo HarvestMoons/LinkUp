@@ -660,6 +660,7 @@ export default {
 
 .taskItem {
   position: relative;
+  overflow: hidden;
   width: min(80%, 600px);
 }
 

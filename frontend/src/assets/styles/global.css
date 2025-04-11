@@ -121,7 +121,6 @@ ul {
     /* 圆角 */
     box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
     /* 阴影效果 */
-    overflow-x: hidden;
     position: relative;
 }
 
@@ -129,7 +128,8 @@ ul {
 .vue-simple-spinner-text {
     font-size: clamp(1rem, 2vw, 5rem) !important;
     font-weight: bold !important;
-    color: #938A8A; /* 可选：统一文本颜色 */
+    color: #938A8A;
+    /* 可选：统一文本颜色 */
 }
 
 .nothing-notice {
