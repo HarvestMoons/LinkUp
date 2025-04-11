@@ -2,55 +2,43 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
-      <HelpTooltip>{{ $t("help.createTask") }}</HelpTooltip>
+      <HelpTooltip>{{ $t('help.createTask') }}</HelpTooltip>
       <!--<transition name="taskFormTransition">-->
       <!-- 控制是否显示输入框 -->
-      <TaskForm
-        v-if="isCreating"
-        :task="newTask"
-        @cancel="cancelCreateTask"
-        @submit="submitTask"
-      />
+      <TaskForm v-if="isCreating" :task="newTask" @cancel="cancelCreateTask" @submit="submitTask" />
       <!--</transition>-->
 
       <!-- 默认的按钮 -->
       <!--<transition name="createButtonTransition">-->
-      <button
-        v-if="!isCreating"
-        @click="startCreateTask"
-        class="button extendButton"
-      >
-        {{ $t("task.createButton") }}
+      <button v-if="!isCreating" class="button extendButton" @click="startCreateTask">
+        {{ $t('task.createButton') }}
       </button>
       <!--</transition>-->
     </div>
 
     <div class="blockContainer">
       <div class="orderSelection">
-        <h3 @click="changeOrderToStatus">{{ $t("task.orderByStatus") }}</h3>
+        <h3 @click="changeOrderToStatus">{{ $t('task.orderByStatus') }}</h3>
         <span class="separator">|</span>
-        <h3 @click="changeOrderToPriority">{{ $t("task.orderByPriority") }}</h3>
+        <h3 @click="changeOrderToPriority">{{ $t('task.orderByPriority') }}</h3>
       </div>
     </div>
 
     <div class="tasksContainer">
-      <div
-        v-if="tasks == null || taskListLoading"
-        class="blockContainer nothing-notice"
-      >
+      <div v-if="tasks == null || taskListLoading" class="blockContainer nothing-notice">
         <MySpinner />
       </div>
       <div v-else-if="tasks.length === 0" class="blockContainer nothing-notice">
-        {{ $t("task.noTask") }}
+        {{ $t('task.noTask') }}
       </div>
       <!-- 显示任务列表 -->
       <div v-else>
         <div v-if="taskOrder === TaskOrder.Priority">
           <div v-if="highTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('high')">
-              <h2>{{ $t("task.priorityTiTle.high") }}</h2>
+              <h2>{{ $t('task.priorityTiTle.high') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.high">
+            <ul v-if="expandedSections.high" class="tasksList">
               <li
                 v-for="task in highTasks"
                 :key="task.id"
@@ -66,27 +54,18 @@
                 />
                 <div v-else>
                   <!-- 任务块 -->
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="false"
-                    :showStatus="true"
-                  />
+                  <TaskBlock :task="task" :show-priority="false" :show-status="true" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -97,9 +76,9 @@
 
           <div v-if="midTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('medium')">
-              <h2>{{ $t("task.priorityTiTle.medium") }}</h2>
+              <h2>{{ $t('task.priorityTiTle.medium') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.medium">
+            <ul v-if="expandedSections.medium" class="tasksList">
               <li
                 v-for="task in midTasks"
                 :key="task.id"
@@ -114,27 +93,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="false"
-                    :showStatus="true"
-                  />
+                  <TaskBlock :task="task" :show-priority="false" :show-status="true" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -145,9 +115,9 @@
 
           <div v-if="lowTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('low')">
-              <h2>{{ $t("task.priorityTiTle.low") }}</h2>
+              <h2>{{ $t('task.priorityTiTle.low') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.low">
+            <ul v-if="expandedSections.low" class="tasksList">
               <li
                 v-for="task in lowTasks"
                 :key="task.id"
@@ -162,27 +132,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="false"
-                    :showStatus="true"
-                  />
+                  <TaskBlock :task="task" :show-priority="false" :show-status="true" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -194,9 +155,9 @@
         <div v-else-if="taskOrder === TaskOrder.Status">
           <div v-if="todoTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('todo')">
-              <h2>{{ $t("task.status.todo") }}</h2>
+              <h2>{{ $t('task.status.todo') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.todo">
+            <ul v-if="expandedSections.todo" class="tasksList">
               <li
                 v-for="task in todoTasks"
                 :key="task.id"
@@ -211,27 +172,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="true"
-                    :showStatus="false"
-                  />
+                  <TaskBlock :task="task" :show-priority="true" :show-status="false" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -242,9 +194,9 @@
 
           <div v-if="inProgressTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('inProgress')">
-              <h2>{{ $t("task.status.inProgress") }}</h2>
+              <h2>{{ $t('task.status.inProgress') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.inProgress">
+            <ul v-if="expandedSections.inProgress" class="tasksList">
               <li
                 v-for="task in inProgressTasks"
                 :key="task.id"
@@ -259,27 +211,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="true"
-                    :showStatus="false"
-                  />
+                  <TaskBlock :task="task" :show-priority="true" :show-status="false" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -290,9 +233,9 @@
 
           <div v-if="completedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('completed')">
-              <h2>{{ $t("task.status.completed") }}</h2>
+              <h2>{{ $t('task.status.completed') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.completed">
+            <ul v-if="expandedSections.completed" class="tasksList">
               <li
                 v-for="task in completedTasks"
                 :key="task.id"
@@ -307,27 +250,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="true"
-                    :showStatus="false"
-                  />
+                  <TaskBlock :task="task" :show-priority="true" :show-status="false" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -338,9 +272,9 @@
 
           <div v-if="archivedTasks.length !== 0" class="blockContainer">
             <div class="previewBar" @click="toggleSection('archived')">
-              <h2>{{ $t("task.status.archived") }}</h2>
+              <h2>{{ $t('task.status.archived') }}</h2>
             </div>
-            <ul class="tasksList" v-if="expandedSections.archived">
+            <ul v-if="expandedSections.archived" class="tasksList">
               <li
                 v-for="task in archivedTasks"
                 :key="task.id"
@@ -355,27 +289,18 @@
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
-                  <TaskBlock
-                    :task="task"
-                    :showPriority="true"
-                    :showStatus="false"
-                  />
+                  <TaskBlock :task="task" :show-priority="true" :show-status="false" />
 
                   <!-- 右上角的 "三个点" -->
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
                     </div>
                   </div>
@@ -390,24 +315,28 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
-import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
-import TaskBlock from "@/components/tasks/TaskBlock.vue";
-import TaskForm from "@/components/tasks/TaskForm.vue";
-import HelpTooltip from "@/components/common/HelpTooltip.vue";
-import MySpinner from "@/components/common/MySpinner.vue";
+import { showToast } from '@/utils/toast'
+import { useToast } from 'vue-toastification'
+import { TaskOrder, TaskPriority, TaskStatus } from '@/config/constants.js'
+import TaskBlock from '@/components/tasks/TaskBlock.vue'
+import TaskForm from '@/components/tasks/TaskForm.vue'
+import HelpTooltip from '@/components/common/HelpTooltip.vue'
+import MySpinner from '@/components/common/MySpinner.vue'
 
 //TODO:HTML大量重复，可以化简
 export default {
+  name: 'TaskList',
   components: { TaskBlock, TaskForm, HelpTooltip, MySpinner },
-  name: "TaskList",
   props: {
     tasks: Array, // 任务数据
     taskListLoading: Boolean, // 是否在加载
     groupId: Number,
     isInGroupPage: Boolean,
     refreshTaskList: Function,
+  },
+  setup() {
+    const toast = useToast()
+    return { toast }
   },
   data() {
     return {
@@ -434,194 +363,188 @@ export default {
       },
       activeDropdown: null,
       editingTasks: {},
-    };
+    }
   },
-  setup() {
-    const toast = useToast();
-    return { toast };
-  },
-  mounted() {
-    this.resetForm();
-    this.showedTasks = this.tasks;
+  computed: {
+    TaskOrder() {
+      return TaskOrder // 让模板能访问 TaskOrder
+    },
   },
   watch: {
     // 监听 tasks 的变化，确保数据更新后再处理
     tasks: {
       handler(tasks) {
         this.$nextTick(() => {
-          this.showedTasks = tasks;
-        });
+          this.showedTasks = tasks
+        })
       },
       deep: true,
     },
     showedTasks: {
       handler(showedTasks) {
         if (showedTasks != null && showedTasks.length > 0) {
-          showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-          this.divideTasksByPriority(showedTasks);
-          this.divideTasksByStatus(showedTasks);
+          showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          this.divideTasksByPriority(showedTasks)
+          this.divideTasksByStatus(showedTasks)
         }
       },
       deep: true, // 确保监听数组内部变化
       immediate: true, // 组件初始化时也执行一次
     },
   },
+  mounted() {
+    this.resetForm()
+    this.showedTasks = this.tasks
+  },
   methods: {
     divideTasksByPriority(tasks) {
-      const newHighTasks = [];
-      const newMidTasks = [];
-      const newLowTasks = [];
+      const newHighTasks = []
+      const newMidTasks = []
+      const newLowTasks = []
       tasks.forEach((task) => {
         if (task.priority === TaskPriority.High) {
-          newHighTasks.push(task);
+          newHighTasks.push(task)
         } else if (task.priority === TaskPriority.Medium) {
-          newMidTasks.push(task);
+          newMidTasks.push(task)
         } else if (task.priority === TaskPriority.Low) {
-          newLowTasks.push(task);
+          newLowTasks.push(task)
         }
-      });
-      this.highTasks = newHighTasks;
-      this.midTasks = newMidTasks;
-      this.lowTasks = newLowTasks;
+      })
+      this.highTasks = newHighTasks
+      this.midTasks = newMidTasks
+      this.lowTasks = newLowTasks
     },
     divideTasksByStatus(tasks) {
-      const newTodoTasks = [];
-      const newInProgressTasks = [];
-      const newCompletedTasks = [];
-      const newArchivedTasks = [];
+      const newTodoTasks = []
+      const newInProgressTasks = []
+      const newCompletedTasks = []
+      const newArchivedTasks = []
       tasks.forEach((task) => {
         if (task.status === TaskStatus.Todo) {
-          newTodoTasks.push(task);
+          newTodoTasks.push(task)
         } else if (task.status === TaskStatus.InProgress) {
-          newInProgressTasks.push(task);
+          newInProgressTasks.push(task)
         } else if (task.status === TaskStatus.Completed) {
-          newCompletedTasks.push(task);
+          newCompletedTasks.push(task)
         } else if (task.status === TaskStatus.Archived) {
-          newArchivedTasks.push(task);
+          newArchivedTasks.push(task)
         }
-      });
-      this.todoTasks = newTodoTasks;
-      this.inProgressTasks = newInProgressTasks;
-      this.completedTasks = newCompletedTasks;
-      this.archivedTasks = newArchivedTasks;
+      })
+      this.todoTasks = newTodoTasks
+      this.inProgressTasks = newInProgressTasks
+      this.completedTasks = newCompletedTasks
+      this.archivedTasks = newArchivedTasks
     },
 
     changeOrderToPriority() {
-      this.taskOrder = TaskOrder.Priority;
+      this.taskOrder = TaskOrder.Priority
     },
     changeOrderToStatus() {
-      this.taskOrder = TaskOrder.Status;
+      this.taskOrder = TaskOrder.Status
     },
 
     isTaskLegal(task) {
       const rules = [
         {
-          condition: task.title === "",
-          message: "task.validation.titleRequired",
+          condition: task.title === '',
+          message: 'task.validation.titleRequired',
         },
         {
-          condition: task.dueDate === "",
-          message: "task.validation.dueDateRequired",
+          condition: task.dueDate === '',
+          message: 'task.validation.dueDateRequired',
         },
-      ];
+      ]
 
-      const failedRule = rules.find((rule) => rule.condition);
+      const failedRule = rules.find((rule) => rule.condition)
       if (failedRule) {
-        showToast(this.toast, this.$t(failedRule.message), "error");
-        return false;
+        showToast(this.toast, this.$t(failedRule.message), 'error')
+        return false
       }
-      return true;
+      return true
     },
 
     // 切换到创建任务模式
     startCreateTask() {
-      this.isCreating = true;
+      this.isCreating = true
     },
     // 取消创建任务
     cancelCreateTask() {
-      this.isCreating = false;
-      this.resetForm(); // 重置表单
+      this.isCreating = false
+      this.resetForm() // 重置表单
     },
     // 提交任务到后端
     async submitTask(newTask) {
       try {
         // 调用后端API创建任务
         if (!this.isTaskLegal(newTask)) {
-          return;
+          return
         }
-        newTask.creator = this.$store.getters.getUser;
-        newTask.taskGroupId = this.groupId;
-        console.log(newTask);
-        await this.$axios.post("/tasks/create", newTask);
-        showToast(this.toast, this.$t("task.success.create"), "success");
+        newTask.creator = this.$store.getters.getUser
+        newTask.taskGroupId = this.groupId
+        console.log(newTask)
+        await this.$axios.post('/tasks/create', newTask)
+        showToast(this.toast, this.$t('task.success.create'), 'success')
 
         // 提交成功后重置状态和表单
-        this.isCreating = false;
-        this.resetForm();
-        this.showedTasks.push(newTask);
-        this.refreshTaskList();
+        this.isCreating = false
+        this.resetForm()
+        this.showedTasks.push(newTask)
+        this.refreshTaskList()
       } catch (error) {
-        console.error(this.$t("task.errors.create"), error);
-        showToast(this.toast, this.$t("task.errors.create"), "error");
+        console.error(this.$t('task.errors.create'), error)
+        showToast(this.toast, this.$t('task.errors.create'), 'error')
       }
     },
     // 重置任务表单
     resetForm() {
       this.newTask = {
-        title: "",
-        description: "",
-        priority: "MEDIUM",
-        status: "TODO",
-        dueDate: "",
-      };
+        title: '',
+        description: '',
+        priority: 'MEDIUM',
+        status: 'TODO',
+        dueDate: '',
+      }
     },
 
     toggleSection(section) {
-      this.expandedSections[section] = !this.expandedSections[section];
+      this.expandedSections[section] = !this.expandedSections[section]
     },
 
     toggleDropdown(taskId) {
-      this.activeDropdown = this.activeDropdown === taskId ? null : taskId;
+      this.activeDropdown = this.activeDropdown === taskId ? null : taskId
     },
     cancelEditTask(taskId) {
-      this.editingTasks[taskId] = false;
+      this.editingTasks[taskId] = false
     },
     editTask(taskId) {
-      this.editingTasks[taskId] = true;
+      this.editingTasks[taskId] = true
     },
     async updateTask(taskId, updatedTask) {
-      console.log(updatedTask);
+      console.log(updatedTask)
       try {
         if (!this.isTaskLegal(updatedTask)) {
-          return;
+          return
         }
-        const taskIndex = this.showedTasks.findIndex(
-          (task) => task.id === taskId
-        );
+        const taskIndex = this.showedTasks.findIndex((task) => task.id === taskId)
         if (taskIndex !== -1) {
-          this.showedTasks[taskIndex] = updatedTask;
+          this.showedTasks[taskIndex] = updatedTask
         }
-        updatedTask.taskGroupId = updatedTask.taskGroup.id;
-        await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
-        this.editingTasks[taskId] = false;
-        showToast(this.toast, this.$t("task.success.update"), "success");
-        this.refreshTaskList();
+        updatedTask.taskGroupId = updatedTask.taskGroup.id
+        await this.$axios.put(`/tasks/update/${taskId}`, updatedTask)
+        this.editingTasks[taskId] = false
+        showToast(this.toast, this.$t('task.success.update'), 'success')
+        this.refreshTaskList()
       } catch (error) {
-        console.error(this.$t("task.errors.update"), error);
-        showToast(this.toast, this.$t("task.errors.update"), "error");
+        console.error(this.$t('task.errors.update'), error)
+        showToast(this.toast, this.$t('task.errors.update'), 'error')
       }
     },
 
     enterGroupChat(groupId) {
-      this.$router.push(`/group/${groupId}`);
+      this.$router.push(`/group/${groupId}`)
     },
   },
-  computed: {
-    TaskOrder() {
-      return TaskOrder; // 让模板能访问 TaskOrder
-    },
-  },
-};
+}
 </script>
 
 <style scoped>

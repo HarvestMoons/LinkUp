@@ -1,10 +1,6 @@
 <!-- HelpTooltip.vue -->
 <template>
-  <div
-    class="help-tooltip-wrapper"
-    @mouseenter="showTooltip"
-    @mouseleave="show = false"
-  >
+  <div class="help-tooltip-wrapper" @mouseenter="showTooltip" @mouseleave="show = false">
     <!-- 问号图标 -->
     <div class="help-icon">?</div>
 
@@ -17,26 +13,26 @@
 
 <script>
 export default {
-  name: "HelpTooltip",
+  name: 'HelpTooltip',
   data() {
     return {
       show: false,
-    };
+    }
   },
   methods: {
     showTooltip() {
-      this.show = true;
+      this.show = true
       this.$nextTick(() => {
-        const tooltip = this.$el.querySelector(".tooltip-box");
-        const rect = this.$el.getBoundingClientRect();
-        tooltip.style.top = `${(rect.bottom + rect.top) / 2}px`;
+        const tooltip = this.$el.querySelector('.tooltip-box')
+        const rect = this.$el.getBoundingClientRect()
+        tooltip.style.top = `${(rect.bottom + rect.top) / 2}px`
         tooltip.style.right = `${
           document.documentElement.scrollWidth - (rect.right + rect.left) / 2
-        }px`;
-      });
+        }px`
+      })
     },
   },
-};
+}
 </script>
 
 <style scoped>

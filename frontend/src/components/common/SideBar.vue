@@ -2,21 +2,20 @@
 <template>
   <transition name="cover">
     <!-- 遮罩层 -->
-    <div v-if="isVisible" class="overlay" @click="$emit('close')"></div>
+    <div v-if="isVisible" class="overlay" @click="$emit('close')" />
   </transition>
 
   <transition name="slide">
     <div v-show="isVisible" class="sidebar">
       <h2>{{ title }}</h2>
       <div class="closeSign" @click="$emit('close')">✖</div>
-      <component :is="contentComponent" v-bind="contentProps"></component>
+      <component :is="contentComponent" v-bind="contentProps" />
     </div>
   </transition>
 </template>
 
 <script>
 export default {
-  emits: ["close"],
   props: {
     title: String,
     isVisible: Boolean,
@@ -29,7 +28,8 @@ export default {
       default: () => ({}), // 默认是空对象
     },
   },
-};
+  emits: ['close'],
+}
 </script>
 
 <style scoped>

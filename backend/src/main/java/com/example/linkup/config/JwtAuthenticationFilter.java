@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // 1. 从请求头中提取 Token
             String jwt = parseJwt(request);
-            System.out.println("解析到的 JWT 令牌: " + jwt);
 
             // 2. 验证 Token 是否有效
             if (jwt != null) {
@@ -50,7 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (jwtUtils.validateJwtToken(jwt)) {
                         // 3. 从 Token 中提取用户名
                         String username = jwtUtils.getUsernameFromJwtToken(jwt);
-                        System.out.println("JWT 解析出的用户名: " + username);
 
                         // 4. 加载用户信息
                         UserDetails userDetails = userDetailsService.loadUserByUsername(username);

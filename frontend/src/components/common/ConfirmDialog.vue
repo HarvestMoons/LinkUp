@@ -4,8 +4,12 @@
     <div class="confirm-dialog">
       <h3>{{ message }}</h3>
       <div class="doubleButtonContainer">
-        <button @click="onConfirm" class="button warningButton">{{ $t('common.confirm') }}</button>
-        <button @click="onCancel" class="button normalButton">{{ $t('common.cancel') }}</button>
+        <button class="button warningButton" @click="onConfirm">
+          {{ $t('common.confirm') }}
+        </button>
+        <button class="button normalButton" @click="onCancel">
+          {{ $t('common.cancel') }}
+        </button>
       </div>
     </div>
   </div>
@@ -25,18 +29,18 @@ export default {
   },
   methods: {
     close() {
-      this.$emit("update:isVisible", false);
+      this.$emit('update:isVisible', false)
     },
     onConfirm() {
-      this.$emit("confirm");
-      this.close();
+      this.$emit('confirm')
+      this.close()
     },
     onCancel() {
-      this.$emit("cancel");
-      this.close();
+      this.$emit('cancel')
+      this.close()
     },
   },
-};
+}
 </script>
 
 <style scoped>

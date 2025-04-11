@@ -10,7 +10,7 @@
  * @property {TranslateFunction} $t - i18n 的翻译函数
  * @property {VuexStore} $store - Vuex 的 store 实例
  */
-const VueGlobalProperties = {};
+const VueGlobalProperties = {}
 
 // 仅用于类型提示，不需要导出实际值
-export default VueGlobalProperties;
+export default VueGlobalProperties
