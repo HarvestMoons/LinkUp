@@ -309,5 +309,9 @@ nav a.router-link-exact-active {
   .userAvatar {
     height: 30px;
   }
+  .tab.active::after {
+    width: 100%;
+    bottom: 0px; /* 让它刚好覆盖 container 上边框 */
+  }
 }
 </style>
