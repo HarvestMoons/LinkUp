@@ -24,6 +24,7 @@
         >{{ $t("dashboard.home") }}</router-link
       >
 
+      <p v-if="isMobile">|</p>
       <router-link
         to="/friends"
         class="tab"
@@ -31,6 +32,7 @@
         >{{ $t("dashboard.friends") }}</router-link
       >
 
+      <p v-if="isMobile">|</p>
       <router-link
         to="/tasks"
         class="tab"
@@ -38,6 +40,7 @@
         >{{ $t("dashboard.tasks") }}</router-link
       >
 
+      <p v-if="isMobile">|</p>
       <router-link
         to="/groups"
         class="tab"
@@ -79,6 +82,8 @@
 import { getFriendList } from "@/utils/friendService";
 import { getTaskList } from "@/utils/taskService";
 import { getGroupList } from "@/utils/groupService";
+import { useIsMobile } from "@/utils/useIsMobile";
+
 export default {
   data() {
     return {
@@ -92,6 +97,10 @@ export default {
         await this.fetchUserData();
       }
     },
+  },
+  setup() {
+    const { isMobile } = useIsMobile();
+    return { isMobile };
   },
   methods: {
     logout() {
@@ -281,12 +290,24 @@ nav a.router-link-exact-active {
 
 @media screen and (max-width: 768px) {
   .tab {
-    padding: 6px 10px;
+    padding: 6px 5px;
+    background: #fff;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    text-decoration: none;
+    transition: 0.3s;
+    position: relative;
+    width: auto;
+    height: 100%;
+    border: none;
   }
   .languageSelect {
     font-size: 10px;
     min-width: 80px;
     padding: 5px 10px;
+  }
+  .userAvatar {
+    height: 30px;
   }
 }
 </style>
