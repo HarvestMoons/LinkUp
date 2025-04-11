@@ -4,15 +4,19 @@ import com.example.linkup.dto.UserInfoDto;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
+import com.example.linkup.repository.UserRepository;
 import com.example.linkup.service.GroupMemberService;
 import com.example.linkup.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -111,5 +115,19 @@ public class UserController {
         User updatedUser = userService.updateAvatar(userId, avatarId);
         return ResponseEntity.ok(updatedUser);
     }
+
+    @PostMapping("/ping")
+    public ResponseEntity<Void> ping() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated()) {
+            String username = ((UserDetails) auth.getPrincipal()).getUsername();
+            User user = userService.findByUsername(username);
+            if (user != null) {
+                userService.updateLastActiveTime(user);
+            }
+        }
+        return ResponseEntity.ok().build();
+    }
+
 
 }

@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
 public class UserService {
@@ -65,6 +67,11 @@ public class UserService {
         User user=findById(userId);
         user.setAvatarId(avatarId);
         return userRepository.save(user);
+    }
+
+    public void updateLastActiveTime(User user) {
+        user.setLastActiveTime(LocalDateTime.now());
+        userRepository.save(user);
     }
 
 }
