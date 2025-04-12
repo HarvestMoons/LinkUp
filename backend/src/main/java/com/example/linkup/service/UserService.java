@@ -31,6 +31,7 @@ public class UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
+        user.setLastActiveTime(LocalDateTime.now());
         userRepository.save(user);
     }
 

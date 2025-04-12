@@ -29,7 +29,7 @@ public class GroupMember {
     private Role role; // 用户角色（OWNER、ADMIN 或 MEMBER）
 
     @CreationTimestamp
-    @Column(name = "joined_at")
+    @Column(name = "joined_at", nullable = false)
     private Timestamp joinedAt; // 加入时间
 
     public enum Role {
