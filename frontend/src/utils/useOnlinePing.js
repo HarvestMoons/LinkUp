@@ -1,11 +1,12 @@
 import { onMounted, onUnmounted } from 'vue'
 import Cookies from 'js-cookie'
+import store from '@/store'
 
 let unloadListenerAdded = false
 let tokenCheckIntervalId = null
 //TODO:此处默认ping周期设置为60000（60s）用于生产环境
 export function useOnlinePing(pollInterval = 2000) {
-  const getToken = () => Cookies.get('JWT')
+  const getToken = () => store.getters.getToken
 
   const startPing = () => {
     if (globalThis.__onlinePingIntervalId) return

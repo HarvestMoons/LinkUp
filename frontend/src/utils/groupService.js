@@ -49,3 +49,19 @@ export async function getGroupList(userId) {
     return await fetchGroups(userId)
   }
 }
+
+export async function fetchMembers(groupId) {
+  try {
+    const response = await axios.get(`/groups/${groupId}/members`)
+    const groupMembers = response.data.map((item) => {
+      return {
+        role: item.role,
+        ...item.user,
+      }
+    })
+    console.log('members', groupMembers);
+    return groupMembers;
+  } catch (error) {
+    console.error('加载群组成员失败', error)
+  }
+}

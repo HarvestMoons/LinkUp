@@ -15,28 +15,33 @@
         "
         @click="deleteMember(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.deleteMember') }}
+        {{ $t("groups.contextMenu.deleteMember") }}
       </li>
       <li
         v-if="
           isUserGroupOwner() &&
-          !(isMemberGroupAdmin(clickOnMember) || isMemberGroupOwner(clickOnMember))
+          !(
+            isMemberGroupAdmin(clickOnMember) ||
+            isMemberGroupOwner(clickOnMember)
+          )
         "
         @click="setMemberAdmin(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.setAdmin') }}
+        {{ $t("groups.contextMenu.setAdmin") }}
       </li>
       <li
         v-if="isUserGroupOwner() && isMemberGroupAdmin(clickOnMember)"
         @click="setMemberNotAdmin(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.removeAdmin') }}
+        {{ $t("groups.contextMenu.removeAdmin") }}
       </li>
       <li
-        v-if="!isUser(clickOnMember) && friends != null && !isFriend(clickOnMember)"
+        v-if="
+          !isUser(clickOnMember) && friends != null && !isFriend(clickOnMember)
+        "
         @click="addMemberAsFriend(clickOnMember)"
       >
-        {{ $t('groups.contextMenu.addFriend') }}
+        {{ $t("groups.contextMenu.addFriend") }}
       </li>
     </ul>
   </div>
@@ -48,10 +53,10 @@
     @confirm="handleConfirm"
   />
 
-  <div>
+  <div class="groupEditorContainer">
     <div class="blockContainer">
       <HelpTooltip>
-        {{ $t('help.groupRole.border') }}
+        {{ $t("help.groupRole.border") }}
         <span
           style="
             display: inline-block;
@@ -62,7 +67,7 @@
             margin-right: 5px;
           "
         />
-        {{ $t('help.groupRole.owner') }}
+        {{ $t("help.groupRole.owner") }}
         <span
           style="
             display: inline-block;
@@ -73,11 +78,11 @@
             margin-right: 5px;
           "
         />
-        {{ $t('help.groupRole.admin') }}
-        {{ $t('help.groupRole.normal') }}
-        {{ $t('help.groupRole.rightClick') }}
+        {{ $t("help.groupRole.admin") }}
+        {{ $t("help.groupRole.normal") }}
+        {{ $t("help.groupRole.rightClick") }}
       </HelpTooltip>
-      <h2>{{ $t('groups.memberListTitle') }}</h2>
+      <h2>{{ $t("groups.memberListTitle") }}</h2>
       <ul class="membersList">
         <div v-if="showedGroupMembers.length === 0">
           <MySpinner />
@@ -98,9 +103,17 @@
             :alt="$t('common.avatarAlt')"
             class="memberAvatar"
           />
-          <span class="memberName">{{ member.username }} (#{{ member.id }}) </span>
+          <span class="memberName"
+            >{{ member.username }} (#{{ member.id }})
+          </span>
         </li>
-        <div v-if="!isSelectingFriend" class="memberItem" @click="startAddingGroupMember">+</div>
+        <div
+          v-if="!isSelectingFriend"
+          class="memberItem"
+          @click="startAddingGroupMember"
+        >
+          +
+        </div>
       </ul>
       <div v-if="isSelectingFriend" class="addGroupMemberContainer">
         <FriendSelection
@@ -111,18 +124,18 @@
 
         <div class="doubleButtonContainer">
           <button class="button warningButton" @click="cancelAddingGroupMember">
-            {{ $t('common.cancel') }}
+            {{ $t("common.cancel") }}
           </button>
           <button class="button normalButton" @click="addGroupMember">
-            {{ $t('groups.inviteButton') }}
+            {{ $t("groups.inviteButton") }}
           </button>
         </div>
       </div>
     </div>
 
     <div class="blockContainer">
-      <HelpTooltip>{{ $t('help.groupInfo') }}</HelpTooltip>
-      <h2>{{ $t('groups.groupInfoTitle') }}</h2>
+      <HelpTooltip>{{ $t("help.groupInfo") }}</HelpTooltip>
+      <h2>{{ $t("groups.groupInfoTitle") }}</h2>
       <div v-if="isEditingName" class="groupField">
         <input
           ref="groupNameInput"
@@ -133,7 +146,7 @@
         />
       </div>
       <div v-else class="groupField" @click="startEditing('name')">
-        <span>{{ $t('groups.groupNameLabel') }} </span>
+        <span>{{ $t("groups.groupNameLabel") }} </span>
         <span class="editableText">{{ showedGroupName }}</span>
       </div>
 
@@ -146,39 +159,49 @@
         />
       </div>
       <div v-else class="groupField" @click="startEditing('description')">
-        <span>{{ $t('groups.groupDescLabel') }} </span>
+        <span>{{ $t("groups.groupDescLabel") }} </span>
         <span class="editableText">{{
-          showedGroupDescription ? showedGroupDescription : $t('groups.noDescription')
+          showedGroupDescription
+            ? showedGroupDescription
+            : $t("groups.noDescription")
         }}</span>
       </div>
     </div>
 
-    <button v-if="isUserGroupOwner()" class="button warningButton" @click="disbandGroup">
-      {{ $t('groups.disbandButton') }}
+    <button
+      v-if="isUserGroupOwner()"
+      class="button warningButton"
+      @click="disbandGroup"
+    >
+      {{ $t("groups.disbandButton") }}
     </button>
-    <button v-if="!isUserGroupOwner()" class="button warningButton" @click="leaveGroup">
-      {{ $t('groups.leaveButton') }}
+    <button
+      v-if="!isUserGroupOwner()"
+      class="button warningButton"
+      @click="leaveGroup"
+    >
+      {{ $t("groups.leaveButton") }}
     </button>
   </div>
 </template>
 
 <script>
-import FriendSelection from '@/components/friends/FriendSelection.vue'
-import ConfirmDialog from '@/components/common/ConfirmDialog.vue'
-import HelpTooltip from '@/components/common/HelpTooltip.vue'
+import FriendSelection from "@/components/friends/FriendSelection.vue";
+import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
+import HelpTooltip from "@/components/common/HelpTooltip.vue";
 
-import { Role } from '@/config/constants'
+import { Role } from "@/config/constants";
 
-import { getFriendList } from '@/utils/friendService'
-import { fetchGroups } from '@/utils/groupService'
+import { getFriendList } from "@/utils/friendService";
+import { fetchGroups } from "@/utils/groupService";
 
-import { showToast } from '@/utils/toast'
-import { useToast } from 'vue-toastification'
-import { validateInput } from '@/utils/validationUtils'
-import MySpinner from '@/components/common/MySpinner.vue'
+import { showToast } from "@/utils/toast";
+import { useToast } from "vue-toastification";
+import { validateInput } from "@/utils/validationUtils";
+import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
-  name: 'GroupEditor',
+  name: "GroupEditor",
   components: { MySpinner, FriendSelection, ConfirmDialog, HelpTooltip },
   props: {
     groupId: Number,
@@ -190,8 +213,8 @@ export default {
     refreshGroupData: Function,
   },
   setup() {
-    const toast = useToast()
-    return { toast }
+    const toast = useToast();
+    return { toast };
   },
   data() {
     return {
@@ -199,7 +222,7 @@ export default {
       menuPosition: { top: 0, left: 0 },
       clickOnMember: null,
       isConfirmDialogVisible: false, // 控制确认框的显示和隐藏
-      confirmMessage: '', // 确认框显示的提示信息
+      confirmMessage: "", // 确认框显示的提示信息
       isEditingName: false,
       isEditingDescription: false,
       editableGroupName: this.groupName,
@@ -210,267 +233,327 @@ export default {
       selectedFriends: [],
       showedGroupMembers: [],
       friends: null,
-    }
+    };
   },
   watch: {
     groupMembers: {
       handler() {
         this.$nextTick(() => {
-          this.showedGroupMembers = this.sortGroupMember(this.groupMembers)
-        })
+          this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
+        });
       },
       deep: true, // 深度监听，确保数组更新时触发
     },
     groupName: {
       handler() {
         this.$nextTick(() => {
-          this.showedGroupName = this.groupName
-        })
+          this.showedGroupName = this.groupName;
+        });
       },
     },
     groupDescription: {
       handler() {
         this.$nextTick(() => {
-          this.showedGroupDescription = this.groupDescription
-        })
+          this.showedGroupDescription = this.groupDescription;
+        });
       },
     },
   },
   async mounted() {
-    this.showedGroupMembers = this.sortGroupMember(this.groupMembers)
-    this.friends = await getFriendList(this.userId)
-    window.addEventListener('click', this.closeMenu)
-    window.addEventListener('wheel', this.closeMenu)
+    this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
+    this.friends = await getFriendList(this.userId);
+    window.addEventListener("click", this.closeMenu);
+    window.addEventListener("wheel", this.closeMenu);
   },
   beforeUnmount() {
-    window.removeEventListener('click', this.closeMenu)
-    window.removeEventListener('wheel', this.closeMenu)
+    window.removeEventListener("click", this.closeMenu);
+    window.removeEventListener("wheel", this.closeMenu);
   },
   methods: {
     isUserGroupOwner() {
-      return this.userRole === Role.Owner
+      return this.userRole === Role.Owner;
     },
     isUserGroupAdmin() {
-      return this.userRole === Role.Admin
+      return this.userRole === Role.Admin;
     },
     isMemberGroupOwner(member) {
-      return member.role === Role.Owner
+      return member.role === Role.Owner;
     },
     isMemberGroupAdmin(member) {
-      return member.role === Role.Admin
+      return member.role === Role.Admin;
     },
     isUser(member) {
-      return member.id === this.userId
+      return member.id === this.userId;
     },
 
     showMenu(event, member) {
-      event.preventDefault() // 阻止浏览器默认的右键菜单
-      this.isMenuVisible = true // 显示自定义菜单
+      event.preventDefault(); // 阻止浏览器默认的右键菜单
+      this.isMenuVisible = true; // 显示自定义菜单
 
       // 计算相对于组件容器的坐标
-      const top = event.clientY
-      const left = event.clientX
+      const top = event.clientY;
+      const left = event.clientX;
 
       // 设置右键菜单的位置
-      this.menuPosition = { top, left }
-      this.clickOnMember = member
+      this.menuPosition = { top, left };
+      this.clickOnMember = member;
     },
     closeMenu() {
-      this.isMenuVisible = false
+      this.isMenuVisible = false;
     },
 
     handleConfirm() {
-      this.disbandGroup() // 用户确认解散群聊
+      this.disbandGroup(); // 用户确认解散群聊
     },
 
     async deleteMember(member) {
       try {
         if (this.showedGroupMembers.length === 2) {
-          this.confirmMessage = this.$t('groups.confirm.disbandWhenRemove', {
+          this.confirmMessage = this.$t("groups.confirm.disbandWhenRemove", {
             username: member.username,
             id: member.id,
-          })
-          this.isConfirmDialogVisible = true
+          });
+          this.isConfirmDialogVisible = true;
         } else {
-          await this.$axios.delete(`/groups/${this.groupId}/members/${member.id}`)
-          this.closeMenu()
-          const index = this.groupMembers.findIndex((tempMember) => tempMember.id === member.id)
-          this.showedGroupMembers.splice(index, 1)
+          await this.$axios.delete(
+            `/groups/${this.groupId}/members/${member.id}`
+          );
+          this.closeMenu();
+          const index = this.groupMembers.findIndex(
+            (tempMember) => tempMember.id === member.id
+          );
+          this.showedGroupMembers.splice(index, 1);
           showToast(
             this.toast,
-            this.$t('groups.memberManagement.removeMemberSuccess', {
+            this.$t("groups.memberManagement.removeMemberSuccess", {
               username: member.username,
               id: member.id,
             }),
-            'success'
-          )
+            "success"
+          );
         }
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.removeMemberFailed'), 'error')
+        showToast(
+          this.toast,
+          this.$t("groups.errors.removeMemberFailed"),
+          "error"
+        );
       }
     },
 
     async setMemberAdmin(member) {
       try {
-        await this.$axios.put(`/groups/${this.groupId}/members/${Number(member.id)}/update-role`, {
-          newRole: Role.Admin,
-        })
-        this.closeMenu()
-        member.role = Role.Admin
+        await this.$axios.put(
+          `/groups/${this.groupId}/members/${Number(member.id)}/update-role`,
+          {
+            newRole: Role.Admin,
+          }
+        );
+        this.closeMenu();
+        member.role = Role.Admin;
         showToast(
           this.toast,
-          this.$t('groups.memberManagement.setAdminSuccess', {
+          this.$t("groups.memberManagement.setAdminSuccess", {
             username: member.username,
             id: member.id,
           }),
-          'success'
-        )
+          "success"
+        );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.setAdminFailed'), 'error')
+        showToast(this.toast, this.$t("groups.errors.setAdminFailed"), "error");
       }
     },
 
     async setMemberNotAdmin(member) {
       try {
-        await this.$axios.put(`/groups/${this.groupId}/members/${member.id}/update-role`, {
-          newRole: Role.Member,
-        })
-        this.closeMenu()
-        member.role = Role.Member
+        await this.$axios.put(
+          `/groups/${this.groupId}/members/${member.id}/update-role`,
+          {
+            newRole: Role.Member,
+          }
+        );
+        this.closeMenu();
+        member.role = Role.Member;
         showToast(
           this.toast,
-          this.$t('groups.memberManagement.removeAdminSuccess', {
+          this.$t("groups.memberManagement.removeAdminSuccess", {
             username: member.username,
             id: member.id,
           }),
-          'success'
-        )
+          "success"
+        );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.removeAdminFailed'), 'error')
+        showToast(
+          this.toast,
+          this.$t("groups.errors.removeAdminFailed"),
+          "error"
+        );
       }
     },
 
     async addMemberAsFriend(member) {
       try {
-        await this.$axios.post('/friend-requests/send', {
+        await this.$axios.post("/friend-requests/send", {
           senderId: Number(this.userId),
           receiverId: Number(member.id),
-        })
-        showToast(this.toast, this.$t('friends.success.requestSent'), 'success')
-        this.closeMenu()
+        });
+        showToast(
+          this.toast,
+          this.$t("friends.success.requestSent"),
+          "success"
+        );
+        this.closeMenu();
       } catch (error) {
-        showToast(this.toast, this.$t('friends.errors.sendRequestFailed'), 'error')
+        showToast(
+          this.toast,
+          this.$t("friends.errors.sendRequestFailed"),
+          "error"
+        );
       }
     },
     isFriend(member) {
-      return this.friends.some((friend) => friend.id === member.id)
+      return this.friends.some((friend) => friend.id === member.id);
     },
     startEditing(field) {
       if (this.isUserGroupOwner() || this.isUserGroupAdmin()) {
-        if (field === 'name') {
-          this.editableGroupName = this.showedGroupName
-          this.isEditingName = true
+        if (field === "name") {
+          this.editableGroupName = this.showedGroupName;
+          this.isEditingName = true;
           setTimeout(() => {
-            this.$refs.groupNameInput.focus()
-          }, 0)
-        } else if (field === 'description') {
-          this.editableGroupDescription = this.showedGroupDescription
-          this.isEditingDescription = true
+            this.$refs.groupNameInput.focus();
+          }, 0);
+        } else if (field === "description") {
+          this.editableGroupDescription = this.showedGroupDescription;
+          this.isEditingDescription = true;
           setTimeout(() => {
-            this.$refs.groupDescriptionInput.focus()
-          }, 0)
+            this.$refs.groupDescriptionInput.focus();
+          }, 0);
         }
       } else {
-        showToast(this.toast, this.$t('groups.permissionDenied.edit'), 'error')
+        showToast(this.toast, this.$t("groups.permissionDenied.edit"), "error");
       }
     },
 
     updateHeader() {
-      this.refreshGroupData()
+      this.refreshGroupData();
     },
     async saveGroupName() {
-      this.isEditingName = false
+      this.isEditingName = false;
       if (this.showedGroupName === this.editableGroupName) {
-        return
+        return;
       }
       this.errorMessage = validateInput(
         this.$constants.GROUP_NAME_VALIDATION,
         this.editableGroupName
-      )
+      );
       if (this.errorMessage) {
-        showToast(this.toast, this.errorMessage, 'error')
-        return
+        showToast(this.toast, this.errorMessage, "error");
+        return;
       }
       try {
-        this.showedGroupName = this.editableGroupName
+        this.showedGroupName = this.editableGroupName;
         await this.$axios.put(`/task-group/${this.groupId}/update-name`, null, {
           params: { name: this.editableGroupName },
-        })
-        showToast(this.toast, this.$t('groups.groupManagement.nameUpdateSuccess'), 'success')
-        this.updateHeader()
+        });
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.nameUpdateSuccess"),
+          "success"
+        );
+        this.updateHeader();
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.updateNameFailed'), 'error')
+        showToast(
+          this.toast,
+          this.$t("groups.errors.updateNameFailed"),
+          "error"
+        );
       }
     },
     async saveGroupDescription() {
-      this.isEditingDescription = false
+      this.isEditingDescription = false;
       if (this.showedGroupDescription === this.editableGroupDescription) {
-        return
+        return;
       }
       if (this.editableGroupDescription == null) {
-        this.editableGroupDescription = ''
+        this.editableGroupDescription = "";
       }
 
       try {
-        this.showedGroupDescription = this.editableGroupDescription
-        await this.$axios.put(`/task-group/${this.groupId}/update-description`, null, {
-          params: { description: this.editableGroupDescription },
-        })
-        showToast(this.toast, this.$t('groups.groupManagement.descUpdateSuccess'), 'success')
-        this.updateHeader()
+        this.showedGroupDescription = this.editableGroupDescription;
+        await this.$axios.put(
+          `/task-group/${this.groupId}/update-description`,
+          null,
+          {
+            params: { description: this.editableGroupDescription },
+          }
+        );
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.descUpdateSuccess"),
+          "success"
+        );
+        this.updateHeader();
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.updateDescFailed'), 'error')
+        showToast(
+          this.toast,
+          this.$t("groups.errors.updateDescFailed"),
+          "error"
+        );
       }
     },
     async disbandGroup() {
       try {
-        await this.$axios.delete(`/task-group/${this.groupId}`)
-        showToast(this.toast, this.$t('groups.groupManagement.disbandSuccess'), 'success')
-        fetchGroups(this.$store.getters.getUserId)
-        this.$router.push('/groups')
+        await this.$axios.delete(`/task-group/${this.groupId}`);
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.disbandSuccess"),
+          "success"
+        );
+        fetchGroups(this.$store.getters.getUserId);
+        this.$router.push("/groups");
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.disbandFailed'), 'error')
+        showToast(this.toast, this.$t("groups.errors.disbandFailed"), "error");
       }
     },
     async leaveGroup() {
       try {
         if (this.groupMembers.length === 2) {
-          await this.$axios.delete(`/task-group/${this.groupId}`)
+          await this.$axios.delete(`/task-group/${this.groupId}`);
         } else {
-          await this.$axios.delete(`/groups/${this.groupId}/members/${this.userId}`)
+          await this.$axios.delete(
+            `/groups/${this.groupId}/members/${this.userId}`
+          );
         }
-        showToast(this.toast, this.$t('groups.groupManagement.leaveSuccess'), 'success')
-        fetchGroups(this.$store.getters.getUserId)
-        this.$router.push('/groups')
+        showToast(
+          this.toast,
+          this.$t("groups.groupManagement.leaveSuccess"),
+          "success"
+        );
+        fetchGroups(this.$store.getters.getUserId);
+        this.$router.push("/groups");
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.leaveFailed'), 'error')
+        showToast(this.toast, this.$t("groups.errors.leaveFailed"), "error");
       }
     },
 
     startAddingGroupMember() {
-      this.isSelectingFriend = true
+      this.isSelectingFriend = true;
     },
     cancelAddingGroupMember() {
-      this.isSelectingFriend = false
+      this.isSelectingFriend = false;
     },
     async addGroupMember() {
       try {
         if (this.selectedFriends.length === 0) {
-          console.log(this.$t('groups.errors.selectAtLeastOne'))
-          showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), 'warning')
-          return
+          console.log(this.$t("groups.errors.selectAtLeastOne"));
+          showToast(
+            this.toast,
+            this.$t("groups.errors.selectAtLeastOne"),
+            "warning"
+          );
+          return;
         }
-        const promises = []
+        const promises = [];
 
         // 收集所有的异步请求
         for (const friend of this.selectedFriends) {
@@ -479,22 +562,26 @@ export default {
               params: { role: Role.Member },
             })
             .then(() => {
-              this.showedGroupMembers.push({ role: Role.Member, ...friend })
-            })
+              this.showedGroupMembers.push({ role: Role.Member, ...friend });
+            });
 
           // 不使用 await，这样不会阻塞循环
-          promises.push(promise)
+          promises.push(promise);
         }
         // 等待所有请求完成
-        await Promise.all(promises)
-        this.isSelectingFriend = false
-        showToast(this.toast, this.$t('groups.memberManagement.inviteSuccess'), 'success')
+        await Promise.all(promises);
+        this.isSelectingFriend = false;
+        showToast(
+          this.toast,
+          this.$t("groups.memberManagement.inviteSuccess"),
+          "success"
+        );
       } catch (error) {
-        showToast(this.toast, this.$t('groups.errors.inviteFailed'), 'error')
+        showToast(this.toast, this.$t("groups.errors.inviteFailed"), "error");
       }
     },
     getGroupMemberIdArray(groupMembers) {
-      return groupMembers.map((item) => item.id)
+      return groupMembers.map((item) => item.id);
     },
 
     sortGroupMember(groupMembers) {
@@ -502,13 +589,13 @@ export default {
         [Role.Owner]: 1,
         [Role.Admin]: 2,
         [Role.Member]: 3,
-      }
-      let result = groupMembers
-      result.sort((a, b) => rolePriority[a.role] - rolePriority[b.role])
-      return result
+      };
+      let result = groupMembers;
+      result.sort((a, b) => rolePriority[a.role] - rolePriority[b.role]);
+      return result;
     },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -611,5 +698,9 @@ export default {
   border-radius: 10px;
   width: 100%;
   box-sizing: border-box;
+}
+
+.groupEditorContainer {
+  width: 100%;
 }
 </style>
