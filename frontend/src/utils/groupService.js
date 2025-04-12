@@ -65,3 +65,14 @@ export async function fetchMembers(groupId) {
     console.error('加载群组成员失败', error)
   }
 }
+
+export async function fetchUserRole(groupId, userId) {
+  try {
+    const response = await axios.get(
+      `/groups/${groupId}/members/${userId}/role`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("加载群组身份失败", error);
+  }
+}

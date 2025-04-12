@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store' // 导入 Vuex store
+import { fetchUserRole } from '@/utils/groupService'
 
 export async function fetchAllTasks(userId) {
   try {
@@ -10,11 +11,16 @@ export async function fetchAllTasks(userId) {
         Authorization: `Bearer ${token}`, // 在请求头中添加 token
       },
     })
-    const responseGroupTasks = await axios.get(`/tasks/user/${userId}/group-tasks`, {
+    let responseGroupTasks = await axios.get(`/tasks/user/${userId}/group-tasks`, {
       headers: {
         Authorization: `Bearer ${token}`, // 在请求头中添加 token
       },
     })
+    await Promise.all(
+      responseGroupTasks.data.map(async task => {
+        task.userRole = await fetchUserRole(task.taskGroup.id, userId);
+      })
+    );
     taskList = responsePersonalTasks.data.concat(responseGroupTasks.data)
     store.dispatch('setTaskList', taskList)
     return taskList

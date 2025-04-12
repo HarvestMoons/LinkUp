@@ -123,7 +123,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import MySpinner from "@/components/common/MySpinner.vue";
 
-import { fetchMembers } from "@/utils/groupService";
+import { fetchMembers, fetchUserRole } from "@/utils/groupService";
 
 export default {
   name: "GroupChatPage",
@@ -229,15 +229,7 @@ export default {
     },
 
     async fetchUserRole() {
-      try {
-        const response = await this.$axios.get(
-          `/groups/${this.groupId}/members/${this.userId}/role`
-        );
-        this.userRole = response.data;
-        console.log("role", this.userRole);
-      } catch (error) {
-        console.error("加载群组身份失败", error);
-      }
+      this.userRole = await fetchUserRole(this.groupId, this.userId);
     },
 
     async fetchMembers() {
@@ -346,6 +338,9 @@ export default {
       try {
         const response = await this.$axios.get(`/tasks/group/${this.groupId}`);
         this.groupTasks = response.data;
+        this.groupTasks.forEach(async (task) => {
+          task.userRole = this.userRole;
+        });
       } catch (error) {
         console.error("获取任务失败", error);
       } finally {

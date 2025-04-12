@@ -3,8 +3,9 @@
   "orderByStatus": "按任务状态排序",
   "orderByPriority": "按任务优先级排序",
   "edit": "编辑任务",
+  "delete": "删除任务",
   "noDescription": "无描述",
-  "noTask":"无任务",
+  "noTask": "无任务",
   "overdue": "已逾期",
   "createButton": "创建任务",
   "form": {

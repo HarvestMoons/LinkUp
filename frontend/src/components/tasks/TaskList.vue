@@ -91,6 +91,12 @@
                       >
                         💬 {{ $t("task.enterGroup") }}
                       </div>
+                      <div
+                        v-if="canBeDeleted(task)"
+                        @click="deleteTask(task.id)"
+                      >
+                        ❌ {{ $t("task.delete") }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -111,6 +117,7 @@ import TaskBlock from "@/components/tasks/TaskBlock.vue";
 import TaskForm from "@/components/tasks/TaskForm.vue";
 import HelpTooltip from "@/components/common/HelpTooltip.vue";
 import MySpinner from "@/components/common/MySpinner.vue";
+import { Role } from "@/config/constants";
 
 export default {
   name: "TaskList",
@@ -336,7 +343,7 @@ export default {
         console.log(newTask);
         await this.$axios.post("/tasks/create", newTask);
         showToast(this.toast, this.$t("task.success.create"), "success");
-
+        newTask.userRole = Role.Member;
         // 提交成功后重置状态和表单
         this.isCreating = false;
         this.resetForm();
@@ -370,6 +377,7 @@ export default {
     },
     editTask(taskId) {
       this.editingTasks[taskId] = true;
+      this.activeDropdown = null;
     },
     async updateTask(taskId, updatedTask) {
       console.log(updatedTask);
@@ -395,13 +403,37 @@ export default {
     },
 
     enterGroupChat(groupId) {
+      this.activeDropdown = null;
       this.$router.push(`/group/${groupId}`);
+    },
+
+    canBeDeleted(task) {
+      if (this.isInGroupPage || task.taskGroup) {
+        if (task.userRole !== Role.Owner && task.userRole !== Role.Admin) {
+          return false;
+        }
+      }
+      return true;
+    },
+    async deleteTask(taskId) {
+      try {
+        this.activeDropdown = null;
+        await this.$axios.delete(`/tasks/delete/${taskId}`);
+        this.showedTasks = this.showedTasks.filter(
+          (task) => task.id !== taskId
+        );
+        showToast(this.toast, this.$t("task.success.delete"), "success");
+      } catch (error) {
+        console.error(this.$t("task.errors.delete"), error);
+        showToast(this.toast, this.$t("task.errors.delete"), "error");
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.taskCreateAndShowContainer,
 .tasksContainer {
   width: 100%;
 }
