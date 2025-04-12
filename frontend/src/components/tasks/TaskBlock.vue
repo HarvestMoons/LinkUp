@@ -51,7 +51,7 @@
         }}
       </span>
       <span class="taskDueDate">{{ formatDate(task.dueDate) }}</span>
-      <span class="taskAssignee" v-if="task.assignee">
+      <span class="taskAssignee" v-if="showAssignee && task.assignee">
         {{ $t("task.assignee") }}: {{ task.assignee?.username }} (#{{
           task.assignee?.id
         }})
@@ -74,6 +74,7 @@ export default {
     task: Object,
     showPriority: Boolean,
     showStatus: Boolean,
+    showAssignee: Boolean,
   },
   computed: {
     isTaskOverdue() {

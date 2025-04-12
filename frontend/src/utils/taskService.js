@@ -16,6 +16,10 @@ export async function fetchAllTasks(userId) {
         Authorization: `Bearer ${token}`, // 在请求头中添加 token
       },
     })
+    responseGroupTasks.data = responseGroupTasks.data.filter(task => {
+      console.log(task)
+      return !task.assignee || task.assignee.id === Number(userId);
+    });
     await Promise.all(
       responseGroupTasks.data.map(async task => {
         task.userRole = await fetchUserRole(task.taskGroup.id, userId);

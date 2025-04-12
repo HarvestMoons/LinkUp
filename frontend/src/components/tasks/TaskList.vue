@@ -76,8 +76,9 @@
                 <div v-else>
                   <TaskBlock
                     :task="task"
-                    :show-priority="section.showPriority"
-                    :show-status="section.showStatus"
+                    :showPriority="section.showPriority"
+                    :showStatus="section.showStatus"
+                    :showAssignee="isInGroupPage"
                   />
 
                   <div class="task-options">

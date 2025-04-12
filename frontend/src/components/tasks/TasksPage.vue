@@ -3,50 +3,49 @@
   <div class="container">
     <TaskList
       :tasks="tasks"
-      :task-list-loading="taskListLoading"
-      :group-id="null"
-      :is-in-group-page="false"
-      :refresh-task-list="fetchAllTasks"
+      :taskListLoading="taskListLoading"
+      :isInGroupPage="false"
+      :refreshTaskList="fetchAllTasks"
     />
   </div>
 </template>
 
 <script>
-import TaskList from '@/components/tasks/TaskList.vue'
+import TaskList from "@/components/tasks/TaskList.vue";
 
-import { useToast } from 'vue-toastification'
-import { fetchAllTasks, getTaskList } from '@/utils/taskService'
+import { useToast } from "vue-toastification";
+import { fetchAllTasks, getTaskList } from "@/utils/taskService";
 
 export default {
-  name: 'TasksPage',
+  name: "TasksPage",
   components: { TaskList },
   setup() {
-    const toast = useToast()
-    return { toast }
+    const toast = useToast();
+    return { toast };
   },
   data() {
     return {
       taskListLoading: false,
-    }
+    };
   },
   computed: {
     tasks() {
-      return this.$store.getters.getTaskList || this.tasks
+      return this.$store.getters.getTaskList || this.tasks;
     },
   },
   async mounted() {
-    this.userId = this.$store.getters.getUserId // 读取 userId
+    this.userId = this.$store.getters.getUserId; // 读取 userId
     if (!this.userId) {
-      return
+      return;
     }
-    this.taskListLoading = true
-    this.tasks = await getTaskList(this.userId)
-    this.taskListLoading = false // 加载完成，更新状态
+    this.taskListLoading = true;
+    this.tasks = await getTaskList(this.userId);
+    this.taskListLoading = false; // 加载完成，更新状态
   },
   methods: {
     fetchAllTasks() {
-      fetchAllTasks(this.userId)
+      fetchAllTasks(this.userId);
     },
   },
-}
+};
 </script>
