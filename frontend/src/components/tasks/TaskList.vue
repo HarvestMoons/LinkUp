@@ -8,6 +8,8 @@
       <TaskForm
         v-if="isCreating"
         :task="newTask"
+        :taskIsInGroup="isInGroupPage"
+        :groupId="groupId"
         @cancel="cancelCreateTask"
         @submit="submitTask"
       />
@@ -66,6 +68,8 @@
                 <TaskForm
                   v-if="editingTasks[task.id]"
                   :task="task"
+                  :taskIsInGroup="isInGroupPage || task.taskGroup !== null"
+                  :groupId="task.taskGroup?.id"
                   @cancel="cancelEditTask(task.id)"
                   @submit="updateTask(task.id, $event)"
                 />
@@ -380,7 +384,7 @@ export default {
       this.activeDropdown = null;
     },
     async updateTask(taskId, updatedTask) {
-      console.log(updatedTask);
+      console.log("111", updatedTask);
       try {
         if (!this.isTaskLegal(updatedTask)) {
           return;

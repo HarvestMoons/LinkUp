@@ -3,10 +3,12 @@
   "orderByStatus": "Ordenar por estado",
   "orderByPriority": "Ordenar por prioridad",
   "edit": "Editar",
+  "delete": "Eliminar tarea",
   "noDescription": "Sin descripción",
   "noTask": "No hay tareas",
   "overdue": "Atrasada",
   "createButton": "Crear tarea",
+  "assignee": "Responsable",
   "form": {
     "titleLabel": "Título de la tarea",
     "titlePlaceholder": "Ingresa el título de la tarea",
@@ -15,7 +17,8 @@
     "priorityLabel": "Prioridad",
     "statusLabel": "Estado",
     "dueDateLabel": "Fecha límite",
-    "submitButton": "Enviar tarea"
+    "submitButton": "Enviar tarea",
+    "selectUserLabel": "Responsable (opcional)"
   },
   "priorityTiTle": {
     "low": "Prioridad baja",

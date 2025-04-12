@@ -3,10 +3,12 @@
   "orderByStatus": "状態で並べ替え",
   "orderByPriority": "優先度で並べ替え",
   "edit": "編集",
+  "delete": "タスクを削除",
   "noDescription": "説明なし",
   "noTask": "タスクがありません",
   "overdue": "期限超過",
   "createButton": "タスクを作成",
+  "assignee": "担当者",
   "form": {
     "titleLabel": "タスクタイトル",
     "titlePlaceholder": "タスクタイトルを入力",
@@ -15,7 +17,8 @@
     "priorityLabel": "優先度",
     "statusLabel": "状態",
     "dueDateLabel": "期限日",
-    "submitButton": "タスクを登録"
+    "submitButton": "タスクを登録",
+    "selectUserLabel": "担当者（任意）"
   },
   "priorityTiTle": {
     "low": "低優先度",

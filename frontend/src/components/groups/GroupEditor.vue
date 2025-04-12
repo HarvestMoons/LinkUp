@@ -108,7 +108,7 @@
           </span>
         </li>
         <div
-          v-if="!isSelectingFriend"
+          v-if="!isSelectingFriend && showedGroupMembers.length !== 0"
           class="memberItem"
           @click="startAddingGroupMember"
         >

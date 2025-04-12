@@ -8,6 +8,7 @@
   "noTask": "无任务",
   "overdue": "已逾期",
   "createButton": "创建任务",
+  "assignee": "负责人",
   "form": {
     "titleLabel": "任务标题",
     "titlePlaceholder": "请输入任务标题",
@@ -16,7 +17,8 @@
     "priorityLabel": "任务优先级",
     "statusLabel": "任务状态",
     "dueDateLabel": "截止日期",
-    "submitButton": "提交任务"
+    "submitButton": "提交任务",
+    "selectUserLabel": "负责人(可以为空)"
   },
   "priorityTiTle": {
     "low": "低优先级",

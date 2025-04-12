@@ -3,10 +3,12 @@
   "orderByStatus": "Order By Status",
   "orderByPriority": "Order By Priority",
   "edit": "Edit",
+  "delete": "Delete Task",
   "noDescription": "No Description",
   "noTask": "No Task",
   "overdue": "Overdue",
   "createButton": "Create Task",
+  "assignee": "Assignee",
   "form": {
     "titleLabel": "Task Title",
     "titlePlaceholder": "Enter task title",
@@ -15,7 +17,8 @@
     "priorityLabel": "Priority",
     "statusLabel": "Status",
     "dueDateLabel": "Due Date",
-    "submitButton": "Submit Task"
+    "submitButton": "Submit Task",
+    "selectUserLabel": "Assignee (optional)"
   },
   "priorityTiTle": {
     "low": "Low Priority",

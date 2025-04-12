@@ -14,7 +14,7 @@
           :key="user.id"
           class="userItem"
           :class="{
-            selected: selectedUsers.includes(user),
+            selected: isSelected(user),
             unavailable: isUnavailable(user),
           }"
           @click="toggleSelection(user)"
@@ -41,7 +41,7 @@
               <span>{{ calcLastActiveString(user.lastActiveTime) }}</span>
             </div>
           </div>
-          <span v-if="selectedUsers.includes(user)" class="checkmark">✔</span>
+          <span v-if="isSelected(user)" class="checkmark">✔</span>
         </li>
       </ul>
     </div>
@@ -72,6 +72,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    multiple: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     selectedUsers: {
@@ -90,15 +94,29 @@ export default {
     toggleSelection(user) {
       if (this.isUnavailable(user)) return;
 
-      const index = this.selectedUsers.findIndex((u) => u.id === user.id);
+      const index = this.selectedUsers.findIndex((u) => u?.id === user.id);
       if (index === -1) {
-        this.selectedUsers = [...this.selectedUsers, user];
+        if (!this.multiple) {
+          this.selectedUsers = [user];
+        } else {
+          this.selectedUsers = [...this.selectedUsers, user];
+        }
       } else {
-        this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id);
+        if (!this.multiple) {
+          this.selectedUsers = [];
+        } else {
+          this.selectedUsers = this.selectedUsers.filter(
+            (u) => u.id !== user.id
+          );
+        }
       }
     },
     calcLastActiveString(lastActiveTime) {
       return calcLastActiveString(lastActiveTime);
+    },
+    isSelected(user) {
+      console.log(this.selectedUsers, user);
+      return this.selectedUsers.some((u) => u?.id === user.id);
     },
   },
 };
