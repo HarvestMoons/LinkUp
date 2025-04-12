@@ -29,7 +29,7 @@ public class TaskService {
 
     // 更新任务
     public Task updateTask(Long id, Task newTask) throws UnexpectedNullElementException {
-        Task existedTask = this.findById(id);
+        Task existedTask = findById(id);
         newTask.setId(existedTask.getId());
         return taskRepository.save(newTask);
     }

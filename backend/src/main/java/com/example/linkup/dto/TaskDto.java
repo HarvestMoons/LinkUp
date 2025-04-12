@@ -17,6 +17,8 @@ public class TaskDto {
     @NotNull
     private User creator;
 
+    private User assignee;
+
     private String description;
 
     @NotNull

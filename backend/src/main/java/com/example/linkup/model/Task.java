@@ -26,9 +26,14 @@ public class Task {
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private TaskGroup taskGroup;
 
+    @ManyToOne
+    @JoinColumn(name = "assignee_id", referencedColumnName = "id")
+    private User assignee;
+
     @Column(nullable = false)
     private String title;
 
+    @Column
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -39,6 +44,7 @@ public class Task {
     @Column(nullable = false)
     private Status status;
 
+    @Column
     private LocalDateTime dueDate;
 
     @JsonIgnore
