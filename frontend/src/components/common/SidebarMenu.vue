@@ -4,6 +4,7 @@
     <router-link
       v-if="$store.getters.isAuthenticated"
       to="/user"
+      @click="navigateAndClose"
       class="userContainer"
     >
       <img

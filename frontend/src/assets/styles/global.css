@@ -250,10 +250,19 @@ p {
 .nickname {
     font-size: 1.5rem;
     font-weight: bold;
-    text-align: left;
-    /* 确保昵称居中对齐 */
-    flex-grow: 1;
+}
+
+.lastActiveTime {
+    font-size: 0.8rem;
+}
+
+.nameAndActiveTimeContainer {
+    display: flex;
+    flex-direction: column;
     /* 如果有更多的空间，昵称会自动占用 */
+    flex-grow: 1;
+    /* 确保昵称居中对齐 */
+    text-align: left;
 }
 
 :root {
