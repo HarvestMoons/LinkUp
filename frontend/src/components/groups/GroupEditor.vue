@@ -116,10 +116,11 @@
         </div>
       </ul>
       <div v-if="isSelectingFriend" class="addGroupMemberContainer">
-        <FriendSelection
+        <UserSelection
+          :users="friends"
+          :unavailable-user-ids="getGroupMemberIdArray(groupMembers)"
           v-model="selectedFriends"
-          :user-id="userId"
-          :unavailable-friend-ids="getGroupMemberIdArray(groupMembers)"
+          :loading="friendListLoading"
         />
 
         <div class="doubleButtonContainer">
@@ -186,7 +187,7 @@
 </template>
 
 <script>
-import FriendSelection from "@/components/friends/FriendSelection.vue";
+import UserSelection from "@/components/common/UserSelection.vue";
 import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
 import HelpTooltip from "@/components/common/HelpTooltip.vue";
 
@@ -202,7 +203,7 @@ import MySpinner from "@/components/common/MySpinner.vue";
 
 export default {
   name: "GroupEditor",
-  components: { MySpinner, FriendSelection, ConfirmDialog, HelpTooltip },
+  components: { MySpinner, UserSelection, ConfirmDialog, HelpTooltip },
   props: {
     groupId: Number,
     groupName: String,
@@ -233,6 +234,7 @@ export default {
       selectedFriends: [],
       showedGroupMembers: [],
       friends: null,
+      friendListLoading: false,
     };
   },
   watch: {
@@ -260,8 +262,10 @@ export default {
     },
   },
   async mounted() {
+    this.friendListLoading = true;
     this.showedGroupMembers = this.sortGroupMember(this.groupMembers);
     this.friends = await getFriendList(this.userId);
+    this.friendListLoading = false;
     window.addEventListener("click", this.closeMenu);
     window.addEventListener("wheel", this.closeMenu);
   },
@@ -620,11 +624,11 @@ export default {
 .blockContainer {
   display: flex;
   flex-direction: column;
-  gap: 30px;
 }
 
 .blockContainer h2 {
   margin: 0;
+  margin-bottom: 10px;
 }
 
 .membersList {
@@ -670,7 +674,7 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 15px;
-  gap: 15px;
+  gap: 20px;
 }
 
 .groupField {

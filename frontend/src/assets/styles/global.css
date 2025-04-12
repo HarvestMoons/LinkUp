@@ -224,6 +224,7 @@ p {
 /* #endregion*/
 
 /* #region user and friend */
+.userList,
 .friendsList {
     padding: 0;
     margin: 0;
@@ -232,6 +233,7 @@ p {
     gap: 15px;
 }
 
+.userItem,
 .friendItem {
     list-style: none;
     display: flex;
