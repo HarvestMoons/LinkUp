@@ -15,6 +15,15 @@
   "status": {
     "fetchFailed": "Error al obtener datos de solicitudes de amistad:"
   },
+  "lastActive": {
+    "noData": "Sin datos de actividad",
+    "online": "En línea",
+    "minutesAgo": "En línea hace {minutes} minutos",
+    "hoursAgo": "En línea hace {hours} horas",
+    "daysAgo": "En línea hace {days} días",
+    "weeksAgo": "En línea hace {weeks} semanas",
+    "offlineOverMonth": "Desconectado por más de un mes"
+  },
   "inputPlaceholder": "Ingresa ID de usuario",
   "addFriend": "Añadir amigo",
   "wantsToAdd": "quiere añadirte como amigo",

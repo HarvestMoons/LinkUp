@@ -1,5 +1,6 @@
 import axios from 'axios'
-import store from '@/store' // 导入 Vuex store
+import store from '@/store'
+import {useI18n} from "vue-i18n"; // 导入 Vuex store
 
 export async function fetchFriends(userId) {
   try {
@@ -41,7 +42,9 @@ export async function getFriendList(userId) {
 }
 
 export function calcLastActiveString(lastActiveTime) {
-  if (!lastActiveTime) return '未知状态'
+  const { t } = useI18n() // 假设你已经配置好了i18n
+
+  if (!lastActiveTime) return t('friends.lastActive.noData')
 
   const last = new Date(lastActiveTime)
   const now = new Date()
@@ -53,14 +56,16 @@ export function calcLastActiveString(lastActiveTime) {
   const diffWeeks = Math.floor(diffDays / 7)
 
   if (diffMinutes < 5) {
-    return '在线'
+    return t('friends.lastActive.online')
   } else if (diffMinutes < 60) {
-    return `${diffMinutes}分钟前在线`
+    return t('friends.lastActive.minutesAgo', { minutes: diffMinutes })
   } else if (diffHours < 24) {
-    return `${diffHours}小时前在线`
+    return t('friends.lastActive.hoursAgo', { hours: diffHours })
   } else if (diffDays < 7) {
-    return `${diffDays}天前在线`
+    return t('friends.lastActive.daysAgo', { days: diffDays })
+  } else if (diffWeeks < 4) {
+    return t('friends.lastActive.weeksAgo', { weeks: diffWeeks })
   } else {
-    return '离线超过一周'
+    return t('friends.lastActive.offlineOverMonth')
   }
 }

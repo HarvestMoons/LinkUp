@@ -15,6 +15,15 @@
   "status": {
     "fetchFailed": "フレンドリクエストデータの取得に失敗しました:"
   },
+  "lastActive": {
+    "noData": "アクティビティデータなし",
+    "online": "オンライン中",
+    "minutesAgo": "{minutes}分前にオンライン",
+    "hoursAgo": "{hours}時間前にオンライン",
+    "daysAgo": "{days}日前にオンライン",
+    "weeksAgo": "{weeks}週間前にオンライン",
+    "offlineOverMonth": "1ヶ月以上オフライン"
+  },
   "inputPlaceholder": "ユーザーIDを入力",
   "addFriend": "フレンド追加",
   "wantsToAdd": "さんがあなたをフレンドに追加しようとしています",

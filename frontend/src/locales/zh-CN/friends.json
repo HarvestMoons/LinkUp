@@ -15,7 +15,15 @@
   "status": {
     "fetchFailed": "获取好友申请数据失败:"
   },
-
+  "lastActive": {
+    "noData": "无活跃数据",
+    "online": "在线",
+    "minutesAgo": "{minutes}分钟前在线",
+    "hoursAgo": "{hours}小时前在线",
+    "daysAgo": "{days}天前在线",
+    "weeksAgo": "{weeks}周前在线",
+    "offlineOverMonth": "离线超过一个月"
+  },
   "inputPlaceholder": "输入用户ID",
   "addFriend": "添加好友",
   "wantsToAdd": "想加你为好友",

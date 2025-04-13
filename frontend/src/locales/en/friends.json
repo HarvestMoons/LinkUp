@@ -15,6 +15,15 @@
   "status": {
     "fetchFailed": "Failed to fetch friend requests data:"
   },
+  "lastActive": {
+    "noData": "No activity data",
+    "online": "Online",
+    "minutesAgo": "Online {minutes} minutes ago",
+    "hoursAgo": "Online {hours} hours ago",
+    "daysAgo": "Online {days} days ago",
+    "weeksAgo": "Online {weeks} weeks ago",
+    "offlineOverMonth": "Offline for over a month"
+  },
   "inputPlaceholder": "Enter user ID",
   "addFriend": "Add Friend",
   "wantsToAdd": "wants to add you as friend",
