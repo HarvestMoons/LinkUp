@@ -80,6 +80,7 @@ export default {
     taskIsInGroup: Boolean,
     groupId: Number,
   },
+  emits: ['submit'],
   data() {
     return {
       localTask: { ...this.task }, // 使用局部副本，避免修改原数据

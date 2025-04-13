@@ -5,7 +5,7 @@
       <MySpinner />
     </div>
     <div v-else-if="users.length === 0" class="nothing-notice">
-      {{ $t("users.noUsers") }}
+      {{ $t('users.noUsers') }}
     </div>
     <div v-else>
       <ul class="userList">
@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import { calcLastActiveString } from "@/utils/friendService";
-import MySpinner from "@/components/common/MySpinner.vue";
+import { calcLastActiveString } from '@/utils/friendService'
+import MySpinner from '@/components/common/MySpinner.vue'
 
 export default {
-  name: "UserSelection",
+  name: 'UserSelection',
   components: { MySpinner },
   props: {
     users: {
@@ -80,46 +80,44 @@ export default {
   computed: {
     selectedUsers: {
       get() {
-        return this.modelValue;
+        return this.modelValue
       },
       set(val) {
-        this.$emit("update:modelValue", val);
+        this.$emit('update:modelValue', val)
       },
     },
     isUnavailable() {
-      return (user) => this.unavailableUserIds.includes(user.id);
+      return (user) => this.unavailableUserIds.includes(user.id)
     },
   },
   methods: {
     toggleSelection(user) {
-      if (this.isUnavailable(user)) return;
+      if (this.isUnavailable(user)) return
 
-      const index = this.selectedUsers.findIndex((u) => u?.id === user.id);
+      const index = this.selectedUsers.findIndex((u) => u?.id === user.id)
       if (index === -1) {
         if (!this.multiple) {
-          this.selectedUsers = [user];
+          this.selectedUsers = [user]
         } else {
-          this.selectedUsers = [...this.selectedUsers, user];
+          this.selectedUsers = [...this.selectedUsers, user]
         }
       } else {
         if (!this.multiple) {
-          this.selectedUsers = [];
+          this.selectedUsers = []
         } else {
-          this.selectedUsers = this.selectedUsers.filter(
-            (u) => u.id !== user.id
-          );
+          this.selectedUsers = this.selectedUsers.filter((u) => u.id !== user.id)
         }
       }
     },
     calcLastActiveString(lastActiveTime) {
-      return calcLastActiveString(lastActiveTime);
+      return calcLastActiveString(lastActiveTime)
     },
     isSelected(user) {
-      console.log(this.selectedUsers, user);
-      return this.selectedUsers.some((u) => u?.id === user.id);
+      console.log(this.selectedUsers, user)
+      return this.selectedUsers.some((u) => u?.id === user.id)
     },
   },
-};
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
-import {useI18n} from "vue-i18n"; // 导入 Vuex store
+import { useI18n } from 'vue-i18n' // 导入 Vuex store
 
 export async function fetchFriends(userId) {
   try {

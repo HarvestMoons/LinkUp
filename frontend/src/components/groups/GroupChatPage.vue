@@ -4,16 +4,14 @@
     <div class="chatContainer">
       <!-- 顶部群组名称 -->
       <header class="groupHeader">
-        <h1>
-          {{ groupData.name }} (#{{ groupId }}) ({{ groupMembers.length }})
-        </h1>
+        <h1>{{ groupData.name }} (#{{ groupId }}) ({{ groupMembers.length }})</h1>
         <p>{{ groupData.description }}</p>
         <div class="doubleButtonContainer">
           <button class="button sideBarButton" @click="toggleTaskSidebar">
-            📋 {{ $t("groups.tasksButton") }}
+            📋 {{ $t('groups.tasksButton') }}
           </button>
           <button class="button sideBarButton" @click="toggleGroupSidebar">
-            {{ $t("groups.groupInfoButton") }}
+            {{ $t('groups.groupInfoButton') }}
           </button>
         </div>
       </header>
@@ -68,7 +66,7 @@
           @keyup.enter="sendMessage"
         />
         <button class="button normalButton" @click="sendMessage">
-          {{ $t("groups.sendButton") }}
+          {{ $t('groups.sendButton') }}
         </button>
       </footer>
     </div>
@@ -108,42 +106,42 @@
 </template>
 
 <script>
-import { markRaw } from "vue";
+import { markRaw } from 'vue'
 
-import SideBar from "@/components/common/SideBar.vue";
-import TaskList from "@/components/tasks/TaskList.vue";
-import GroupEditor from "@/components/groups/GroupEditor.vue";
+import SideBar from '@/components/common/SideBar.vue'
+import TaskList from '@/components/tasks/TaskList.vue'
+import GroupEditor from '@/components/groups/GroupEditor.vue'
 
-import { Role } from "@/config/constants";
+import { Role } from '@/config/constants'
 
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
+import { showToast } from '@/utils/toast'
+import { useToast } from 'vue-toastification'
 
-import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
-import MySpinner from "@/components/common/MySpinner.vue";
+import SockJS from 'sockjs-client'
+import { Stomp } from '@stomp/stompjs'
+import MySpinner from '@/components/common/MySpinner.vue'
 
-import { fetchMembers, fetchUserRole } from "@/utils/groupService";
+import { fetchMembers, fetchUserRole } from '@/utils/groupService'
 
 export default {
-  name: "GroupChatPage",
+  name: 'GroupChatPage',
   components: { MySpinner, SideBar },
   setup() {
-    const toast = useToast();
-    return { toast };
+    const toast = useToast()
+    return { toast }
   },
   data() {
     return {
       groupId: null,
       groupData: {
         id: 1,
-        name: this.$t("groups.groupNameLoading"),
-        description: this.$t("groups.groupDescLoading"),
+        name: this.$t('groups.groupNameLoading'),
+        description: this.$t('groups.groupDescLoading'),
       },
       groupMembers: [],
       isMember: false,
       messageLoading: true,
-      newMessage: "",
+      newMessage: '',
       messageList: [],
       showTaskSidebar: false,
       showGroupSidebar: false,
@@ -154,43 +152,43 @@ export default {
       taskListLoading: false,
       TaskList: markRaw(TaskList),
       GroupEditor: markRaw(GroupEditor),
-    };
+    }
   },
 
   watch: {
     messageList: {
       handler() {
         this.$nextTick(() => {
-          this.scrollToBottom();
-        });
+          this.scrollToBottom()
+        })
       },
       deep: true, // 深度监听，确保数组更新时触发
     },
   },
   async mounted() {
-    this.user = this.$store.getters.getUser;
+    this.user = this.$store.getters.getUser
     if (!this.user) {
-      return;
+      return
     }
-    this.userId = this.user.id;
+    this.userId = this.user.id
 
-    this.groupId = parseInt(this.$route.params.id);
-    this.connectWebSocket(); // 修改后的连接方法
+    this.groupId = parseInt(this.$route.params.id)
+    this.connectWebSocket() // 修改后的连接方法
 
     this.checkMembership().then(() => {
       if (this.isMember) {
-        this.fetchGroup();
-        this.fetchUserRole();
-        this.fetchMembers();
-        this.fetchMessages();
-        this.taskListLoading = true;
-        this.fetchGroupTasks();
+        this.fetchGroup()
+        this.fetchUserRole()
+        this.fetchMembers()
+        this.fetchMessages()
+        this.taskListLoading = true
+        this.fetchGroupTasks()
       }
-    });
+    })
   },
   beforeUnmount() {
     if (this.stompClient) {
-      this.stompClient.deactivate(); // 安全断开连接
+      this.stompClient.deactivate() // 安全断开连接
     }
   },
   methods: {
@@ -198,162 +196,152 @@ export default {
       try {
         const response = await this.$axios.get(
           `/groups/${this.groupId}/members/${this.userId}/is-member`
-        );
-        this.isMember = response.data;
+        )
+        this.isMember = response.data
         if (!this.isMember) {
-          showToast(this.toast, this.$t("groups.errors.notMember"), "error");
-          this.$router.push("/");
+          showToast(this.toast, this.$t('groups.errors.notMember'), 'error')
+          this.$router.push('/')
         }
       } catch (error) {
-        console.error("检查群组权限失败", error);
+        console.error('检查群组权限失败', error)
         if (error.response.data.message) {
-          showToast(this.toast, error.response.data.message, "error");
+          showToast(this.toast, error.response.data.message, 'error')
         } else {
-          showToast(
-            this.toast,
-            this.$t("groups.errors.checkPermissionDefault"),
-            "error"
-          );
+          showToast(this.toast, this.$t('groups.errors.checkPermissionDefault'), 'error')
         }
-        this.$router.push("/");
+        this.$router.push('/')
       }
     },
 
     async fetchGroup() {
       try {
-        const response = await this.$axios.get(`/task-group/${this.groupId}`);
-        this.groupData = response.data;
+        const response = await this.$axios.get(`/task-group/${this.groupId}`)
+        this.groupData = response.data
       } catch (error) {
-        console.error("加载群组失败", error);
+        console.error('加载群组失败', error)
       }
     },
 
     async fetchUserRole() {
-      this.userRole = await fetchUserRole(this.groupId, this.userId);
+      this.userRole = await fetchUserRole(this.groupId, this.userId)
     },
 
     async fetchMembers() {
-      this.groupMembers = await fetchMembers(this.groupId);
+      this.groupMembers = await fetchMembers(this.groupId)
     },
 
     async fetchMessages() {
       try {
-        const response = await this.$axios.get(
-          `/chat-message/group/${this.groupId}`
-        );
-        this.messageList = response.data;
+        const response = await this.$axios.get(`/chat-message/group/${this.groupId}`)
+        this.messageList = response.data
       } catch (error) {
-        console.error("加载聊天记录失败", error);
+        console.error('加载聊天记录失败', error)
       } finally {
-        this.messageLoading = false;
+        this.messageLoading = false
       }
     },
 
     isSentByCurrentUser(message) {
-      return this.userId === message.sender.id;
+      return this.userId === message.sender.id
     },
 
     connectWebSocket() {
-      const socket = new SockJS("/chatroom");
-      this.stompClient = Stomp.over(socket);
+      const socket = new SockJS('/chatroom')
+      this.stompClient = Stomp.over(socket)
 
       this.stompClient.connect(
         {},
         (frame) => {
-          console.log("STOMP连接成功:", frame);
-          console.log("当前 groupId:", this.groupId);
+          console.log('STOMP连接成功:', frame)
+          console.log('当前 groupId:', this.groupId)
 
           if (!this.groupId) {
-            console.error("groupId 未定义，无法订阅 WebSocket 主题");
-            return;
+            console.error('groupId 未定义，无法订阅 WebSocket 主题')
+            return
           }
 
           this.subscription = this.stompClient.subscribe(
             `/topic/group/${this.groupId}`,
             (message) => {
-              console.log("收到消息:", message.body);
-              const receivedMessage = JSON.parse(message.body);
+              console.log('收到消息:', message.body)
+              const receivedMessage = JSON.parse(message.body)
               if (receivedMessage.sender.id !== this.userId) {
-                this.messageList.push(receivedMessage);
+                this.messageList.push(receivedMessage)
               }
             }
-          );
+          )
         },
         (error) => {
-          console.error("STOMP 连接失败:", error);
+          console.error('STOMP 连接失败:', error)
         }
-      );
+      )
     },
 
     sendMessage() {
       if (!this.newMessage.trim()) {
-        showToast(this.toast, this.$t("groups.errors.emptyMessage"), "error");
-        return;
+        showToast(this.toast, this.$t('groups.errors.emptyMessage'), 'error')
+        return
       }
 
       const message = {
         content: this.newMessage,
         sender: this.user,
         taskGroup: { id: this.groupId },
-      };
+      }
 
       if (this.stompClient && this.stompClient.connected) {
-        console.log("发送消息:", message);
+        console.log('发送消息:', message)
         this.stompClient.publish({
           destination: `/chat/sendMessage`,
           body: JSON.stringify(message),
-        });
-        this.messageList.push(message);
-        this.newMessage = "";
+        })
+        this.messageList.push(message)
+        this.newMessage = ''
       } else {
-        console.error("STOMP连接未就绪");
-        showToast(
-          this.toast,
-          this.$t("groups.errors.connectionNotReady"),
-          "error"
-        );
+        console.error('STOMP连接未就绪')
+        showToast(this.toast, this.$t('groups.errors.connectionNotReady'), 'error')
       }
     },
 
     scrollToBottom() {
-      const container = this.$refs.messageItemRef;
+      const container = this.$refs.messageItemRef
       if (container) {
         if (container.length > 0) {
           container[container.length - 1].scrollIntoView({
-            behavior: "smooth",
-          });
+            behavior: 'smooth',
+          })
         }
       }
     },
 
     toggleTaskSidebar() {
-      this.showTaskSidebar = !this.showTaskSidebar;
-      this.showGroupSidebar = false;
+      this.showTaskSidebar = !this.showTaskSidebar
+      this.showGroupSidebar = false
       if (this.showTaskSidebar) {
-        this.fetchGroupTasks();
+        this.fetchGroupTasks()
       }
     },
 
     async fetchGroupTasks() {
       try {
-        const response = await this.$axios.get(`/tasks/group/${this.groupId}`);
-        this.groupTasks = response.data;
+        const response = await this.$axios.get(`/tasks/group/${this.groupId}`)
+        this.groupTasks = response.data
         this.groupTasks.forEach(async (task) => {
-          task.userRole = this.userRole;
-        });
+          task.userRole = this.userRole
+        })
       } catch (error) {
-        console.error("获取任务失败", error);
+        console.error('获取任务失败', error)
       } finally {
-        this.taskListLoading = false;
+        this.taskListLoading = false
       }
     },
 
     toggleGroupSidebar() {
-      this.showGroupSidebar = !this.showGroupSidebar;
-      this.showTaskSidebar = false;
+      this.showGroupSidebar = !this.showGroupSidebar
+      this.showTaskSidebar = false
     },
   },
-};
+}
 </script>
 
 <style scoped>

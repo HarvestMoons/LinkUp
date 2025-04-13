@@ -40,7 +40,7 @@
       </div>
       <!-- 显示任务列表 -->
       <div v-else>
-        <div v-if="taskSections.length != 0">
+        <div v-if="taskSections.length !== 0">
           <div v-for="section in taskSections" :key="section.key" class="blockContainer">
             <div class="previewBar" @click="toggleSection(section.key)">
               <h2>{{ $t(section.titleKey) }}</h2>
@@ -109,11 +109,26 @@ export default {
   name: 'TaskList',
   components: { TaskBlock, TaskForm, HelpTooltip, MySpinner },
   props: {
-    tasks: Array, // 任务数据
-    taskListLoading: Boolean, // 是否在加载
-    groupId: Number,
-    isInGroupPage: Boolean,
-    refreshTaskList: Function,
+    tasks: {
+      type: Array,
+      default: () => [], // 默认空数组
+    },
+    taskListLoading: {
+      type: Boolean,
+      default: false, // 默认 false
+    },
+    groupId: {
+      type: Number,
+      default: null, // 默认 null 或其他适当的值
+    },
+    isInGroupPage: {
+      type: Boolean,
+      default: false,
+    },
+    refreshTaskList: {
+      type: Function,
+      default: () => () => {}, // 默认空函数
+    },
   },
   setup() {
     const toast = useToast()
@@ -243,42 +258,46 @@ export default {
   },
   methods: {
     divideTasksByPriority(tasks) {
-      const newHighTasks = []
-      const newMidTasks = []
-      const newLowTasks = []
+      // 初始化分类容器
+      const taskGroups = {
+        [TaskPriority.High]: [],
+        [TaskPriority.Medium]: [],
+        [TaskPriority.Low]: [],
+      }
+
+      // 分类逻辑（统一默认值处理）
       tasks.forEach((task) => {
-        if (task.priority === TaskPriority.High) {
-          newHighTasks.push(task)
-        } else if (task.priority === TaskPriority.Medium) {
-          newMidTasks.push(task)
-        } else if (task.priority === TaskPriority.Low) {
-          newLowTasks.push(task)
-        }
+        const group = taskGroups[task.priority] || taskGroups[TaskPriority.Medium] // 未定义优先级默认归类到Medium
+        group.push(task)
       })
-      this.highTasks = newHighTasks
-      this.midTasks = newMidTasks
-      this.lowTasks = newLowTasks
+
+      // 使用 Object.assign 赋值
+      Object.assign(this, {
+        highTasks: taskGroups[TaskPriority.High],
+        midTasks: taskGroups[TaskPriority.Medium],
+        lowTasks: taskGroups[TaskPriority.Low],
+      })
     },
+
     divideTasksByStatus(tasks) {
-      const newTodoTasks = []
-      const newInProgressTasks = []
-      const newCompletedTasks = []
-      const newArchivedTasks = []
+      const taskGroups = {
+        [TaskStatus.Todo]: [],
+        [TaskStatus.InProgress]: [],
+        [TaskStatus.Completed]: [],
+        [TaskStatus.Archived]: [],
+      }
+
       tasks.forEach((task) => {
-        if (task.status === TaskStatus.Todo) {
-          newTodoTasks.push(task)
-        } else if (task.status === TaskStatus.InProgress) {
-          newInProgressTasks.push(task)
-        } else if (task.status === TaskStatus.Completed) {
-          newCompletedTasks.push(task)
-        } else if (task.status === TaskStatus.Archived) {
-          newArchivedTasks.push(task)
-        }
+        const group = taskGroups[task.status] || taskGroups[TaskStatus.Todo] // 未定义状态默认归类到Todo
+        group.push(task)
       })
-      this.todoTasks = newTodoTasks
-      this.inProgressTasks = newInProgressTasks
-      this.completedTasks = newCompletedTasks
-      this.archivedTasks = newArchivedTasks
+
+      Object.assign(this, {
+        todoTasks: taskGroups[TaskStatus.Todo],
+        inProgressTasks: taskGroups[TaskStatus.InProgress],
+        completedTasks: taskGroups[TaskStatus.Completed],
+        archivedTasks: taskGroups[TaskStatus.Archived],
+      })
     },
 
     changeOrderToPriority() {
@@ -366,7 +385,6 @@ export default {
       this.activeDropdown = null
     },
     async updateTask(taskId, updatedTask) {
-      console.log('111', updatedTask)
       try {
         if (!this.isTaskLegal(updatedTask)) {
           return

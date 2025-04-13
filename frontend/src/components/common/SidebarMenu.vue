@@ -4,38 +4,28 @@
     <router-link
       v-if="$store.getters.isAuthenticated"
       to="/user"
-      @click="navigateAndClose"
       class="userContainer"
+      @click="navigateAndClose"
     >
-      <img
-        :src="$store.getters.getUserAvatar"
-        :alt="$t('common.avatarAlt')"
-        class="userAvatar"
-      />
+      <img :src="$store.getters.getUserAvatar" :alt="$t('common.avatarAlt')" class="userAvatar" />
       <span class="userNickname"
-        >{{ $store.getters.getUser?.username || "" }} (#{{
-          $store.getters.getUserId
-        }})
+        >{{ $store.getters.getUser?.username || '' }} (#{{ $store.getters.getUserId }})
       </span>
     </router-link>
-    <router-link to="/home" @click="navigateAndClose" class="tab">{{
-      $t("dashboard.home")
+    <router-link to="/home" class="tab" @click="navigateAndClose">{{
+      $t('dashboard.home')
     }}</router-link>
-    <router-link to="/friends" @click="navigateAndClose" class="tab">{{
-      $t("dashboard.friends")
+    <router-link to="/friends" class="tab" @click="navigateAndClose">{{
+      $t('dashboard.friends')
     }}</router-link>
-    <router-link to="/tasks" @click="navigateAndClose" class="tab">{{
-      $t("dashboard.tasks")
+    <router-link to="/tasks" class="tab" @click="navigateAndClose">{{
+      $t('dashboard.tasks')
     }}</router-link>
-    <router-link to="/groups" @click="navigateAndClose" class="tab">{{
-      $t("dashboard.groups")
+    <router-link to="/groups" class="tab" @click="navigateAndClose">{{
+      $t('dashboard.groups')
     }}</router-link>
 
-    <select
-      v-model="$i18n.locale"
-      class="languageSelect"
-      @change="changeLanguage"
-    >
+    <select v-model="$i18n.locale" class="languageSelect" @change="changeLanguage">
       <option value="en">English</option>
       <option value="zh-CN">中文</option>
       <option value="es">Español</option>
@@ -47,7 +37,7 @@
       class="button normalButton logoutButton"
       @click="logout"
     >
-      {{ $t("dashboard.logout") }}
+      {{ $t('dashboard.logout') }}
     </button>
   </div>
 </template>
@@ -56,21 +46,21 @@
 export default {
   methods: {
     changeLanguage(event) {
-      const lang = event.target.value;
-      this.$store.commit("setLanguage", lang);
-      localStorage.setItem("userLanguage", lang);
-      this.$i18n.locale = lang;
+      const lang = event.target.value
+      this.$store.commit('setLanguage', lang)
+      localStorage.setItem('userLanguage', lang)
+      this.$i18n.locale = lang
     },
     logout() {
-      this.$store.dispatch("logout");
-      this.$router.push("/login");
-      this.$emit("request-close");
+      this.$store.dispatch('logout')
+      this.$router.push('/login')
+      this.$emit('request-close')
     },
     navigateAndClose() {
-      this.$emit("request-close");
+      this.$emit('request-close')
     },
   },
-};
+}
 </script>
 
 <style scoped>

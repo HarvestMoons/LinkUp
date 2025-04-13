@@ -35,7 +35,6 @@ export default {
       const dueDate = new Date(task.dueDate)
       return dueDate < now && task.status !== 'COMPLETED' && task.status !== 'ARCHIVED'
     }
-
     return { calendarOptions }
   },
 }
