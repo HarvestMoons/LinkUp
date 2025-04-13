@@ -30,7 +30,7 @@ public class GroupMember {
 
     @CreationTimestamp
     @Column(name = "joined_at", nullable = false)
-    private Timestamp joinedAt; // 加入时间
+    private Timestamp joinedAt; // groupMe
 
     public enum Role {
         OWNER, ADMIN, MEMBER;

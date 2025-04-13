@@ -253,7 +253,6 @@ export default {
         {},
         (frame) => {
           console.log('STOMP连接成功:', frame)
-          console.log('当前 groupId:', this.groupId)
 
           if (!this.groupId) {
             console.error('groupId 未定义，无法订阅 WebSocket 主题')
@@ -263,7 +262,6 @@ export default {
           this.subscription = this.stompClient.subscribe(
             `/topic/group/${this.groupId}`,
             (message) => {
-              console.log('收到消息:', message.body)
               const receivedMessage = JSON.parse(message.body)
               if (receivedMessage.sender.id !== this.userId) {
                 this.messageList.push(receivedMessage)
@@ -290,7 +288,6 @@ export default {
       }
 
       if (this.stompClient && this.stompClient.connected) {
-        console.log('发送消息:', message)
         this.stompClient.publish({
           destination: `/chat/sendMessage`,
           body: JSON.stringify(message),

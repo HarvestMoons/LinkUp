@@ -174,7 +174,6 @@ export default {
     async acceptRequest(requestId) {
       try {
         // 接受好友申请
-        console.log(sessionStorage.getItem('userId'))
         await this.$axios.post(`/friend-requests/accept/${requestId}`)
 
         // 更新待处理申请和好友列表

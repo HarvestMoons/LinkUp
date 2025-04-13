@@ -26,7 +26,6 @@ export async function fetchGroups(userId) {
         const avatars = members
           .slice(0, 4)
           .map((member) => store.getters.getAvatar(member.user.avatarId))
-        console.log()
         return { ...group, avatars }
       })
     )
@@ -59,7 +58,6 @@ export async function fetchMembers(groupId) {
         ...item.user,
       }
     })
-    console.log('members', groupMembers)
     return groupMembers
   } catch (error) {
     console.error('加载群组成员失败', error)

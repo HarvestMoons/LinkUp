@@ -22,8 +22,6 @@ public class ChatWebSocketController {
      */
     @MessageMapping("/sendMessage")
     public void sendMessage(ChatMessage message) throws Exception {
-        System.out.println("收到 WebSocket 消息: " + message.getContent());
-        System.out.println("任务组 ID：" + message.getTaskGroup().getId());
         ChatMessage savedMessage = chatMessageService.sendMessage(
                 message.getTaskGroup().getId(),
                 message.getSender().getId(),
@@ -32,7 +30,5 @@ public class ChatWebSocketController {
         // 这里动态构造目标路径
         String destination = "/topic/group/" + message.getTaskGroup().getId();
         messagingTemplate.convertAndSend(destination, savedMessage);
-        System.out.println("目标主题：" + destination);
-        System.out.println("发送消息内容：" + savedMessage.getContent());
     }
 }

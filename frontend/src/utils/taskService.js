@@ -17,7 +17,6 @@ export async function fetchAllTasks(userId) {
       },
     })
     responseGroupTasks.data = responseGroupTasks.data.filter((task) => {
-      console.log(task)
       return !task.assignee || task.assignee.id === Number(userId)
     })
     await Promise.all(

@@ -476,7 +476,6 @@ export default {
     async addGroupMember() {
       try {
         if (this.selectedFriends.length === 0) {
-          console.log(this.$t('groups.errors.selectAtLeastOne'))
           showToast(this.toast, this.$t('groups.errors.selectAtLeastOne'), 'warning')
           return
         }

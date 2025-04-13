@@ -113,7 +113,6 @@ export default {
       return calcLastActiveString(lastActiveTime)
     },
     isSelected(user) {
-      console.log(this.selectedUsers, user)
       return this.selectedUsers.some((u) => u?.id === user.id)
     },
   },

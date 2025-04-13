@@ -74,8 +74,6 @@ export default {
           password: this.password,
         })
 
-        console.log(response)
-
         const responseUser = await this.$axios.get(`/user/info`)
         this.user = responseUser.data
         this.$store.dispatch('setUser', this.user)
@@ -91,7 +89,6 @@ export default {
           this.$store.dispatch('setLogined')
         }, 3000)
       } catch (error) {
-        console.error(error)
         if (error.response) {
           // 后端返回了错误响应（HTTP 4xx 或 5xx）
           this.errorMessage = error.response.data.message || this.$t('error.server.default')

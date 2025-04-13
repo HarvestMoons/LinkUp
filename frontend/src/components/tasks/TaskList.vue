@@ -345,7 +345,6 @@ export default {
         }
         newTask.creator = this.$store.getters.getUser
         newTask.taskGroupId = this.groupId
-        console.log(newTask)
         await this.$axios.post('/tasks/create', newTask)
         showToast(this.toast, this.$t('task.success.create'), 'success')
         newTask.userRole = Role.Member

@@ -167,7 +167,6 @@ export default {
     }
     this.tasks = await getTaskList(this.userId)
     this.todoTasks = this.tasks.filter((task) => task.status === TaskStatus.Todo)
-    console.log(this.tasks)
   },
   methods: {
     getThisWeekRange() {

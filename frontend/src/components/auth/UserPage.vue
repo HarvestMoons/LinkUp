@@ -150,7 +150,6 @@ export default {
   },
   mounted() {
     this.user = this.$store.getters.getUser
-    console.log(this.user.avatarId)
   },
   methods: {
     cancelDropdown() {
@@ -224,20 +223,6 @@ export default {
 
         this.$store.dispatch('logout')
         this.$router.push('/login')
-        /*
-        this.$store.dispatch("logout");
-        const response = await this.$axios.post(
-          `${this.$CONSTANT.PUBLIC_AUTH_API}/login`,
-          {
-            username: this.editableUserName,
-            password: this.password,
-          }
-        );
-
-        console.log(response);
-        this.$store.dispatch("login", response.data.token);
-*/
-        console.log(this.user)
         showToast(this.toast, this.$t('profile.username.update_success'), 'success')
       } catch (error) {
         showToast(this.toast, this.$t('profile.username.update_fail'), 'error')

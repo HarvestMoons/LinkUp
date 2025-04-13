@@ -90,7 +90,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(this.selectedUser, this.task)
     this.memberListLoading = true
     if (this.taskIsInGroup) {
       this.groupMembers = [...(await fetchMembers(this.groupId))]

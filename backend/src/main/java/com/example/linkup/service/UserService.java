@@ -71,7 +71,6 @@ public class UserService {
     }
 
     public void updateLastActiveTime(User user) {
-        System.out.println("更新时间"+LocalDateTime.now());
         user.setLastActiveTime(LocalDateTime.now());
         userRepository.save(user);
     }
