@@ -15,14 +15,12 @@
       >
         {{
           task.priority === TaskPriority.High
-            ? $t("task.priority.high") +
-              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            ? $t('task.priority.high') + (isTaskOverdue ? ` (${$t('task.overdue')})` : '')
             : task.priority === TaskPriority.Medium
-            ? $t("task.priority.medium") +
-              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            ? $t('task.priority.medium') + (isTaskOverdue ? ` (${$t('task.overdue')})` : '')
             : task.priority === TaskPriority.Low
-            ? $t("task.priority.low")
-            : "Unknown"
+            ? $t('task.priority.low')
+            : 'Unknown'
         }}
       </span>
       <span
@@ -38,38 +36,34 @@
       >
         {{
           task.status === TaskStatus.Todo
-            ? $t("task.status.todo") +
-              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            ? $t('task.status.todo') + (isTaskOverdue ? ` (${$t('task.overdue')})` : '')
             : task.status === TaskStatus.InProgress
-            ? $t("task.status.inProgress") +
-              (isTaskOverdue ? ` (${$t("task.overdue")})` : "")
+            ? $t('task.status.inProgress') + (isTaskOverdue ? ` (${$t('task.overdue')})` : '')
             : task.status === TaskStatus.Completed
-            ? $t("task.status.completed")
+            ? $t('task.status.completed')
             : task.status === TaskStatus.Archived
-            ? $t("task.status.archived")
-            : "Unknown"
+            ? $t('task.status.archived')
+            : 'Unknown'
         }}
       </span>
       <span class="taskDueDate">{{ formatDate(task.dueDate) }}</span>
-      <span class="taskAssignee" v-if="showAssignee && task.assignee">
-        {{ $t("task.assignee") }}: {{ task.assignee?.username }} (#{{
-          task.assignee?.id
-        }})
+      <span v-if="showAssignee && task.assignee" class="taskAssignee">
+        {{ $t('task.assignee') }}: {{ task.assignee?.username }} (#{{ task.assignee?.id }})
       </span>
     </div>
     <div class="taskDetails">
       <p class="taskDescription">
-        {{ task.description || $t("task.noDescription") }}
+        {{ task.description || $t('task.noDescription') }}
       </p>
     </div>
   </div>
 </template>
 
 <script>
-import { TaskStatus, TaskPriority } from "@/config/constants.js";
+import { TaskStatus, TaskPriority } from '@/config/constants.js'
 
 export default {
-  name: "TaskBlock",
+  name: 'TaskBlock',
   props: {
     task: Object,
     showPriority: Boolean,
@@ -78,28 +72,24 @@ export default {
   },
   computed: {
     isTaskOverdue() {
-      const now = new Date();
-      const dueDate = new Date(this.task.dueDate);
-      return (
-        dueDate < now &&
-        this.task.status !== "COMPLETED" &&
-        this.task.status !== "ARCHIVED"
-      );
+      const now = new Date()
+      const dueDate = new Date(this.task.dueDate)
+      return dueDate < now && this.task.status !== 'COMPLETED' && this.task.status !== 'ARCHIVED'
     },
     TaskStatus() {
-      return TaskStatus;
+      return TaskStatus
     },
     TaskPriority() {
-      return TaskPriority;
+      return TaskPriority
     },
   },
   methods: {
     formatDate(date) {
-      if (date == null) return;
-      return date.replace("T", " ").slice(0, 16);
+      if (date == null) return
+      return date.replace('T', ' ').slice(0, 16)
     },
   },
-};
+}
 </script>
 
 <style scoped>

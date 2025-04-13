@@ -2,14 +2,14 @@
 <template>
   <div class="taskCreateAndShowContainer">
     <div class="blockContainer">
-      <HelpTooltip>{{ $t("help.createTask") }}</HelpTooltip>
+      <HelpTooltip>{{ $t('help.createTask') }}</HelpTooltip>
       <!--<transition name="taskFormTransition">-->
       <!-- 控制是否显示输入框 -->
       <TaskForm
         v-if="isCreating"
         :task="newTask"
-        :taskIsInGroup="isInGroupPage"
-        :groupId="groupId"
+        :task-is-in-group="isInGroupPage"
+        :group-id="groupId"
         @cancel="cancelCreateTask"
         @submit="submitTask"
       />
@@ -17,42 +17,31 @@
 
       <!-- 默认的按钮 -->
       <!--<transition name="createButtonTransition">-->
-      <button
-        v-if="!isCreating"
-        class="button extendButton"
-        @click="startCreateTask"
-      >
-        {{ $t("task.createButton") }}
+      <button v-if="!isCreating" class="button extendButton" @click="startCreateTask">
+        {{ $t('task.createButton') }}
       </button>
       <!--</transition>-->
     </div>
 
     <div class="blockContainer">
       <div class="orderSelection">
-        <h3 @click="changeOrderToStatus">{{ $t("task.orderByStatus") }}</h3>
+        <h3 @click="changeOrderToStatus">{{ $t('task.orderByStatus') }}</h3>
         <span class="separator">|</span>
-        <h3 @click="changeOrderToPriority">{{ $t("task.orderByPriority") }}</h3>
+        <h3 @click="changeOrderToPriority">{{ $t('task.orderByPriority') }}</h3>
       </div>
     </div>
 
     <div class="tasksContainer">
-      <div
-        v-if="tasks == null || taskListLoading"
-        class="blockContainer nothing-notice"
-      >
+      <div v-if="tasks == null || taskListLoading" class="blockContainer nothing-notice">
         <MySpinner />
       </div>
       <div v-else-if="tasks.length === 0" class="blockContainer nothing-notice">
-        {{ $t("task.noTask") }}
+        {{ $t('task.noTask') }}
       </div>
       <!-- 显示任务列表 -->
       <div v-else>
         <div v-if="taskSections.length != 0">
-          <div
-            v-for="section in taskSections"
-            :key="section.key"
-            class="blockContainer"
-          >
+          <div v-for="section in taskSections" :key="section.key" class="blockContainer">
             <div class="previewBar" @click="toggleSection(section.key)">
               <h2>{{ $t(section.titleKey) }}</h2>
             </div>
@@ -68,39 +57,31 @@
                 <TaskForm
                   v-if="editingTasks[task.id]"
                   :task="task"
-                  :taskIsInGroup="isInGroupPage || task.taskGroup !== null"
-                  :groupId="task.taskGroup?.id"
+                  :task-is-in-group="isInGroupPage || task.taskGroup !== null"
+                  :group-id="task.taskGroup?.id"
                   @cancel="cancelEditTask(task.id)"
                   @submit="updateTask(task.id, $event)"
                 />
                 <div v-else>
                   <TaskBlock
                     :task="task"
-                    :showPriority="section.showPriority"
-                    :showStatus="section.showStatus"
-                    :showAssignee="isInGroupPage"
+                    :show-priority="section.showPriority"
+                    :show-status="section.showStatus"
+                    :show-assignee="isInGroupPage"
                   />
 
                   <div class="task-options">
                     <button @click.stop="toggleDropdown(task.id)">⋮</button>
-                    <div
-                      v-if="activeDropdown === task.id"
-                      class="dropdown-menu"
-                    >
-                      <div @click="editTask(task.id)">
-                        ✏️ {{ $t("task.edit") }}
-                      </div>
+                    <div v-if="activeDropdown === task.id" class="dropdown-menu">
+                      <div @click="editTask(task.id)">✏️ {{ $t('task.edit') }}</div>
                       <div
                         v-if="task.taskGroup && !isInGroupPage"
                         @click="enterGroupChat(task.taskGroup.id)"
                       >
-                        💬 {{ $t("task.enterGroup") }}
+                        💬 {{ $t('task.enterGroup') }}
                       </div>
-                      <div
-                        v-if="canBeDeleted(task)"
-                        @click="deleteTask(task.id)"
-                      >
-                        ❌ {{ $t("task.delete") }}
+                      <div v-if="canBeDeleted(task)" @click="deleteTask(task.id)">
+                        ❌ {{ $t('task.delete') }}
                       </div>
                     </div>
                   </div>
@@ -115,17 +96,17 @@
 </template>
 
 <script>
-import { showToast } from "@/utils/toast";
-import { useToast } from "vue-toastification";
-import { TaskOrder, TaskPriority, TaskStatus } from "@/config/constants.js";
-import TaskBlock from "@/components/tasks/TaskBlock.vue";
-import TaskForm from "@/components/tasks/TaskForm.vue";
-import HelpTooltip from "@/components/common/HelpTooltip.vue";
-import MySpinner from "@/components/common/MySpinner.vue";
-import { Role } from "@/config/constants";
+import { showToast } from '@/utils/toast'
+import { useToast } from 'vue-toastification'
+import { TaskOrder, TaskPriority, TaskStatus } from '@/config/constants.js'
+import TaskBlock from '@/components/tasks/TaskBlock.vue'
+import TaskForm from '@/components/tasks/TaskForm.vue'
+import HelpTooltip from '@/components/common/HelpTooltip.vue'
+import MySpinner from '@/components/common/MySpinner.vue'
+import { Role } from '@/config/constants'
 
 export default {
-  name: "TaskList",
+  name: 'TaskList',
   components: { TaskBlock, TaskForm, HelpTooltip, MySpinner },
   props: {
     tasks: Array, // 任务数据
@@ -135,8 +116,8 @@ export default {
     refreshTaskList: Function,
   },
   setup() {
-    const toast = useToast();
-    return { toast };
+    const toast = useToast()
+    return { toast }
   },
   data() {
     return {
@@ -163,75 +144,75 @@ export default {
       },
       activeDropdown: null,
       editingTasks: {},
-    };
+    }
   },
   computed: {
     TaskOrder() {
-      return TaskOrder; // 让模板能访问 TaskOrder
+      return TaskOrder // 让模板能访问 TaskOrder
     },
 
     taskSections() {
-      let sections = [];
+      let sections = []
 
       if (this.taskOrder === TaskOrder.Priority) {
         sections = [
           {
-            key: "high",
-            titleKey: "task.priorityTiTle.high",
+            key: 'high',
+            titleKey: 'task.priorityTiTle.high',
             tasks: this.highTasks,
             showPriority: false,
             showStatus: true,
           },
           {
-            key: "medium",
-            titleKey: "task.priorityTiTle.medium",
+            key: 'medium',
+            titleKey: 'task.priorityTiTle.medium',
             tasks: this.midTasks,
             showPriority: false,
             showStatus: true,
           },
           {
-            key: "low",
-            titleKey: "task.priorityTiTle.low",
+            key: 'low',
+            titleKey: 'task.priorityTiTle.low',
             tasks: this.lowTasks,
             showPriority: false,
             showStatus: true,
           },
-        ];
+        ]
       } else if (this.taskOrder === TaskOrder.Status) {
         sections = [
           {
-            key: "todo",
-            titleKey: "task.status.todo",
+            key: 'todo',
+            titleKey: 'task.status.todo',
             tasks: this.todoTasks,
             showPriority: true,
             showStatus: false,
           },
           {
-            key: "inProgress",
-            titleKey: "task.status.inProgress",
+            key: 'inProgress',
+            titleKey: 'task.status.inProgress',
             tasks: this.inProgressTasks,
             showPriority: true,
             showStatus: false,
           },
           {
-            key: "completed",
-            titleKey: "task.status.completed",
+            key: 'completed',
+            titleKey: 'task.status.completed',
             tasks: this.completedTasks,
             showPriority: true,
             showStatus: false,
           },
           {
-            key: "archived",
-            titleKey: "task.status.archived",
+            key: 'archived',
+            titleKey: 'task.status.archived',
             tasks: this.archivedTasks,
             showPriority: true,
             showStatus: false,
           },
-        ];
+        ]
       }
 
       // ✅ 在这里过滤掉没有任务的 section
-      return sections.filter((section) => section.tasks.length > 0);
+      return sections.filter((section) => section.tasks.length > 0)
     },
   },
   watch: {
@@ -239,17 +220,17 @@ export default {
     tasks: {
       handler(tasks) {
         this.$nextTick(() => {
-          this.showedTasks = tasks;
-        });
+          this.showedTasks = tasks
+        })
       },
       deep: true,
     },
     showedTasks: {
       handler(showedTasks) {
         if (showedTasks != null && showedTasks.length > 0) {
-          showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-          this.divideTasksByPriority(showedTasks);
-          this.divideTasksByStatus(showedTasks);
+          showedTasks.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          this.divideTasksByPriority(showedTasks)
+          this.divideTasksByStatus(showedTasks)
         }
       },
       deep: true, // 确保监听数组内部变化
@@ -257,184 +238,180 @@ export default {
     },
   },
   mounted() {
-    this.resetForm();
-    this.showedTasks = this.tasks;
+    this.resetForm()
+    this.showedTasks = this.tasks
   },
   methods: {
     divideTasksByPriority(tasks) {
-      const newHighTasks = [];
-      const newMidTasks = [];
-      const newLowTasks = [];
+      const newHighTasks = []
+      const newMidTasks = []
+      const newLowTasks = []
       tasks.forEach((task) => {
         if (task.priority === TaskPriority.High) {
-          newHighTasks.push(task);
+          newHighTasks.push(task)
         } else if (task.priority === TaskPriority.Medium) {
-          newMidTasks.push(task);
+          newMidTasks.push(task)
         } else if (task.priority === TaskPriority.Low) {
-          newLowTasks.push(task);
+          newLowTasks.push(task)
         }
-      });
-      this.highTasks = newHighTasks;
-      this.midTasks = newMidTasks;
-      this.lowTasks = newLowTasks;
+      })
+      this.highTasks = newHighTasks
+      this.midTasks = newMidTasks
+      this.lowTasks = newLowTasks
     },
     divideTasksByStatus(tasks) {
-      const newTodoTasks = [];
-      const newInProgressTasks = [];
-      const newCompletedTasks = [];
-      const newArchivedTasks = [];
+      const newTodoTasks = []
+      const newInProgressTasks = []
+      const newCompletedTasks = []
+      const newArchivedTasks = []
       tasks.forEach((task) => {
         if (task.status === TaskStatus.Todo) {
-          newTodoTasks.push(task);
+          newTodoTasks.push(task)
         } else if (task.status === TaskStatus.InProgress) {
-          newInProgressTasks.push(task);
+          newInProgressTasks.push(task)
         } else if (task.status === TaskStatus.Completed) {
-          newCompletedTasks.push(task);
+          newCompletedTasks.push(task)
         } else if (task.status === TaskStatus.Archived) {
-          newArchivedTasks.push(task);
+          newArchivedTasks.push(task)
         }
-      });
-      this.todoTasks = newTodoTasks;
-      this.inProgressTasks = newInProgressTasks;
-      this.completedTasks = newCompletedTasks;
-      this.archivedTasks = newArchivedTasks;
+      })
+      this.todoTasks = newTodoTasks
+      this.inProgressTasks = newInProgressTasks
+      this.completedTasks = newCompletedTasks
+      this.archivedTasks = newArchivedTasks
     },
 
     changeOrderToPriority() {
-      this.taskOrder = TaskOrder.Priority;
+      this.taskOrder = TaskOrder.Priority
     },
     changeOrderToStatus() {
-      this.taskOrder = TaskOrder.Status;
+      this.taskOrder = TaskOrder.Status
     },
 
     isTaskLegal(task) {
       const rules = [
         {
-          condition: task.title === "",
-          message: "task.validation.titleRequired",
+          condition: task.title === '',
+          message: 'task.validation.titleRequired',
         },
         {
-          condition: task.dueDate === "",
-          message: "task.validation.dueDateRequired",
+          condition: task.dueDate === '',
+          message: 'task.validation.dueDateRequired',
         },
-      ];
+      ]
 
-      const failedRule = rules.find((rule) => rule.condition);
+      const failedRule = rules.find((rule) => rule.condition)
       if (failedRule) {
-        showToast(this.toast, this.$t(failedRule.message), "error");
-        return false;
+        showToast(this.toast, this.$t(failedRule.message), 'error')
+        return false
       }
-      return true;
+      return true
     },
 
     // 切换到创建任务模式
     startCreateTask() {
-      this.isCreating = true;
+      this.isCreating = true
     },
     // 取消创建任务
     cancelCreateTask() {
-      this.isCreating = false;
-      this.resetForm(); // 重置表单
+      this.isCreating = false
+      this.resetForm() // 重置表单
     },
     // 提交任务到后端
     async submitTask(newTask) {
       try {
         // 调用后端API创建任务
         if (!this.isTaskLegal(newTask)) {
-          return;
+          return
         }
-        newTask.creator = this.$store.getters.getUser;
-        newTask.taskGroupId = this.groupId;
-        console.log(newTask);
-        await this.$axios.post("/tasks/create", newTask);
-        showToast(this.toast, this.$t("task.success.create"), "success");
-        newTask.userRole = Role.Member;
+        newTask.creator = this.$store.getters.getUser
+        newTask.taskGroupId = this.groupId
+        console.log(newTask)
+        await this.$axios.post('/tasks/create', newTask)
+        showToast(this.toast, this.$t('task.success.create'), 'success')
+        newTask.userRole = Role.Member
         // 提交成功后重置状态和表单
-        this.isCreating = false;
-        this.resetForm();
-        this.showedTasks.push(newTask);
-        this.refreshTaskList();
+        this.isCreating = false
+        this.resetForm()
+        this.showedTasks.push(newTask)
+        this.refreshTaskList()
       } catch (error) {
-        console.error(this.$t("task.errors.create"), error);
-        showToast(this.toast, this.$t("task.errors.create"), "error");
+        console.error(this.$t('task.errors.create'), error)
+        showToast(this.toast, this.$t('task.errors.create'), 'error')
       }
     },
     // 重置任务表单
     resetForm() {
       this.newTask = {
-        title: "",
-        description: "",
-        priority: "MEDIUM",
-        status: "TODO",
-        dueDate: "",
-      };
+        title: '',
+        description: '',
+        priority: 'MEDIUM',
+        status: 'TODO',
+        dueDate: '',
+      }
     },
 
     toggleSection(section) {
-      this.expandedSections[section] = !this.expandedSections[section];
+      this.expandedSections[section] = !this.expandedSections[section]
     },
 
     toggleDropdown(taskId) {
-      this.activeDropdown = this.activeDropdown === taskId ? null : taskId;
+      this.activeDropdown = this.activeDropdown === taskId ? null : taskId
     },
     cancelEditTask(taskId) {
-      this.editingTasks[taskId] = false;
+      this.editingTasks[taskId] = false
     },
     editTask(taskId) {
-      this.editingTasks[taskId] = true;
-      this.activeDropdown = null;
+      this.editingTasks[taskId] = true
+      this.activeDropdown = null
     },
     async updateTask(taskId, updatedTask) {
-      console.log("111", updatedTask);
+      console.log('111', updatedTask)
       try {
         if (!this.isTaskLegal(updatedTask)) {
-          return;
+          return
         }
-        const taskIndex = this.showedTasks.findIndex(
-          (task) => task.id === taskId
-        );
+        const taskIndex = this.showedTasks.findIndex((task) => task.id === taskId)
         if (taskIndex !== -1) {
-          this.showedTasks[taskIndex] = updatedTask;
+          this.showedTasks[taskIndex] = updatedTask
         }
-        updatedTask.taskGroupId = updatedTask.taskGroup?.id || null;
-        await this.$axios.put(`/tasks/update/${taskId}`, updatedTask);
-        this.editingTasks[taskId] = false;
-        showToast(this.toast, this.$t("task.success.update"), "success");
-        this.refreshTaskList();
+        updatedTask.taskGroupId = updatedTask.taskGroup?.id || null
+        await this.$axios.put(`/tasks/update/${taskId}`, updatedTask)
+        this.editingTasks[taskId] = false
+        showToast(this.toast, this.$t('task.success.update'), 'success')
+        this.refreshTaskList()
       } catch (error) {
-        console.error(this.$t("task.errors.update"), error);
-        showToast(this.toast, this.$t("task.errors.update"), "error");
+        console.error(this.$t('task.errors.update'), error)
+        showToast(this.toast, this.$t('task.errors.update'), 'error')
       }
     },
 
     enterGroupChat(groupId) {
-      this.activeDropdown = null;
-      this.$router.push(`/group/${groupId}`);
+      this.activeDropdown = null
+      this.$router.push(`/group/${groupId}`)
     },
 
     canBeDeleted(task) {
       if (this.isInGroupPage || task.taskGroup) {
         if (task.userRole !== Role.Owner && task.userRole !== Role.Admin) {
-          return false;
+          return false
         }
       }
-      return true;
+      return true
     },
     async deleteTask(taskId) {
       try {
-        this.activeDropdown = null;
-        await this.$axios.delete(`/tasks/delete/${taskId}`);
-        this.showedTasks = this.showedTasks.filter(
-          (task) => task.id !== taskId
-        );
-        showToast(this.toast, this.$t("task.success.delete"), "success");
+        this.activeDropdown = null
+        await this.$axios.delete(`/tasks/delete/${taskId}`)
+        this.showedTasks = this.showedTasks.filter((task) => task.id !== taskId)
+        showToast(this.toast, this.$t('task.success.delete'), 'success')
       } catch (error) {
-        console.error(this.$t("task.errors.delete"), error);
-        showToast(this.toast, this.$t("task.errors.delete"), "error");
+        console.error(this.$t('task.errors.delete'), error)
+        showToast(this.toast, this.$t('task.errors.delete'), 'error')
       }
     },
   },
-};
+}
 </script>
 
 <style scoped>

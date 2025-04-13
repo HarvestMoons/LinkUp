@@ -41,26 +41,26 @@ export async function getFriendList(userId) {
 }
 
 export function calcLastActiveString(lastActiveTime) {
-  if (!lastActiveTime) return "未知状态";
+  if (!lastActiveTime) return '未知状态'
 
-  const last = new Date(lastActiveTime);
-  const now = new Date();
-  const diffMs = now - last;
+  const last = new Date(lastActiveTime)
+  const now = new Date()
+  const diffMs = now - last
 
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMinutes = Math.floor(diffMs / (1000 * 60))
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  const diffWeeks = Math.floor(diffDays / 7)
 
   if (diffMinutes < 5) {
-    return "在线";
+    return '在线'
   } else if (diffMinutes < 60) {
-    return `${diffMinutes}分钟前在线`;
+    return `${diffMinutes}分钟前在线`
   } else if (diffHours < 24) {
-    return `${diffHours}小时前在线`;
+    return `${diffHours}小时前在线`
   } else if (diffDays < 7) {
-    return `${diffDays}天前在线`;
+    return `${diffDays}天前在线`
   } else {
-    return "离线超过一周";
+    return '离线超过一周'
   }
 }

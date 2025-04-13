@@ -1,61 +1,35 @@
 <template>
-  <div class="hamburgerContainer" v-if="isMobile">
+  <div v-if="isMobile" class="hamburgerContainer">
     <button class="hamburger" @click="sidebarVisible = true">☰</button>
   </div>
-  <div class="navContainer" v-if="!isMobile">
+  <div v-if="!isMobile" class="navContainer">
     <nav class="tabNav">
-      <router-link
-        v-if="$store.getters.isAuthenticated"
-        to="/user"
-        class="userContainer"
-      >
-        <img
-          :src="$store.getters.getUserAvatar"
-          :alt="$t('common.avatarAlt')"
-          class="userAvatar"
-        />
+      <router-link v-if="$store.getters.isAuthenticated" to="/user" class="userContainer">
+        <img :src="$store.getters.getUserAvatar" :alt="$t('common.avatarAlt')" class="userAvatar" />
         <span class="userNickname"
-          >{{ $store.getters.getUser?.username || "" }} (#{{
-            $store.getters.getUserId
-          }})
+          >{{ $store.getters.getUser?.username || '' }} (#{{ $store.getters.getUserId }})
         </span>
       </router-link>
-      <router-link
-        to="/home"
-        class="tab"
-        :class="{ active: isActive('/') || isActive('/home') }"
-        >{{ $t("dashboard.home") }}</router-link
-      >
+      <router-link to="/home" class="tab" :class="{ active: isActive('/') || isActive('/home') }">{{
+        $t('dashboard.home')
+      }}</router-link>
 
       <p v-if="isMobile">|</p>
-      <router-link
-        to="/friends"
-        class="tab"
-        :class="{ active: isActive('/friends') }"
-        >{{ $t("dashboard.friends") }}</router-link
-      >
+      <router-link to="/friends" class="tab" :class="{ active: isActive('/friends') }">{{
+        $t('dashboard.friends')
+      }}</router-link>
 
       <p v-if="isMobile">|</p>
-      <router-link
-        to="/tasks"
-        class="tab"
-        :class="{ active: isActive('/tasks') }"
-        >{{ $t("dashboard.tasks") }}</router-link
-      >
+      <router-link to="/tasks" class="tab" :class="{ active: isActive('/tasks') }">{{
+        $t('dashboard.tasks')
+      }}</router-link>
 
       <p v-if="isMobile">|</p>
-      <router-link
-        to="/groups"
-        class="tab"
-        :class="{ active: isActive('/groups') }"
-        >{{ $t("dashboard.groups") }}</router-link
-      >
+      <router-link to="/groups" class="tab" :class="{ active: isActive('/groups') }">{{
+        $t('dashboard.groups')
+      }}</router-link>
 
-      <select
-        v-model="$i18n.locale"
-        class="languageSelect"
-        @change="changeLanguage"
-      >
+      <select v-model="$i18n.locale" class="languageSelect" @change="changeLanguage">
         <option value="en">English</option>
         <option value="zh-CN">中文</option>
         <option value="es">Español</option>
@@ -67,7 +41,7 @@
         class="button normalButton logoutButton"
         @click="logout"
       >
-        {{ $t("dashboard.logout") }}
+        {{ $t('dashboard.logout') }}
       </button>
     </nav>
   </div>
@@ -84,87 +58,87 @@
   <div class="footerContainer">
     <p>© 2025 Link Up</p>
     <p>|</p>
-    <router-link to="/privacy">{{ $t("dashboard.privacyPolicy") }}</router-link>
+    <router-link to="/privacy">{{ $t('dashboard.privacyPolicy') }}</router-link>
   </div>
 </template>
 
 <script>
-import { markRaw } from "vue";
-import { getFriendList } from "@/utils/friendService";
-import { getTaskList } from "@/utils/taskService";
-import { getGroupList } from "@/utils/groupService";
-import { useIsMobile } from "@/utils/useIsMobile";
-import { useOnlinePing } from "@/utils/useOnlinePing";
-import SideBar from "@/components/common/SideBar.vue";
-import SidebarMenu from "@/components/common/SidebarMenu.vue";
+import { markRaw } from 'vue'
+import { getFriendList } from '@/utils/friendService'
+import { getTaskList } from '@/utils/taskService'
+import { getGroupList } from '@/utils/groupService'
+import { useIsMobile } from '@/utils/useIsMobile'
+import { useOnlinePing } from '@/utils/useOnlinePing'
+import SideBar from '@/components/common/SideBar.vue'
+import SidebarMenu from '@/components/common/SidebarMenu.vue'
 
 export default {
   components: { SideBar, SidebarMenu },
   setup() {
-    const { isMobile } = useIsMobile();
-    useOnlinePing(); // 页面挂载时执行，内部自动监听 token
-    return { isMobile };
+    const { isMobile } = useIsMobile()
+    useOnlinePing() // 页面挂载时执行，内部自动监听 token
+    return { isMobile }
   },
   data() {
     return {
       sidebarVisible: false,
       SidebarMenu: markRaw(SidebarMenu),
       user: {},
-    };
+    }
   },
   watch: {
     // 监听路由变化，判断是否需要调用 fetchUserData
     async $route(to) {
       if (to.meta.requiresAuth) {
-        await this.fetchUserData();
+        await this.fetchUserData()
       }
     },
   },
   created() {
-    this.$store.dispatch("loadAvatars");
+    this.$store.dispatch('loadAvatars')
     if (this.$route.meta.requiresAuth) {
-      this.fetchUserData();
+      this.fetchUserData()
     }
   },
   methods: {
     logout() {
-      this.$store.dispatch("logout");
-      this.$router.push("/login"); // 跳转到登录页面
-      this.user = {};
+      this.$store.dispatch('logout')
+      this.$router.push('/login') // 跳转到登录页面
+      this.user = {}
     },
     async fetchUserData() {
       try {
         // 检查 sessionStorage 中是否存在用户数据
         if (this.$store.getters.getUserId && this.$store.getters.getUser) {
-          this.user = this.$store.getters.getUser;
+          this.user = this.$store.getters.getUser
         } else {
-          const responseUser = await this.$axios.get(`/user/info`);
-          this.user = responseUser.data;
-          this.$store.dispatch("setUser", this.user);
+          const responseUser = await this.$axios.get(`/user/info`)
+          this.user = responseUser.data
+          this.$store.dispatch('setUser', this.user)
         }
 
-        getFriendList(this.$store.getters.getUserId);
-        getTaskList(this.$store.getters.getUserId);
-        getGroupList(this.$store.getters.getUserId);
+        getFriendList(this.$store.getters.getUserId)
+        getTaskList(this.$store.getters.getUserId)
+        getGroupList(this.$store.getters.getUserId)
       } catch (error) {
-        console.error("获取用户数据失败:", error);
+        console.error('获取用户数据失败:', error)
         // 捕获 401 错误（JWT 过期或无效）
         if (error.response && error.response.status === 401) {
-          this.logout();
+          this.logout()
         }
       }
     },
     isActive(route) {
-      return this.$route.path === route;
+      return this.$route.path === route
     },
     changeLanguage(event) {
-      const lang = event.target.value;
-      this.$store.commit("setLanguage", lang);
-      localStorage.setItem("userLanguage", lang);
-      this.$i18n.locale = lang;
+      const lang = event.target.value
+      this.$store.commit('setLanguage', lang)
+      localStorage.setItem('userLanguage', lang)
+      this.$i18n.locale = lang
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -256,7 +230,7 @@ export default {
 }
 
 .tab.active::after {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 3px; /* 和 container 的边框厚度一致 */
