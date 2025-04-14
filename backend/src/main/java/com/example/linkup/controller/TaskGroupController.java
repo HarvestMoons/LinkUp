@@ -5,7 +5,6 @@ import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskGroupService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +15,9 @@ import java.util.List;
 @RequestMapping("/task-group")
 public class TaskGroupController {
     private final TaskGroupService taskGroupService;
-    private final ModelMapper modelMapper;
 
-    public TaskGroupController(TaskGroupService taskGroupService, ModelMapper modelMapper) {
+    public TaskGroupController(TaskGroupService taskGroupService) {
         this.taskGroupService = taskGroupService;
-        this.modelMapper = modelMapper;
     }
 
     /**
@@ -54,7 +51,7 @@ public class TaskGroupController {
      */
     @PostMapping("/create")
     public ResponseEntity<TaskGroup> createTaskGroup(@RequestBody TaskGroupDto taskGroupDto) {
-        TaskGroup createdTaskGroup = taskGroupService.createTaskGroup(modelMapper.map(taskGroupDto, TaskGroup.class));
+        TaskGroup createdTaskGroup = taskGroupService.createTaskGroup(taskGroupDto);
         return new ResponseEntity<>(createdTaskGroup, HttpStatus.CREATED);
     }
 
@@ -69,7 +66,7 @@ public class TaskGroupController {
     @PutMapping("/{id}")
     public ResponseEntity<TaskGroup> updateTaskGroup(@PathVariable("id") Long id, @RequestBody TaskGroupDto taskGroupDto)
             throws ElementNotExistException {
-        TaskGroup updatedTaskGroup = taskGroupService.updateTaskGroup(id, modelMapper.map(taskGroupDto, TaskGroup.class));
+        TaskGroup updatedTaskGroup = taskGroupService.updateTaskGroup(id, taskGroupDto);
         return ResponseEntity.ok(updatedTaskGroup);
     }
 

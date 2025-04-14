@@ -6,7 +6,7 @@ module.exports = defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://8.155.47.138:8099', // 代理 API 请求
+        target: 'http://z:8099', // 代理 API 请求
         changeOrigin: true,
         pathRewrite: {
           '^/api': '',

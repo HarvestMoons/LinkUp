@@ -2,13 +2,16 @@ package com.example.linkup.service;
 
 import com.example.linkup.exception.ElementExistedException;
 import com.example.linkup.exception.UnexpectedNullElementException;
+import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
+import com.example.linkup.repository.GroupMemberRepository;
 import com.example.linkup.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -16,10 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final GroupMemberRepository groupMemberRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, GroupMemberRepository groupMemberRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.groupMemberRepository = groupMemberRepository;
     }
 
     public void registerUser(String username, String password) {
@@ -48,6 +53,13 @@ public class UserService {
         userRepository.deleteById(userId);
     }
 
+    // 获取用户所在的所有群组
+    public List<GroupMember> getGroupsForUser(long userId) throws UnexpectedNullElementException {
+        //检查对应用户是否存在
+        findById(userId);
+        return groupMemberRepository.findByUserId(userId);
+    }
+
     public User updateUsername(Long userId, String newUsername) throws UnexpectedNullElementException {
         User user = findById(userId);
         user.setUsername(newUsername);
@@ -74,5 +86,4 @@ public class UserService {
         user.setLastActiveTime(LocalDateTime.now());
         userRepository.save(user);
     }
-
 }

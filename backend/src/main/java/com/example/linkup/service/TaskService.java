@@ -1,10 +1,14 @@
 package com.example.linkup.service;
 
+import com.example.linkup.dto.TaskDto;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.Task;
+import com.example.linkup.model.TaskGroup;
 import com.example.linkup.repository.GroupMemberRepository;
+import com.example.linkup.repository.TaskGroupRepository;
 import com.example.linkup.repository.TaskRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,19 +20,31 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final TaskGroupRepository taskGroupRepository;
+    private final ModelMapper modelMapper;
 
-    public TaskService(TaskRepository taskRepository, GroupMemberRepository groupMemberRepository) {
+    public TaskService(TaskRepository taskRepository, GroupMemberRepository groupMemberRepository, TaskGroupRepository taskGroupRepository, ModelMapper modelMapper) {
         this.taskRepository = taskRepository;
         this.groupMemberRepository = groupMemberRepository;
+        this.taskGroupRepository = taskGroupRepository;
+        this.modelMapper = modelMapper;
     }
 
     // 创建任务
-    public Task createTask(Task task) {
-        return taskRepository.save(task);
+    public Task createTask(TaskDto taskDto) throws UnexpectedNullElementException {
+        Task newTask = modelMapper.map(taskDto, Task.class);
+        // 这里，taskGroup可以为空（表示单人任务）
+        Long groupId = taskDto.getTaskGroupId();
+        if (groupId != null) {
+            TaskGroup taskGroup = taskGroupRepository.findById(groupId).orElseThrow(UnexpectedNullElementException::new);;
+            newTask.setTaskGroup(taskGroup);
+        }
+        return taskRepository.save(newTask);
     }
 
     // 更新任务
-    public Task updateTask(Long id, Task newTask) throws UnexpectedNullElementException {
+    public Task updateTask(Long id, TaskDto newTaskDto) throws UnexpectedNullElementException {
+        Task newTask=modelMapper.map(newTaskDto, Task.class);
         Task existedTask = findById(id);
         newTask.setId(existedTask.getId());
         return taskRepository.save(newTask);

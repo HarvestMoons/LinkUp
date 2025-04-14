@@ -3,7 +3,6 @@ package com.example.linkup.controller;
 import com.example.linkup.dto.TaskDto;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.Task;
-import com.example.linkup.model.TaskGroup;
 import com.example.linkup.service.TaskGroupService;
 import com.example.linkup.service.TaskService;
 import org.modelmapper.ModelMapper;
@@ -17,13 +16,9 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
-    private final TaskGroupService taskGroupService;
-    private final ModelMapper modelMapper;
 
-    public TaskController(TaskService taskService, TaskGroupService taskGroupService, ModelMapper modelMapper) {
+    public TaskController(TaskService taskService, ModelMapper modelMapper) {
         this.taskService = taskService;
-        this.taskGroupService = taskGroupService;
-        this.modelMapper = modelMapper;
     }
 
     /**
@@ -31,17 +26,10 @@ public class TaskController {
      *
      * @param taskDto 任务的数据传输对象
      * @return 创建的任务
-     * @throws UnexpectedNullElementException
      */
     @PostMapping("/create")
     public ResponseEntity<Task> createTask(@RequestBody TaskDto taskDto) throws UnexpectedNullElementException {
-        Task task = taskService.createTask(modelMapper.map(taskDto, Task.class));
-        // 这里，taskGroup可以为空（表示单人任务）
-        Long groupId = taskDto.getTaskGroupId();
-        if (groupId != null) {
-            TaskGroup taskGroup = taskGroupService.findById(groupId);
-            task.setTaskGroup(taskGroup);
-        }
+        Task task = taskService.createTask(taskDto);
         return ResponseEntity.status(201).body(task); // 返回 201 Created
     }
 
@@ -74,7 +62,7 @@ public class TaskController {
     @PutMapping("/update/{id}")
     public ResponseEntity<Task> updateTask(@PathVariable("id") Long id, @RequestBody TaskDto taskDto)
             throws UnexpectedNullElementException {
-        Task updatedTask = taskService.updateTask(id, modelMapper.map(taskDto, Task.class));
+        Task updatedTask = taskService.updateTask(id, taskDto);
         return ResponseEntity.ok(updatedTask);
     }
 

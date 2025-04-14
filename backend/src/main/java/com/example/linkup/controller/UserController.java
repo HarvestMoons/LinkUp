@@ -4,8 +4,6 @@ import com.example.linkup.dto.UserInfoDto;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.GroupMember;
 import com.example.linkup.model.User;
-import com.example.linkup.repository.UserRepository;
-import com.example.linkup.service.GroupMemberService;
 import com.example.linkup.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,14 +20,9 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final GroupMemberService groupMemberService;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, GroupMemberService groupMemberService,
-            PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.groupMemberService = groupMemberService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     // TODO: 尽量只给前端拿到以及使用userid
@@ -59,8 +50,8 @@ public class UserController {
 
     // 获取用户加入的所有群组
     @GetMapping("/groups/{userId}")
-    public ResponseEntity<List<GroupMember>> getGroupsForUser(@PathVariable long userId) {
-        List<GroupMember> groups = groupMemberService.getGroupsForUser(userId);
+    public ResponseEntity<List<GroupMember>> getGroupsForUser(@PathVariable long userId) throws UnexpectedNullElementException {
+        List<GroupMember> groups = userService.getGroupsForUser(userId);
         return ResponseEntity.ok(groups);
     }
 

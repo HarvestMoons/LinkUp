@@ -35,11 +35,6 @@ public class GroupMemberService {
         return groupMemberRepository.findByTaskGroupId(taskGroupId);
     }
 
-    // 获取用户所在的所有群组
-    public List<GroupMember> getGroupsForUser(long userId) {
-        return groupMemberRepository.findByUserId(userId);
-    }
-
     // 获取群组中的特定角色成员
     public List<GroupMember> getMembersByRole(long taskGroupId, Role role) {
         return groupMemberRepository.findByTaskGroupIdAndRole(taskGroupId, role);

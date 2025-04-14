@@ -1,10 +1,12 @@
 package com.example.linkup.service;
 
+import com.example.linkup.dto.TaskGroupDto;
 import com.example.linkup.exception.ElementNotExistException;
 import com.example.linkup.exception.UnexpectedNullElementException;
 import com.example.linkup.model.TaskGroup;
 import com.example.linkup.repository.TaskGroupRepository;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +16,11 @@ import java.util.List;
 public class TaskGroupService {
 
     private final TaskGroupRepository taskGroupRepository;
+    private final ModelMapper modelMapper;
 
-    public TaskGroupService(TaskGroupRepository taskGroupRepository) {
+    public TaskGroupService(TaskGroupRepository taskGroupRepository, ModelMapper modelMapper) {
         this.taskGroupRepository = taskGroupRepository;
+        this.modelMapper = modelMapper;
     }
 
     // 获取所有任务群组
@@ -30,12 +34,14 @@ public class TaskGroupService {
     }
 
     // 创建新群组
-    public TaskGroup createTaskGroup(TaskGroup taskGroup) {
+    public TaskGroup createTaskGroup(TaskGroupDto taskGroupDto) {
+        TaskGroup taskGroup = modelMapper.map(taskGroupDto, TaskGroup.class);
         return taskGroupRepository.save(taskGroup);
     }
 
     // 更新群组
-    public TaskGroup updateTaskGroup(Long id, TaskGroup taskGroup) throws ElementNotExistException {
+    public TaskGroup updateTaskGroup(Long id, TaskGroupDto taskGroupDto) throws ElementNotExistException {
+        TaskGroup taskGroup=modelMapper.map(taskGroupDto, TaskGroup.class);
         if (taskGroupRepository.existsById(id)) {
             taskGroup.setId(id);
             return taskGroupRepository.save(taskGroup);

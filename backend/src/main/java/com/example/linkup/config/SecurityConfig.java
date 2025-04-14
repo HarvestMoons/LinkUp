@@ -28,7 +28,6 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
-    // 构造器注入 UserDetailsService 和 PasswordEncoder
     public SecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder,
                           @Lazy JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;

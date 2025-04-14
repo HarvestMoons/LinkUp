@@ -1,0 +1,127 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rectangle
+left to right direction
+
+package "com.example.linkup" {
+  package "Controller" <<Controller Layer>> {
+    [AuthController]
+    [ChatMessageController]
+    [ChatWebSocketController]
+    [FriendRequestController]
+    [FriendshipsController]
+    [GroupMemberController]
+    [TaskController]
+    [TaskGroupController]
+    [UserController]
+  }
+
+  package "Service" <<Service Layer>> {
+    [ChatMessageService]
+    [FriendRequestService]
+    [FriendshipsService]
+    [GroupMemberService]
+    [TaskService]
+    [TaskGroupService]
+    [UserService]
+  }
+
+  package "Repository" <<Repository Layer>> {
+    [ChatMessageRepository]
+    [FriendRequestRepository]
+    [FriendshipsRepository]
+    [GroupMemberRepository]
+    [TaskGroupRepository]
+    [TaskRepository]
+    [UserRepository]
+  }
+
+  package "Model" <<Model Layer>> {
+    [ChatMessage]
+    [FriendRequest]
+    [Friendships]
+    [GroupMember]
+    [TaskGroup]
+    [Task]
+    [User]
+  }
+
+  package "Config" <<Configuration>> {
+    [JwtAuthenticationFilter]
+    [SecurityConfig]
+    [SecurityBeansConfig]
+    [WebSocketConfig]
+    [ModelMapperConfig]
+    [CustomUserDetailService]
+  }
+
+  package "utils"<<Utils>>{
+    [JwtUtils]
+  }
+}
+
+' ====== 标准分层依赖 ======
+[AuthController] --> [CustomUserDetailService]
+[ChatMessageController] --> [ChatMessageService]
+[ChatWebSocketController] --> [ChatMessageService]
+[FriendRequestController] --> [FriendRequestService]
+[FriendshipsController] --> [FriendshipsService]
+[GroupMemberController] --> [GroupMemberService]
+[TaskController] --> [TaskService]
+[TaskGroupController] --> [TaskGroupService]
+[UserController] --> [UserService]
+
+[ChatMessageService] --> [ChatMessageRepository]
+[CustomUserDetailService] --> [UserRepository]
+[FriendRequestService] --> [FriendRequestRepository]
+[FriendshipsService] --> [FriendshipsRepository]
+[GroupMemberService] --> [GroupMemberRepository]
+[TaskService] --> [TaskRepository]
+[TaskGroupService] --> [TaskGroupRepository]
+[UserService] --> [UserRepository]
+
+[ChatMessageRepository] --> [ChatMessage]
+[FriendRequestRepository] --> [FriendRequest]
+[FriendshipsRepository] --> [Friendships]
+[GroupMemberRepository] --> [GroupMember]
+[TaskGroupRepository] --> [TaskGroup]
+[TaskRepository] --> [Task]
+[UserRepository] --> [User]
+
+' ====== 跨业务依赖 ======
+[FriendRequestController]-->[FriendshipsService]
+[FriendRequestController]-->[UserService]
+[FriendshipsController] --> [UserService]
+[GroupMemberController]-->[UserService]
+[GroupMemberController]-->[TaskGroupService]
+
+[ChatMessageService] --> [UserRepository]
+[ChatMessageService] -->[TaskGroupRepository]
+[TaskService] --> [GroupMemberRepository]
+[FriendRequestService] --> [FriendshipsRepository]
+[GroupMemberService] --> [UserRepository]
+[GroupMemberService] --> [TaskGroupRepository]
+[FriendshipsService] --> [UserRepository]
+[UserService]-->[GroupMemberRepository]
+[TaskService]-->[TaskGroupRepository]
+
+' ====== 基础设施依赖 ======
+[SecurityConfig] ..> [CustomUserDetailService] : @Bean
+[SecurityConfig] ..> [JwtAuthenticationFilter] : @Bean
+[SecurityBeansConfig] ..> [SecurityConfig] : @Bean
+[JwtAuthenticationFilter] ..> [JwtUtils] : @Autowired
+[CustomUserDetailService]..>[UserService]:@Autowired
+[WebSocketConfig] ..> [ChatWebSocketController] : 注册端点
+[JwtAuthenticationFilter] --> [UserRepository] : 用户验证
+[ModelMapperConfig] --> [TaskService]: 对象映射
+[ModelMapperConfig] --> [TaskGroupService] : 对象映射
+
+
+' ====== 特殊说明 ======
+note top of [ModelMapperConfig] : 全局DTO转换配置
+note right of Config
+  安全、WebSocket等基础设施组件
+  通过**配置类**统一管理
+  与业务层解耦
+end note
+@enduml

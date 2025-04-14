@@ -5,7 +5,7 @@
       <MySpinner />
     </div>
     <div v-else-if="users.length === 0" class="nothing-notice">
-      {{ $t('users.noUsers') }}
+      {{ $t('friends.noFriends') }}
     </div>
     <div v-else>
       <ul class="userList">
