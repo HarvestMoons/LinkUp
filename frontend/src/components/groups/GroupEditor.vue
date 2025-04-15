@@ -210,7 +210,6 @@ export default {
     groupDescription: String,
     groupMembers: Array,
     userRole: Role,
-    userId: Number,
     refreshGroupData: Function,
   },
   setup() {
@@ -219,6 +218,7 @@ export default {
   },
   data() {
     return {
+      userId: this.$store.getters.getUserId,
       isMenuVisible: false,
       menuPosition: { top: 0, left: 0 },
       clickOnMember: null,
