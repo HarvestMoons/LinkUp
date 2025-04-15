@@ -240,7 +240,7 @@ p {
   flex: 2;
   width: 100%;
   max-width: 600px;
-  min-width: 400px;
+  min-width: 300px;
   overflow: hidden;
 }
 
