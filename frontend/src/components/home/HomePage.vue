@@ -238,7 +238,8 @@ p {
 
 .calendar-view {
   flex: 2;
-  max-width: min(80vw, 600px);
+  width: 100%;
+  max-width: 600px;
   min-width: 400px;
   overflow: hidden;
 }
