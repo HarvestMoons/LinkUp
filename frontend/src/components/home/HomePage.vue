@@ -173,7 +173,7 @@ export default {
   methods: {
     getThisWeekRange() {
       const today = new Date();
-      const dayOfWeek = today.getDay(); // 0 = Sunday
+      const dayOfWeek = (today.getDay() + 6) % 7; // 0 = Sunday
       const start = new Date(today);
       start.setDate(today.getDate() - dayOfWeek);
       const end = new Date(start);
@@ -195,7 +195,10 @@ export default {
       const completed = filtered.filter(
         (t) => t.status === TaskStatus.Completed
       ).length;
-      return ((completed / filtered.length) * 100).toFixed(1);
+      const archived = filtered.filter(
+        (t) => t.status === TaskStatus.Archived
+      ).length;
+      return (((completed + archived) / filtered.length) * 100).toFixed(1);
     },
     formatDate(date) {
       return new Date(date).toLocaleDateString("zh-CN");
