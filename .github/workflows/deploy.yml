@@ -1,0 +1,60 @@
+name: Deploy LinkUp
+
+on:
+  push:
+    branches:
+      - master  # 推送到 master 分支时触发自动化部署
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 22
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '22'
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "====== 仓库拉取开始 ======"
+            
+            BASE_PATH="/opt/project/test/LinkUp"
+            cd $BASE_PATH
+            git pull
+            
+            echo "====== 设置 Maven 与 JDK 环境变量 ======"
+            export JAVA_HOME=/usr/local/jdk-22.0.2
+            export M2_HOME=/usr/local/maven
+            export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
+            java -version  # 可选：验证输出是 Java 21
+            
+            echo "== 编译后端 =="
+            cd "$BASE_PATH/backend"
+            mvn clean package -Dmaven.test.skip=true
+            
+            echo "== 杀死旧进程（端口8099）并重启新版本 =="
+            PID=$(lsof -t -i :8099)
+            
+            if [ -n "$PID" ]; then
+                kill -9 $PID
+                echo "已终止进程 $PID"
+            else
+                echo "无进程占用 8099"
+            fi
+            nohup /usr/local/jdk-22.0.2/bin/java -jar "$BASE_PATH/backend/target/LinkUp-1.60.15.jar" > "$BASE_PATH/output.log" 2>&1 &
+            
+            echo "====== 前端部署开始 ======"
+            cd "$BASE_PATH/frontend"
+            npm install
+            npm run build
+            cp -rf "$BASE_PATH/frontend/dist/"* /www/wwwroot/frontend/
