@@ -36,7 +36,7 @@ jobs:
             export JAVA_HOME=/usr/local/jdk-22.0.2
             export M2_HOME=/usr/local/maven
             export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
-            java -version  # 可选：验证输出是 Java 21
+            java -version  # 可选：验证输出是 Java 22
             
             echo "== 编译后端 =="
             cd "$BASE_PATH/backend"
