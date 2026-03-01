@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: linkup_backend
+    restart: always
+    ports:
+      - "8099:8099" # 映射给宿主机的需要与原来外部访问保持一致，或者仅仅作内部通信
+    environment:
+      # 可选：如果希望通过环境变量覆盖 application.properties 的配置可以在这里写，
+      # 例如：SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/link_up
+      - TZ=Asia/Shanghai
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+        compress: "true"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: linkup_nginx
+    restart: always
+    ports:
+      - "8666:80" # 8666作为外部访问端口，80为内部nginx暴露端口
+    depends_on:
+      - backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"

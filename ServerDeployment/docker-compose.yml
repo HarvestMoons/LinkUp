@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  backend:
+    image: beecool/linkup-backend:latest
+    container_name: linkup_backend
+    restart: always
+    ports:
+      - "8099:8099" # 后端应用端口
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - linkup-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+        compress: "true"
+    # 每次部署前拉取最新镜像
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+
+  frontend:
+    image: beecool/linkup-frontend:latest
+    container_name: linkup_nginx
+    restart: always
+    ports:
+      - "8666:80"  # 服务器外部暴露端口8666，容器内nginx占用80
+    depends_on:
+      - backend
+    networks:
+      - linkup-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  linkup-network:
+    driver: bridge
